@@ -1,0 +1,1 @@
+application={content={fps=Data.fps,width=720,height=1280,scale='letterbox'}}
