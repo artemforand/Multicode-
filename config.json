@@ -1,6 +1,6 @@
 {
   "images": [
-   
+   {"title":"Меню","file":"rumble_jungle_lobby.png"}
   ],
   "music": [
     { "title": "Музыка меню", "file": "menu.mp3" }
