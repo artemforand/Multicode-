@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andbrawl — Official Universe</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-base: #050507;
+            --accent: #ff6b00;
+            --accent-glow: rgba(255, 107, 0, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #8a8a9e;
+            --grad-primary: linear-gradient(135deg, #ff6b00 0%, #cc3700 100%);
+            
+            --shadow-neon: 0 0 30px var(--accent-glow);
+            --glass: rgba(15, 15, 20, 0.65);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --radius-lg: 32px;
+            --radius-md: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { 
+            background-color: var(--bg-base); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            padding-bottom: 100px; 
+        }
+
+        /* Анимированная сетка и свечение */
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: -2; pointer-events: none;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+        .glow-sphere { position: fixed; top: -20%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%); z-index: -1; pointer-events: none; filter: blur(100px); }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 25px; }
+
+        /* --- HERO --- */
+        .hero { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero-badge { background: rgba(255,255,255,0.05); border: var(--glass-border); padding: 5px 15px; border-radius: 100px; font-size: 0.85rem; color: var(--accent); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
+        .hero-icon { width: 160px; height: 160px; border-radius: 40px; box-shadow: var(--shadow-neon); margin-bottom: 25px; border: 4px solid rgba(255,255,255,0.1); background: #111; overflow: hidden; }
+        .hero-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .hero h1 { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; background: var(--grad-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; margin-bottom: 15px; }
+        .hero p { max-width: 500px; margin: 0 auto 30px auto; font-size: 1.1rem; color: var(--text-muted); }
+        
+        .btn { padding: 15px 35px; border-radius: 100px; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; color: white; background: var(--grad-primary); box-shadow: 0 10px 25px var(--accent-glow); }
+        .btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-neon); }
+
+        /* --- КАРТОЧКИ И СТАТИСТИКА --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .stat-item { background: var(--glass); backdrop-filter: blur(20px); border: var(--glass-border); border-radius: var(--radius-md); padding: 25px; text-align: center; }
+        .stat-num { font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 5px; }
+        .stat-label { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        .section-card { background: var(--glass); backdrop-filter: blur(20px); border: var(--glass-border); border-radius: var(--radius-lg); padding: 40px; margin-bottom: 30px; transition: 0.3s; }
+        .section-card:hover { border-color: rgba(255, 107, 0, 0.3); }
+        
+        h2 { font-size: 2rem; margin-bottom: 15px; color: #fff; display: flex; align-items: center; gap: 10px; }
+        h2 span { color: var(--accent); }
+
+        /* --- ГАЛЕРЕЯ --- */
+        .slider-wrapper { position: relative; display: flex; align-items: center; margin-top: 20px; }
+        .slider-track { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .slider-track::-webkit-scrollbar { display: none; }
+        .slide { flex: 0 0 80%; max-width: 400px; aspect-ratio: 16/9; scroll-snap-align: center; border-radius: 15px; background: rgba(255,255,255,0.05); border: var(--glass-border); display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-weight: 700; overflow: hidden; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- РАЗРАБОТЧИК --- */
+        .dev-box { display: flex; align-items: center; gap: 20px; }
+        .dev-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); flex-shrink: 0; overflow: hidden; }
+        .dev-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- НАВИГАЦИЯ --- */
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(10,10,15,0.9); backdrop-filter: blur(20px); border-radius: 100px; border: var(--glass-border); padding: 10px; display: flex; justify-content: space-around; z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .nav-link { color: var(--text-muted); text-decoration: none; font-size: 0.75rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; padding: 5px 15px; transition: 0.3s; }
+        .nav-link svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 3px; }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 3rem; }
+            .section-card { padding: 25px; }
+            .dev-box { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="glow-sphere"></div>
+
+<div class="container">
+    
+    <section class="hero">
+        <div class="hero-badge">Разработано на Solar2D</div>
+        <div class="hero-icon" id="icon3D">
+            <img src="icon.png" alt="Andbrawl Icon" onerror="this.src='https://ui-avatars.com/api/?name=AB&background=ff6b00&color=fff&size=160'">
+        </div>
+        <h1>Andbrawl</h1>
+        <p>Быстрый, честный и оптимизированный мобильный 2D-экшен. Без доната, влияющего на баланс.</p>
+        <a href="#download" class="btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+            Скачать APK
+        </a>
+    </section>
+
+    <section class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-num" id="player-count">...</div>
+            <div class="stat-label">Зарегистрировано аккаунтов</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num" style="color: #fff;">Solar2D</div>
+            <div class="stat-label">Игровой движок</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num" style="color: #fff;">60</div>
+            <div class="stat-label">FPS на смартфонах</div>
+        </div>
+    </section>
+
+    <section class="section-card">
+        <h2><span>#</span> Почему Andbrawl?</h2>
+        <ul style="color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
+            <li><b>Идеальная оптимизация:</b> Благодаря движку Solar2D (Lua), игра летает даже на старых устройствах, выдавая стабильный фреймрейт.</li>
+            <li><b>Свобода моддинга:</b> Заменяй скины, карты и звуки — клиент полностью открыт для фанатского творчества.</li>
+            <li><b>Честный баланс:</b> Решают только твои навыки, а не уровень прокачки за деньги.</li>
+        </ul>
+    </section>
+
+    <section class="section-card">
+        <h2><span>#</span> Скриншоты</h2>
+        <div class="slider-wrapper">
+            <div class="slider-track" id="gallery">
+                <div class="slide"><img src="assets/screenshot1.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 1'"></div>
+                <div class="slide"><img src="assets/screenshot2.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 2'"></div>
+                <div class="slide"><img src="assets/screenshot3.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 3'"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-card" id="dev">
+        <h2><span>#</span> Разработчик</h2>
+        <div class="dev-box">
+            <div class="dev-img">
+                <img src="artem.png" alt="Artem" onerror="this.src='https://ui-avatars.com/api/?name=Artem&background=ff6b00&color=fff&size=80'">
+            </div>
+            <div>
+                <h3 style="color: #fff;">Артем</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Создаю игру в соло на Solar2D. Моя цель — сделать качественный мобильный экшен, прислушиваясь к комьюнити.</p>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<nav class="bottom-nav">
+    <a href="https://t.me/andbrawlofficial" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm4.1 7.2l-1.5 6.6c-.1.5-.4.6-.8.4l-2.5-1.8-1.2 1.2c-.1.1-.3.2-.4.2h-.1l.1-1.8 3.5-3.2c.1-.1.1-.3 0-.4s-.3-.1-.4 0L8.6 13.5 6 12.6c-.5-.1-.5-.5.1-.7l9-3.5c.4-.2.8-.1 1 0 .2.2.3.4.2.8z"/></svg>
+        <span>TG</span>
+    </a>
+    <a href="#download" class="nav-link active">
+        <svg viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+        <span>APK</span>
+    </a>
+</nav>
+
+<script>
+    // 1. Получение количества аккаунтов из Firebase
+    async function fetchPlayerCount() {
+        const countElement = document.getElementById('player-count');
+        const dbUrl = 'https://teohhb-e4e81-default-rtdb.firebaseio.com/PROFILE.json';
+        
+        try {
+            const response = await fetch(dbUrl);
+            if (!response.ok) throw new Error('Ошибка сети');
+            
+            const data = await response.json();
+            
+            // Если база не пустая, считаем количество ключей
+            if (data) {
+                const accountsCount = Object.keys(data).length;
+                // Анимируем счетчик от 0 до нужного числа для красоты
+                animateValue(countElement, 0, accountsCount, 1500);
+            } else {
+                countElement.textContent = '0';
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки профилей:', error);
+            countElement.textContent = '???'; // Если ошибка, показываем вопросы
+        }
+    }
+
+    // Красивая анимация набора чисел
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('ru-RU');
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // Запускаем загрузку статистики
+    fetchPlayerCount();
+
+    // 2. 3D Parallax эффект для иконки
+    const icon = document.getElementById('icon3D');
+    document.addEventListener('mousemove', (e) => {
+        if(window.innerWidth > 600) {
+            let x = (window.innerWidth / 2 - e.pageX) / 25;
+            let y = (window.innerHeight / 2 - e.pageY) / 25;
+            icon.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        }
+    });
+    document.addEventListener('mouseleave', () => {
+        icon.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+
+    // 3. Подсветка активной кнопки в меню
+    const navLinks = document.querySelectorAll('.bottom-nav .nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+
+</body>
+</html>
+
