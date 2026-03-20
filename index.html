@@ -45,6 +45,97 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 0 25px; }
 
+        /* --- ВЕРХНЕЕ МЕНЮ (ТРИ ТОЧКИ) --- */
+        .top-menu-container {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 50;
+        }
+        .kebab-btn {
+            background: var(--glass);
+            border: var(--glass-border);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .kebab-btn:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 15px var(--accent-glow); }
+        .kebab-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: rgba(15, 15, 20, 0.9);
+            backdrop-filter: blur(20px);
+            border: var(--glass-border);
+            border-radius: 15px;
+            width: 180px;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transform-origin: top right;
+            animation: fadeIn 0.2s ease forwards;
+        }
+        .dropdown-menu.active { display: flex; }
+        .dropdown-item {
+            padding: 10px 15px;
+            color: var(--text-muted);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-item:hover { background: rgba(255, 107, 0, 0.2); color: var(--accent); }
+
+        /* --- МОДАЛЬНОЕ ОКНО --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
+            z-index: 200; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: var(--glass); border: var(--glass-border);
+            border-radius: var(--radius-lg); width: 90%; max-width: 600px;
+            max-height: 80vh; overflow-y: auto; padding: 30px; position: relative;
+            transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+            font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .modal-close:hover { background: var(--accent); }
+        .modal-title { margin-bottom: 25px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+
+        /* Стили для контента из JSON */
+        .media-grid { display: flex; flex-direction: column; gap: 20px; }
+        .media-item { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .media-item h4 { margin-bottom: 10px; font-size: 1rem; color: #fff; }
+        .media-item img { width: 100%; border-radius: 10px; }
+        .media-item audio { width: 100%; height: 40px; outline: none; }
+        audio::-webkit-media-controls-panel { background-color: rgba(255,255,255,0.1); }
+        audio::-webkit-media-controls-current-time-display, audio::-webkit-media-controls-time-remaining-display { color: white; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
         /* --- HERO --- */
         .hero { min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .hero-badge { background: rgba(255,255,255,0.05); border: var(--glass-border); padding: 5px 15px; border-radius: 100px; font-size: 0.85rem; color: var(--accent); margin-bottom: 20px; font-weight: 700; text-transform: uppercase; }
@@ -90,6 +181,7 @@
             .hero h1 { font-size: 3rem; }
             .section-card { padding: 25px; }
             .dev-box { flex-direction: column; text-align: center; }
+            .top-menu-container { top: 15px; right: 15px; }
         }
     </style>
 </head>
@@ -97,6 +189,31 @@
 
 <div class="bg-grid"></div>
 <div class="glow-sphere"></div>
+
+<div class="top-menu-container">
+    <button class="kebab-btn" id="kebabBtn">
+        <svg viewBox="0 0 24 24"><path d="M12 16a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z"/></svg>
+    </button>
+    <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-item" onclick="openMediaModal('images')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            Изображения
+        </div>
+        <div class="dropdown-item" onclick="openMediaModal('music')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            Музыка
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="mediaModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeMediaModal()">✕</button>
+        <h2 class="modal-title" id="modalTitle">Медиа</h2>
+        <div class="media-grid" id="modalContentBody">
+            </div>
+    </div>
+</div>
 
 <div class="container">
     
@@ -137,17 +254,6 @@
         </ul>
     </section>
 
-    <section class="section-card">
-        <h2><span>#</span> Скриншоты</h2>
-        <div class="slider-wrapper">
-            <div class="slider-track" id="gallery">
-                <div class="slide"><img src="assets/screenshot1.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 1'"></div>
-                <div class="slide"><img src="assets/screenshot2.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 2'"></div>
-                <div class="slide"><img src="assets/screenshot3.png" onerror="this.style.display='none'; this.parentNode.innerHTML='Скриншот 3'"></div>
-            </div>
-        </div>
-    </section>
-
     <section class="section-card" id="dev">
         <h2><span>#</span> Разработчик</h2>
         <div class="dev-box">
@@ -156,7 +262,7 @@
             </div>
             <div>
                 <h3 style="color: #fff;">Артем</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Создаю игру в соло(верим) на Solar2D. Моя цель — сделать качественный мобильный 2d бравл старс..</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Создаю игру в соло (верим) на Solar2D. Моя цель — сделать качественный мобильный 2d бравл старс..</p>
             </div>
         </div>
     </section>
@@ -175,7 +281,7 @@
 </nav>
 
 <script>
-    // 1. Получение количества аккаунтов из Firebase
+    // --- 1. Статистика из Firebase ---
     async function fetchPlayerCount() {
         const countElement = document.getElementById('player-count');
         const dbUrl = 'https://teohhb-e4e81-default-rtdb.firebaseio.com/PROFILE.json';
@@ -186,21 +292,18 @@
             
             const data = await response.json();
             
-            // Если база не пустая, считаем количество ключей
             if (data) {
                 const accountsCount = Object.keys(data).length;
-                // Анимируем счетчик от 0 до нужного числа для красоты
                 animateValue(countElement, 0, accountsCount, 1500);
             } else {
                 countElement.textContent = '0';
             }
         } catch (error) {
             console.error('Ошибка загрузки профилей:', error);
-            countElement.textContent = '???'; // Если ошибка, показываем вопросы
+            countElement.textContent = '???';
         }
     }
 
-    // Красивая анимация набора чисел
     function animateValue(obj, start, end, duration) {
         let startTimestamp = null;
         const step = (timestamp) => {
@@ -213,11 +316,9 @@
         };
         window.requestAnimationFrame(step);
     }
-
-    // Запускаем загрузку статистики
     fetchPlayerCount();
 
-    // 2. 3D Parallax эффект для иконки
+    // --- 2. 3D Parallax эффект ---
     const icon = document.getElementById('icon3D');
     document.addEventListener('mousemove', (e) => {
         if(window.innerWidth > 600) {
@@ -230,7 +331,7 @@
         icon.style.transform = `rotateY(0deg) rotateX(0deg)`;
     });
 
-    // 3. Подсветка активной кнопки в меню
+    // --- 3. Навигация ---
     const navLinks = document.querySelectorAll('.bottom-nav .nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
@@ -238,6 +339,97 @@
             this.classList.add('active');
         });
     });
+
+    // --- 4. МЕНЮ "ТРИ ТОЧКИ" И ЗАГРУЗКА CONFIG.JSON ---
+    const kebabBtn = document.getElementById('kebabBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const mediaModal = document.getElementById('mediaModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContentBody = document.getElementById('modalContentBody');
+    let configData = null;
+
+    // Открытие/закрытие меню
+    kebabBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    });
+
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', () => {
+        dropdownMenu.classList.remove('active');
+    });
+
+    // Предзагрузка конфига
+    async function loadConfig() {
+        try {
+            const response = await fetch('config.json');
+            if(response.ok) {
+                configData = await response.json();
+            } else {
+                console.warn('config.json не найден. Создайте его для загрузки медиа.');
+            }
+        } catch (error) {
+            console.error('Ошибка загрузки config.json:', error);
+        }
+    }
+    loadConfig();
+
+    // Открытие модального окна
+    function openMediaModal(type) {
+        if (!configData) {
+            alert('Конфигурационный файл (config.json) еще не загружен или отсутствует.');
+            return;
+        }
+
+        modalContentBody.innerHTML = ''; // Очищаем старый контент
+        
+        if (type === 'images') {
+            modalTitle.innerHTML = '<span>#</span> Изображения';
+            const images = configData.images || [];
+            if(images.length === 0) modalContentBody.innerHTML = '<p style="color:var(--text-muted)">Нет изображений</p>';
+            
+            images.forEach(img => {
+                modalContentBody.innerHTML += `
+                    <div class="media-item">
+                        <h4>${img.title}</h4>
+                        <img src="assets/images/${img.file}" alt="${img.title}" onerror="this.style.display='none'">
+                    </div>
+                `;
+            });
+        } else if (type === 'music') {
+            modalTitle.innerHTML = '<span>#</span> Музыка';
+            const music = configData.music || [];
+            if(music.length === 0) modalContentBody.innerHTML = '<p style="color:var(--text-muted)">Нет музыки</p>';
+            
+            music.forEach(track => {
+                modalContentBody.innerHTML += `
+                    <div class="media-item">
+                        <h4>${track.title}</h4>
+                        <audio controls>
+                            <source src="assets/music/${track.file}" type="audio/mpeg">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                `;
+            });
+        }
+
+        mediaModal.classList.add('active');
+    }
+
+    // Закрытие модального окна
+    function closeMediaModal() {
+        mediaModal.classList.remove('active');
+        // Останавливаем музыку при закрытии окна
+        const audios = modalContentBody.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
+
+    // Закрытие модалки по клику на фон
+    mediaModal.addEventListener('click', (e) => {
+        if(e.target === mediaModal) closeMediaModal();
+    });
+
 </script>
 
 </body>
