@@ -1,153 +1,203 @@
+const $ = id => document.getElementById(id)
+
+const countElement = $('player-count')
+const icon = $('icon3D')
+const kebabBtn = $('kebabBtn')
+const dropdownMenu = $('dropdownMenu')
+const mediaModal = $('mediaModal')
+const modalContentBody = $('modalContentBody')
+const mediaSearch = $('mediaSearch')
+const toast = $('toast')
+
+let configData = null
+let currentMediaType = ''
+let currentMediaItems = []
+let playerCountCache = null
+
 async function fetchPlayerCount() {
-    const countElement = document.getElementById('player-count');
+    if (playerCountCache !== null) return animateValue(countElement, 0, playerCountCache, 1200)
     try {
-        const response = await fetch('https://teohhb-e4e81-default-rtdb.firebaseio.com/PROFILE.json');
-        const data = await response.json();
-        if (data) animateValue(countElement, 0, Object.keys(data).length, 1500);
-        else countElement.textContent = '0';
-    } catch { countElement.textContent = '???'; }
-}
-
-function animateValue(obj, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString('ru-RU');
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
-}
-fetchPlayerCount();
-
-const icon = document.getElementById('icon3D');
-document.addEventListener('mousemove', (e) => {
-    if(window.innerWidth > 600) {
-        let x = (window.innerWidth / 2 - e.pageX) / 25;
-        let y = (window.innerHeight / 2 - e.pageY) / 25;
-        icon.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        const r = await fetch('https://teohhb-e4e81-default-rtdb.firebaseio.com/PROFILE.json', { cache: 'no-store' })
+        const d = await r.json()
+        const count = d ? Object.keys(d).length : 0
+        playerCountCache = count
+        animateValue(countElement, 0, count, 1200)
+    } catch {
+        countElement.textContent = '???'
     }
-});
-document.addEventListener('mouseleave', () => icon.style.transform = `rotateY(0deg) rotateX(0deg)`);
+}
+
+function animateValue(el, start, end, duration) {
+    let startTime
+    const step = t => {
+        if (!startTime) startTime = t
+        const p = Math.min((t - startTime) / duration, 1)
+        el.textContent = Math.floor(p * (end - start) + start).toLocaleString('ru-RU')
+        if (p < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+}
+
+fetchPlayerCount()
+
+let raf = null
+document.addEventListener('mousemove', e => {
+    if (window.innerWidth <= 600) return
+    if (raf) cancelAnimationFrame(raf)
+    raf = requestAnimationFrame(() => {
+        const x = (window.innerWidth / 2 - e.pageX) / 25
+        const y = (window.innerHeight / 2 - e.pageY) / 25
+        icon.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`
+    })
+})
+
+document.addEventListener('mouseleave', () => {
+    icon.style.transform = `rotateY(0deg) rotateX(0deg)`
+})
 
 document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('.bottom-nav .nav-link').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
+    link.addEventListener('click', () => {
+        document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
+        link.classList.add('active')
+    })
+})
 
-const kebabBtn = document.getElementById('kebabBtn');
-const dropdownMenu = document.getElementById('dropdownMenu');
-const mediaModal = document.getElementById('mediaModal');
-const modalContentBody = document.getElementById('modalContentBody');
-const mediaSearch = document.getElementById('mediaSearch');
-const toast = document.getElementById('toast');
+kebabBtn.onclick = e => {
+    e.stopPropagation()
+    dropdownMenu.classList.toggle('active')
+    kebabBtn.classList.toggle('active')
+}
 
-let configData = null;
-let currentMediaType = '';
-let currentMediaItems = [];
-
-kebabBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdownMenu.classList.toggle('active');
-    kebabBtn.classList.toggle('active');
-});
-
-document.addEventListener('click', () => {
-    dropdownMenu.classList.remove('active');
-    kebabBtn.classList.remove('active');
-});
+document.onclick = () => {
+    dropdownMenu.classList.remove('active')
+    kebabBtn.classList.remove('active')
+}
 
 async function loadConfig() {
     try {
-        const response = await fetch('config.json');
-        if(response.ok) configData = await response.json();
-    } catch (e) {}
+        const r = await fetch('config.json', { cache: 'force-cache' })
+        if (r.ok) configData = await r.json()
+    } catch {}
 }
-loadConfig();
+loadConfig()
 
 function copyLink(path) {
-    const fullUrl = new URL(path, window.location.href).href;
-    navigator.clipboard.writeText(fullUrl).then(() => {
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
-    }).catch(() => alert('Не удалось скопировать ссылку'));
+    const url = new URL(path, location.href).href
+    navigator.clipboard.writeText(url).then(() => {
+        toast.classList.add('show')
+        setTimeout(() => toast.classList.remove('show'), 2000)
+    })
 }
 
-const copyIconSvg = `<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
-const downloadIconSvg = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>`;
+const copyIconSvg = `<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`
+const downloadIconSvg = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>`
 
-// Функция для отрисовки элементов с поддержкой описания
 function renderMediaItems(items) {
-    modalContentBody.innerHTML = '';
-    
-    if (items.length === 0) {
-        modalContentBody.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 30px 0;">Ничего не найдено 😢</p>';
-        return;
+    if (!items.length) {
+        modalContentBody.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:30px 0;">Ничего не найдено 😢</p>'
+        return
     }
 
-    items.forEach(item => {
-        const filePath = currentMediaType === 'images' ? `assets/images/${item.file}` : `assets/music/${item.file}`;
-        
-        // Получаем расширение файла или берем описание из конфига, если есть
-        const fileExt = item.file.split('.').pop().toUpperCase();
-        const infoText = item.description || `Файл формата ${fileExt}`;
-        
-        const mediaTag = currentMediaType === 'images' 
-            ? `<img src="${filePath}" alt="${item.title}" onerror="this.style.display='none'">`
-            : `<audio controls><source src="${filePath}" type="audio/mpeg"></audio>`;
-        
-        modalContentBody.innerHTML += `
-            <div class="media-item">
-                <div class="media-header">
-                    <div class="media-text">
-                        <h4>${item.title}</h4>
-                        <div class="media-info">${infoText}</div>
-                    </div>
-                    <div class="media-actions">
-                        <a href="${filePath}" download="${item.file}" class="action-btn" title="Скачать файл">${downloadIconSvg}</a>
-                        <button class="action-btn" onclick="copyLink('${filePath}')" title="Скопировать ссылку">${copyIconSvg}</button>
-                    </div>
+    modalContentBody.innerHTML = items.map(item => {
+        const path = currentMediaType === 'images'
+            ? `assets/images/${item.file}`
+            : `assets/music/${item.file}`
+
+        const ext = item.file.split('.').pop().toUpperCase()
+        const info = item.description || `Файл ${ext}`
+
+        const media = currentMediaType === 'images'
+            ? `<img loading="lazy" src="${path}" alt="${item.title}">`
+            : `<audio preload="none" controls><source src="${path}" type="audio/mpeg"></audio>`
+
+        return `
+        <div class="media-item">
+            <div class="media-header">
+                <div class="media-text">
+                    <h4>${item.title}</h4>
+                    <div class="media-info">${info}</div>
                 </div>
-                ${mediaTag}
+                <div class="media-actions">
+                    <a href="${path}" download class="action-btn">${downloadIconSvg}</a>
+                    <button class="action-btn" data-copy="${path}">${copyIconSvg}</button>
+                </div>
             </div>
-        `;
-    });
+            ${media}
+        </div>`
+    }).join('')
 }
 
-function openMediaModal(type) {
-    if (!configData) return;
-    
-    currentMediaType = type;
-    currentMediaItems = configData[type] || [];
-    
-    document.getElementById('modalTitle').innerHTML = `<span>#</span> ${type === 'images' ? 'Изображения' : 'Музыка'}`;
-    mediaSearch.value = ''; // Очищаем поиск при открытии
-    
-    renderMediaItems(currentMediaItems);
-    mediaModal.classList.add('active');
-}
+modalContentBody.addEventListener('click', e => {
+    const btn = e.target.closest('[data-copy]')
+    if (btn) copyLink(btn.dataset.copy)
+})
 
-// Поиск на лету
-mediaSearch.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    
-    const filteredItems = currentMediaItems.filter(item => {
-        const titleMatch = item.title.toLowerCase().includes(query);
-        const fileMatch = item.file.toLowerCase().includes(query);
-        const descMatch = item.description && item.description.toLowerCase().includes(query);
-        
-        return titleMatch || fileMatch || descMatch;
-    });
-    
-    renderMediaItems(filteredItems);
-});
+mediaSearch.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase().trim()
+    const filtered = currentMediaItems.filter(i =>
+        i.title.toLowerCase().includes(q) ||
+        i.file.toLowerCase().includes(q) ||
+        (i.description || '').toLowerCase().includes(q)
+    )
+    renderMediaItems(filtered)
+})
 
 function closeMediaModal() {
-    mediaModal.classList.remove('active');
-    modalContentBody.querySelectorAll('audio').forEach(audio => audio.pause());
+    mediaModal.classList.remove('active')
+    modalContentBody.querySelectorAll('audio').forEach(a => a.pause())
 }
 
-mediaModal.addEventListener('click', (e) => { if(e.target === mediaModal) closeMediaModal(); });
-    
+mediaModal.onclick = e => { if (e.target === mediaModal) closeMediaModal() }
+
+async function openMediaModal(type) {
+    currentMediaType = type
+    $('modalTitle').innerHTML = `<span>#</span> ${
+        type === 'images' ? 'Изображения' :
+        type === 'music' ? 'Музыка' : 'Скриншоты'
+    }`
+
+    mediaSearch.value = ''
+    modalContentBody.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Загрузка...</p>'
+
+    if (type === 'screenshots') {
+        mediaSearch.style.display = 'none'
+        await loadScreenshots()
+    } else {
+        mediaSearch.style.display = 'block'
+        currentMediaItems = configData?.[type] || []
+        renderMediaItems(currentMediaItems)
+    }
+
+    mediaModal.classList.add('active')
+}
+
+async function loadScreenshots() {
+    let html = '<div class="screenshot-slider">'
+    let found = false
+
+    await Promise.all(
+        Array.from({ length: 20 }, async (_, i) => {
+            const id = i + 1
+            const path = `assets/screenshot${id}.png`
+            try {
+                const r = await fetch(path, { method: 'HEAD' })
+                if (!r.ok) return
+                found = true
+                html += `
+                <div class="screenshot-item">
+                    <img loading="lazy" src="${path}">
+                    <div class="screenshot-footer">
+                        <span class="media-info">Скриншот #${id}</span>
+                        <div class="media-actions">
+                            <a href="${path}" download class="action-btn">${downloadIconSvg}</a>
+                            <button class="action-btn" data-copy="${path}">${copyIconSvg}</button>
+                        </div>
+                    </div>
+                </div>`
+            } catch {}
+        })
+    )
+
+    html += '</div>'
+    modalContentBody.innerHTML = found ? html : '<p style="text-align:center;color:var(--text-muted);padding:20px;">Скриншоты не найдены</p>'
+}
