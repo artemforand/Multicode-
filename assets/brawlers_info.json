@@ -1,0 +1,13 @@
+{
+  "shelly":{ "width":174, "height":357, "x":20,"y":10,"icon":"shelly", "rare":"shelly","music":["shelly_lead_01.mp3","shelly_lead_02.mp3","shelly_lead_04.mp3"]},
+"nita":{"width":238,"icon":"nita","height":325,"x":20, "y":22, "rare":"rare"},
+"dyno":{"width":281,"icon":"dyno", "height":325, "x":30,  "y":25, "rare":"super_rare"
+},
+"buzz":{"width":269,"icon":"buzz","height":246,"x":20,"y":60,  "rare":"mythical"},
+"spike":{ "width":295,"icon":"spike", "height":325, "x":30, "y":25, "rare":"legendary"},
+"bubble":{ "width":260,"icon":"bubble", "height":260, "x":28,  "y":100,  "rare":"mythical","bg":"Untitled8_20260205095126.png"},
+"meduza":{ "width":260,"icon":"meduza", "height":260, "x":28,  "y":100,  "rare":"mythical","bg":"Untitled8_20260205095126.png"},
+"colt":{ "width":217,"icon":"colt", "height":327, "x":20, "y":20, "rare":"rare"},
+"bear":{ "width":367,"icon":"bear", "height":297, "x":25, "y":37, "rare":"epic","skins":["bear_1"]}
+}
+}
