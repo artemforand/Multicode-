@@ -85,9 +85,15 @@ M.create = function()
                 item.rect.strokeWidth = 4
 
                 item.icon = display.newRoundedRect(item.group, -360, 0, 85, 85, 15)
-
+                
+                item.rank = display.newImage(item.group,FUN.rankpath(FUN.getRank(1)),360,0)
+                item.rank.xScale,item.rank.yScale = 0.5,0.5
                 item.rankText = display.newText{
                     parent = item.group, text = "", x = -440, y = 0,
+                    font = "assets/Pusia", fontSize = sr(42)
+                }
+                item.ranText = display.newText{
+                    parent = item.group, text = "", x = 360, y = 0,
                     font = "assets/Pusia", fontSize = sr(42)
                 }
 
@@ -126,7 +132,12 @@ M.create = function()
             item.rankText.text = tostring(i)
             item.nameText.text = info.name or "Игрок"
             item.cubicText.text = tostring(info.cubic or 0)
+            item.ranText.text = math.floor(info.cubic/1000)
             item.icon.fill = { filename = imageP('icons/'..(info.icon or 'default')), type="image" }
+            item.rank.fill = { filename = FUN.rankpath(FUN.getRank(info.cubic)), type = "image" }
+            if info.cubic > 1999 then
+            item.rank.xScale,item.rank.yScale = 0.6,0.5
+            end
 
             item.cubicIcon.x = item.cubicText.x - item.cubicText.width - sr(35)
             item.cubicIcon.y = item.cubicText.y
@@ -199,7 +210,12 @@ M.create = function()
                 font = "assets/Pusia", fontSize = sr(50)
             }
             M.userPanelRank:setFillColor(0.3, 0.8, 1)
-
+                M.userrank = display.newImage(M.userPanelGroup,FUN.rankpath(FUN.getRank(userData.cubic)),360,0)
+                M.userrank.xScale,M.userrank.yScale = 0.5,0.5
+M.userranText = display.newText{
+                    parent = M.userPanelGroup, text = math.floor(userData.cubic/1000), x = 360, y = 0,
+                    font = "assets/Pusia", fontSize = sr(42)
+                }
             M.userPanelIcon = display.newRoundedRect(M.userPanelGroup, -350, 0, 95, 95, 20)
             M.userPanelIcon.fill = { filename = imageP('icons/'..(userData.icon or 'default')), type="image" }
 
