@@ -92,6 +92,7 @@ M.create = function()
                     parent = item.group, text = "", x = -440, y = 0,
                     font = "assets/Pusia", fontSize = sr(42)
                 }
+                    print(item.rank)
                 item.ranText = display.newText{
                     parent = item.group, text = "", x = 360, y = 0,
                     font = "assets/Pusia", fontSize = sr(42)
