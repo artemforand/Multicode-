@@ -1,0 +1,10 @@
+local items = {
+    {
+        iconAct = "banner_1.png",
+        item = {"mega", "box"},
+        prize = {10, "gems"},
+        count = 1,
+        nameAct = "Ничего"
+    }
+}
+return items
