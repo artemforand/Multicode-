@@ -55,11 +55,49 @@ document.addEventListener('mouseleave', () => {
     icon.style.transform = `rotateY(0deg) rotateX(0deg)`
 })
 
+// ОБНОВЛЕНО: Обработка кликов в bottom-nav с поддержкой плавного скролла для якорей
 document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', e => {
+        const href = link.getAttribute('href')
+        
+        // Если это ссылка на внутренний блок (например, #news)
+        if (href && href.startsWith('#')) {
+            e.preventDefault()
+            const target = $(href.substring(1))
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' })
+            }
+        }
+
         document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
         link.classList.add('active')
     })
+})
+
+// НОВОЕ: Автоматическое переключение активного пункта меню при скролле (Scroll Spy)
+window.addEventListener('scroll', () => {
+    const newsSection = $('news')
+    const newsLink = $('news-nav-link')
+    // Находим кнопку APK по её ссылке на скачивание
+    const apkLink = document.querySelector('.bottom-nav .nav-link[href*="game.apk"]')
+    
+    if (!newsSection || !newsLink || !apkLink) return
+
+    const rect = newsSection.getBoundingClientRect()
+    
+    // Если секция новостей пересекает середину экрана
+    if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        if (!newsLink.classList.contains('active')) {
+            document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
+            newsLink.classList.add('active')
+        }
+    } else if (window.scrollY < (newsSection.offsetTop - 300)) {
+        // Если вернулись к началу страницы
+        if (!apkLink.classList.contains('active')) {
+            document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
+            apkLink.classList.add('active')
+        }
+    }
 })
 
 kebabBtn.onclick = e => {
