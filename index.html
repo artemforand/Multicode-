@@ -141,9 +141,9 @@
         }
 
         /* ==========================================================================
-           РЕЖИМ BRAWL STARS (ТОЛЬКО НОВОСТИ СЛЕВА НАПРАВО)
+           КРИТИЧЕСКИЙ ОБНОВЛЕННЫЙ РЕЖИМ BRAWL STARS (ТОЛЬКО ЛЕНТА НОВОСТЕЙ)
            ========================================================================== */
-        body.news-only-mode { padding-bottom: 0; }
+        body.news-only-mode { padding-bottom: 0 !important; overflow-y: hidden !important; height: 100vh; }
         body.news-only-mode .hero,
         body.news-only-mode .stats-grid,
         body.news-only-mode .section-card:not(#news),
@@ -151,18 +151,18 @@
         body.news-only-mode .top-menu-container {
             display: none !important;
         }
-        body.news-only-mode .container { max-width: 100%; padding: 20px; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        body.news-only-mode #news { width: 100%; background: transparent; border: none; padding: 0; margin: 0; }
-        body.news-only-mode #news h2 { padding-left: 10px; margin-bottom: 25px; font-size: 2.2rem; text-transform: uppercase; }
-        body.news-only-mode .news-scroll-container { overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 15px; -webkit-overflow-scrolling: touch; }
-        body.news-only-mode .news-list { display: flex; flex-direction: row; gap: 20px; }
-        body.news-only-mode .news-item { flex: 0 0 85%; scroll-snap-align: center; background: #111116; border: 2px solid rgba(255, 107, 0, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); min-height: 50vh; display: flex; flex-direction: column; justify-content: space-between; }
+        body.news-only-mode .container { max-width: 100% !important; width: 100vw; padding: 30px; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body.news-only-mode #news { width: 100%; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; }
+        body.news-only-mode #news h2 { padding-left: 10px; margin-bottom: 25px; font-size: clamp(1.8rem, 5vw, 2.5rem); text-transform: uppercase; font-weight: 900; }
+        body.news-only-mode .news-scroll-container { overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch; display: block; width: 100%; }
+        body.news-only-mode .news-list { display: flex !important; flex-direction: row !important; gap: 25px; width: max-content; margin-top: 0; }
+        body.news-only-mode .news-item { flex: 0 0 320px; width: 320px; scroll-snap-align: start; background: #0b0b0f; border: 2px solid rgba(255, 107, 0, 0.2); box-shadow: 0 15px 40px rgba(0,0,0,0.6); min-height: 55vh; display: flex; flex-direction: column; justify-content: flex-start; }
         body.news-only-mode .news-item:hover { border-color: var(--accent); box-shadow: var(--shadow-neon); }
         body.news-only-mode .news-scroll-container::-webkit-scrollbar { height: 8px; }
         body.news-only-mode .news-scroll-container::-webkit-scrollbar-thumb { background: var(--grad-primary); border-radius: 10px; }
 
         @media (min-width: 768px) {
-            body.news-only-mode .news-item { flex: 0 0 45%; }
+            body.news-only-mode .news-item { flex: 0 0 420px; width: 420px; }
         }
 
         @media (max-width: 600px) {
@@ -181,9 +181,7 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
     </style>
 </head>
-<body>
-
-<div class="bg-grid"></div>
+<body class=""> <div class="bg-grid"></div>
 <div class="glow-sphere"></div>
 
 <div class="modal-overlay" id="mediaModal">
@@ -271,7 +269,7 @@
         <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm4.1 7.2l-1.5 6.6c-.1.5-.4.6-.8.4l-2.5-1.8-1.2 1.2c-.1.1-.3.2-.4.2h-.1l.1-1.8 3.5-3.2c.1-.1.1-.3 0-.4s-.3-.1-.4 0L8.6 13.5 6 12.6c-.5-.1-.5-.5.1-.7l9-3.5c.4-.2.8-.1 1 0 .2.2.3.4.2.8z"/></svg>
         <span>TG</span>
     </a>
-    <a href="#news" class="nav-link" id="news-nav-link">
+    <a href="#news-only" class="nav-link" id="news-nav-link">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20,11H4V9H20M20,15H4V13H20M20,19H4V17H20M4,5V7H20V5M2,3H22V21H2V3Z"/></svg>
         <span>Новости</span>
     </a>
@@ -331,7 +329,7 @@
         raf = requestAnimationFrame(() => {
             const x = (window.innerWidth / 2 - e.pageX) / 25
             const y = (window.innerHeight / 2 - e.pageY) / 25
-            icon.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`
+            if(icon) icon.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`
         })
     })
 
@@ -339,23 +337,28 @@
         if(icon) icon.style.transform = `rotateY(0deg) rotateX(0deg)`
     })
 
-    // Клики по меню с поддержкой плавного скролла
+    // Клики по меню с поддержкой переключения режимов отображения
     document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
         link.addEventListener('click', e => {
             const href = link.getAttribute('href')
-            if (href && href.startsWith('#')) {
+            
+            // Если кликнули на новости — включаем горизонтальный режим Brawl Stars
+            if (href === '#news-only') {
+                e.preventDefault()
+                window.history.pushState(null, '', '?view=news')
+                checkViewMode()
+            } else if (href && href.startsWith('#')) {
                 e.preventDefault()
                 const target = $(href.substring(1))
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' })
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth' })
             }
+            
             document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
             link.classList.add('active')
         })
     })
 
-    // Умный трекер положения экрана (Scroll Spy)
+    // Умный трекер положения экрана (Scroll Spy) для обычного режима
     window.addEventListener('scroll', () => {
         if (document.body.classList.contains('news-only-mode')) return
         const newsSection = $('news')
@@ -515,7 +518,11 @@
             document.body.classList.remove('news-only-mode');
         }
     }
+    
+    // Проверяем режим при загрузке страницы и при переходе "назад" в браузере
     checkViewMode();
+    window.addEventListener('popstate', checkViewMode);
 </script>
 </body>
 </html>
+
