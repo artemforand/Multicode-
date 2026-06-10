@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Andbrawl — Official Universe</title>
     <link rel="icon" type="image/png" href="icon.png">
     <style>
@@ -22,7 +22,7 @@
             --radius-md: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.6; overflow-x: hidden; padding-bottom: 100px; }
 
         .bg-grid { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 40px 40px; z-index: -2; pointer-events: none; mask-image: radial-gradient(circle at center, black, transparent 80%); -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%); }
@@ -35,15 +35,7 @@
         .kebab-btn svg { width: 24px; height: 24px; fill: currentColor; transition: 0.3s; }
         .kebab-btn.active svg { transform: rotate(90deg); color: var(--accent); }
 
-        /* Стили для слайдера скриншотов */
-        .screenshot-slider {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding-bottom: 10px;
-            scrollbar-width: thin;
-        }
+        .screenshot-slider { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: thin; }
         .screenshot-slider::-webkit-scrollbar { height: 6px; }
         .screenshot-item { flex: 0 0 85%; scroll-snap-align: center; background: rgba(0,0,0,0.4); border-radius: 15px; border: var(--glass-border); overflow: hidden; display: flex; flex-direction: column; }
         .screenshot-item img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-bottom: var(--glass-border); }
@@ -122,9 +114,6 @@
         .nav-link svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 3px; }
         .nav-link:hover, .nav-link.active { color: var(--accent); }
 
-        /* ==========================================================================
-           СТИЛИ ДЛЯ БЛОКА НОВОСТЕЙ
-           ========================================================================== */
         .news-list { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
         .news-item { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: var(--radius-md); padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; }
         .news-item:hover { border-color: rgba(255, 107, 0, 0.2); background: rgba(255, 107, 0, 0.02); transform: translateY(-2px); }
@@ -140,10 +129,7 @@
             100% { border-color: rgba(255, 255, 255, 0.08); box-shadow: none; }
         }
 
-        /* ==========================================================================
-           КРИТИЧЕСКИЙ ОБНОВЛЕННЫЙ РЕЖИМ BRAWL STARS (ТОЛЬКО ЛЕНТА НОВОСТЕЙ)
-           ========================================================================== */
-        body.news-only-mode { padding-bottom: 0 !important; overflow-y: hidden !important; height: 100vh; }
+        body.news-only-mode { padding-bottom: 0 !important; overflow: hidden !important; height: 100vh; width: 100vw; position: fixed; }
         body.news-only-mode .hero,
         body.news-only-mode .stats-grid,
         body.news-only-mode .section-card:not(#news),
@@ -151,19 +137,18 @@
         body.news-only-mode .top-menu-container {
             display: none !important;
         }
-        body.news-only-mode .container { max-width: 100% !important; width: 100vw; padding: 30px; height: 100vh; display: flex; align-items: center; justify-content: center; }
-        body.news-only-mode #news { width: 100%; background: transparent !important; border: none !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; }
-        body.news-only-mode #news h2 { padding-left: 10px; margin-bottom: 25px; font-size: clamp(1.8rem, 5vw, 2.5rem); text-transform: uppercase; font-weight: 900; }
-        body.news-only-mode .news-scroll-container { overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory; padding-bottom: 20px; -webkit-overflow-scrolling: touch; display: block; width: 100%; }
-        body.news-only-mode .news-list { display: flex !important; flex-direction: row !important; gap: 25px; width: max-content; margin-top: 0; }
-        body.news-only-mode .news-item { flex: 0 0 320px; width: 320px; scroll-snap-align: start; background: #0b0b0f; border: 2px solid rgba(255, 107, 0, 0.2); box-shadow: 0 15px 40px rgba(0,0,0,0.6); min-height: 55vh; display: flex; flex-direction: column; justify-content: flex-start; }
-        body.news-only-mode .news-item:hover { border-color: var(--accent); box-shadow: var(--shadow-neon); }
+        body.news-only-mode .container { max-width: 100% !important; width: 100vw; height: 100vh; padding: 0; display: flex; flex-direction: column; justify-content: center; align-items: stretch; }
+        body.news-only-mode #news { width: 100%; height: 100%; background: transparent !important; border: none !important; padding: 40px 20px 20px 20px !important; margin: 0 !important; box-shadow: none !important; display: flex; flex-direction: column; justify-content: center; }
+        body.news-only-mode #news h2 { padding-left: clamp(10px, 4vw, 30px); margin-bottom: 20px; font-size: clamp(1.8rem, 5vw, 2.8rem); text-transform: uppercase; font-weight: 900; flex-shrink: 0; letter-spacing: 1px; }
+        body.news-only-mode .news-scroll-container { overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory; padding: 10px clamp(10px, 4vw, 30px) 30px clamp(10px, 4vw, 30px); -webkit-overflow-scrolling: touch; width: 100%; flex-grow: 1; display: flex; align-items: center; }
+        body.news-only-mode .news-list { display: flex !important; flex-direction: row !important; gap: 20px; width: max-content; margin-top: 0; height: 100%; max-height: 480px; align-items: center; }
+        body.news-only-mode .news-item { flex: 0 0 clamp(290px, 75vw, 420px); width: clamp(290px, 75vw, 420px); height: 100%; max-height: 420px; scroll-snap-align: start; background: #0c0c12; border: 3px solid #222230; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); padding: clamp(20px, 5vw, 30px); display: flex; flex-direction: column; justify-content: flex-start; transition: transform 0.2s, border-color 0.2s; }
+        body.news-only-mode .news-item:hover { border-color: var(--accent); box-shadow: var(--shadow-neon); transform: translateY(-4px); }
+        body.news-only-mode .news-title { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 900; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        body.news-only-mode .news-text { font-size: clamp(0.85rem, 3vw, 1rem); color: #a0a0b5; overflow-y: auto; flex-grow: 1; padding-right: 5px; }
         body.news-only-mode .news-scroll-container::-webkit-scrollbar { height: 8px; }
-        body.news-only-mode .news-scroll-container::-webkit-scrollbar-thumb { background: var(--grad-primary); border-radius: 10px; }
-
-        @media (min-width: 768px) {
-            body.news-only-mode .news-item { flex: 0 0 420px; width: 420px; }
-        }
+        body.news-only-mode .news-scroll-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; margin: 0 30px; }
+        body.news-only-mode .news-scroll-container::-webkit-scrollbar-thumb { background: var(--grad-primary); border-radius: 10px; box-shadow: 0 0 10px var(--accent-glow); }
 
         @media (max-width: 600px) {
             .hero h1 { font-size: 3rem; }
@@ -181,7 +166,9 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
     </style>
 </head>
-<body class=""> <div class="bg-grid"></div>
+<body>
+
+<div class="bg-grid"></div>
 <div class="glow-sphere"></div>
 
 <div class="modal-overlay" id="mediaModal">
@@ -337,12 +324,9 @@
         if(icon) icon.style.transform = `rotateY(0deg) rotateX(0deg)`
     })
 
-    // Клики по меню с поддержкой переключения режимов отображения
     document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
         link.addEventListener('click', e => {
             const href = link.getAttribute('href')
-            
-            // Если кликнули на новости — включаем горизонтальный режим Brawl Stars
             if (href === '#news-only') {
                 e.preventDefault()
                 window.history.pushState(null, '', '?view=news')
@@ -352,13 +336,11 @@
                 const target = $(href.substring(1))
                 if (target) target.scrollIntoView({ behavior: 'smooth' })
             }
-            
             document.querySelector('.bottom-nav .nav-link.active')?.classList.remove('active')
             link.classList.add('active')
         })
     })
 
-    // Умный трекер положения экрана (Scroll Spy) для обычного режима
     window.addEventListener('scroll', () => {
         if (document.body.classList.contains('news-only-mode')) return
         const newsSection = $('news')
@@ -509,7 +491,6 @@
         modalContentBody.innerHTML = found ? html : '<p style="text-align:center;color:var(--text-muted);padding:20px;">Скриншоты не найдены</p>'
     }
 
-    // Проверка параметров URL на наличие ?view=news
     function checkViewMode() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('view') === 'news') {
@@ -519,7 +500,6 @@
         }
     }
     
-    // Проверяем режим при загрузке страницы и при переходе "назад" в браузере
     checkViewMode();
     window.addEventListener('popstate', checkViewMode);
 </script>
