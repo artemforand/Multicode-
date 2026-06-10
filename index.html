@@ -428,7 +428,7 @@
             <p class="full-text">${text}</p>
         `;
         newsModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.body.style.setProperty('overflow', 'hidden', 'important');
     }
 
     function closeNewsModal() {
@@ -538,10 +538,15 @@
 
     function checkViewMode() {
         const urlParams = new URLSearchParams(window.location.search);
+        const newsLink = $('news-nav-link');
+        
         if (urlParams.get('view') === 'news') {
             document.body.classList.add('news-only-mode');
+            document.querySelectorAll('.bottom-nav .nav-link').forEach(l => l.classList.remove('active'));
+            if (newsLink) newsLink.classList.add('active');
         } else {
             document.body.classList.remove('news-only-mode');
+            closeNewsModal();
         }
     }
     
