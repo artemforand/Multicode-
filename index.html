@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Andbrawl — AndKit</title>
+    <meta name="description" content="Официальный портал Andbrawl и библиотека ресурсов AndKit">
+    <meta property="og:title" content="Andbrawl — AndKit">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0d0e15">
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0d0e15;
+            --bg-card: #161822;
+            --bg-card-hover: #1e212f;
+            --border-color: #26293b;
+            --text-primary: #ffffff;
+            --text-secondary: #8b92b0;
+            --btn-download-bg: linear-gradient(180deg, #00d2ff 0%, #0088ff 100%);
+            --btn-download-shadow: 0 6px 0 #0055b3;
+            --accent-yellow: #fcc200;
+            --accent-red: #ff3355;
+            --accent-green: #2ecc71;
+            --header-bg: rgba(13, 14, 21, 0.9);
+            --modal-bg: rgba(5, 6, 10, 0.95);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-main: #edf0f7;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f5f7fc;
+            --border-color: #d1d8e8;
+            --text-primary: #111319;
+            --text-secondary: #656d8a;
+            --btn-download-bg: linear-gradient(180deg, #0088ff 0%, #0055b3 100%);
+            --btn-download-shadow: 0 6px 0 #003366;
+            --accent-yellow: #d99b00;
+            --accent-red: #e61e43;
+            --header-bg: rgba(237, 240, 247, 0.9);
+            --modal-bg: rgba(237, 240, 247, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color var(--transition), color var(--transition);
+            overflow-x: hidden;
+            padding-bottom: 40px;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 640px;
+            padding: 0 16px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            width: 100%;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 640px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-family: 'Lilita One', cursive;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 8px;
+            position: relative;
+        }
+
+        .control-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: background var(--transition), border-color var(--transition), transform 0.1s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.92);
+        }
+
+        .control-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 52px;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px;
+            width: 240px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 100;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all var(--transition);
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .menu-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .menu-item img, .menu-item span.icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 24px 0 16px;
+        }
+
+        .app-icon {
+            width: 104px;
+            height: 104px;
+            border-radius: 26px;
+            margin-bottom: 14px;
+            object-fit: cover;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .title {
+            font-family: 'Lilita One', cursive;
+            font-size: clamp(2rem, 8vw, 2.8rem);
+            letter-spacing: 1.5px;
+            line-height: 1;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            text-shadow: 0 4px 0 rgba(0,0,0,0.15);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: clamp(0.75rem, 3vw, 0.9rem);
+            font-weight: 700;
+            margin-top: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 16px;
+            background: var(--btn-download-bg);
+            box-shadow: var(--btn-download-shadow);
+            color: #ffffff;
+            font-family: 'Lilita One', cursive;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .download-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #003366;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-family: 'Lilita One', cursive;
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+        }
+
+        .stat-lbl {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .search-box {
+            margin-top: 16px;
+            width: 100%;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: #0088ff;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .section-header {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 22px 0 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .quick-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 800;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .quick-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .screenshots-slider {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screenshots-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .screenshot-img {
+            width: min(160px, 45vw);
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            flex-shrink: 0;
+            cursor: pointer;
+            scroll-snap-align: start;
+            transition: transform 0.15s ease, border-color var(--transition);
+            background: var(--bg-card);
+        }
+
+        .screenshot-img:active {
+            transform: scale(0.96);
+        }
+
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .creator-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .creator-card:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .creator-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-yellow);
+            flex-shrink: 0;
+        }
+
+        .creator-info {
+            overflow: hidden;
+        }
+
+        .creator-name {
+            font-size: 0.85rem;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .creator-tag {
+            font-size: 0.75rem;
+            color: var(--accent-yellow);
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .hub-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .card-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 10px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .empty-state {
+            width: 100%;
+            text-align: center;
+            padding: 18px;
+            background: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .andkit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            transition: background var(--transition), transform 0.1s;
+        }
+
+        .resource-card:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .resource-preview {
+            width: 100%;
+            height: 110px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .resource-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .folder-badge {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 0.65rem;
+            color: var(--accent-yellow);
+            font-weight: 800;
+        }
+
+        .resource-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .resource-meta {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        .resource-actions {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .res-btn {
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 10px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: background var(--transition);
+        }
+
+        .res-btn:hover {
+            border-color: #0088ff;
+        }
+
+        .audio-player-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .audio-play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--btn-download-bg);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .audio-play-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-top: 10px;
+        }
+
+        .filter-tags::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tag-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+
+        .tag-btn.active {
+            background: var(--accent-yellow);
+            color: #000000;
+            border-color: var(--accent-yellow);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: var(--modal-bg);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 16px;
+            object-fit: contain;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition);
+            z-index: 80;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 360px) {
+            .wrapper { padding: 0 10px; }
+            .screenshots-slider { margin: 0 -10px; padding: 0 10px 8px; }
+            .quick-grid { grid-template-columns: 1fr; }
+            .andkit-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <div class="brand-logo" id="brand-logo" onclick="switchPage('main')">Andbrawl</div>
+            <div class="top-controls">
+                <button class="control-btn" onclick="sharePortal()" aria-label="Поделиться">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" onclick="toggleTheme()" aria-label="Тема">
+                    <svg id="theme-icon" viewBox="0 0 24 24">
+                        <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" onclick="toggleMenu()" aria-label="Меню">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </button>
+                <div class="dropdown-menu" id="dropdown"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <div id="page-main" class="page active">
+            <section class="hero">
+                <img id="app-icon" class="app-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="App Icon">
+                <h1 id="app-title" class="title">Andbrawl</h1>
+                <p id="app-subtitle" class="subtitle"></p>
+                <a id="download-btn" class="download-btn" href="#">Скачать</a>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val">v1.0</div>
+                        <div class="stat-lbl">Версия</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">Online</div>
+                        <div class="stat-lbl">Сервер</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">Free</div>
+                        <div class="stat-lbl">Доступ</div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="search-input" class="search-input" placeholder="Поиск по разделам..." oninput="filterHub()">
+            </div>
+
+            <div class="section-header">Быстрые ссылки</div>
+            <div class="quick-grid" id="quick-links-container"></div>
+
+            <div class="section-header">Скриншоты</div>
+            <div class="screenshots-slider" id="screenshots-container"></div>
+
+            <div class="section-header" id="creators-section">Креаторы</div>
+            <div class="creators-grid" id="creators-container"></div>
+
+            <div class="section-header">Разделы портала</div>
+            <div class="hub-list" id="hub-container"></div>
+        </div>
+
+        <div id="page-andkit" class="page">
+            <section class="hero" style="padding: 16px 0 10px;">
+                <h1 class="title">AndKit</h1>
+                <p class="subtitle">Игровые ресурсы & Файлы</p>
+            </section>
+
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" id="andkit-search" class="search-input" placeholder="Поиск ресурсов..." oninput="filterAndKit()">
+            </div>
+
+            <div class="filter-tags">
+                <button class="tag-btn active" onclick="setAndKitFilter('all', this)">Все</button>
+                <button class="tag-btn" onclick="setAndKitFilter('image', this)">Картинки</button>
+                <button class="tag-btn" onclick="setAndKitFilter('audio', this)">Звуки</button>
+            </div>
+
+            <div class="section-header">
+                <span>Ресурсы</span>
+                <span id="res-count-badge" style="font-size: 0.75rem; color: var(--accent-yellow);">0 файлов</span>
+            </div>
+
+            <div class="andkit-grid" id="andkit-container"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal" onclick="closeModal()">
+        <button class="modal-close" aria-label="Закрыть" onclick="closeModal()">&times;</button>
+        <img class="modal-img" id="modal-img" src="" alt="Preview">
+    </div>
+
+    <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" aria-label="Наверх">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+        </svg>
+    </button>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const moonPath = "M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3z";
+        const sunPath = "M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z";
+        let globalHubItems = [];
+        let andkitResources = [];
+        let currentAndkitFilter = 'all';
+        let activeAudio = null;
+        let loadedResourcePaths = [];
+
+        function initTheme() {
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelector('#theme-icon path').setAttribute('d', theme === 'light' ? sunPath : moonPath);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('theme', target);
+            document.querySelector('#theme-icon path').setAttribute('d', target === 'light' ? sunPath : moonPath);
+        }
+
+        function toggleMenu() {
+            document.getElementById('dropdown').classList.toggle('active');
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            document.getElementById('dropdown').classList.remove('active');
+            if (pageId === 'andkit' && andkitResources.length === 0) {
+                parseAndKitResources();
+            }
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            toast.innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function sharePortal() {
+            if (navigator.share) {
+                navigator.share({ title: document.title, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Ссылка скопирована!');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('dropdown');
+            const isMenuBtn = e.target.closest('.control-btn') && e.target.closest('.control-btn').getAttribute('onclick') === 'toggleMenu()';
+            if (dropdown.classList.contains('active') && !dropdown.contains(e.target) && !isMenuBtn) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top-btn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(src) {
+            document.getElementById('modal-img').src = src;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function filterHub() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const hubContainer = document.getElementById('hub-container');
+            hubContainer.innerHTML = '';
+            
+            const filtered = globalHubItems.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                (item.description && item.description.toLowerCase().includes(query))
+            );
+
+            if (filtered.length > 0) {
+                filtered.forEach(item => hubContainer.appendChild(createCard(item)));
+            } else {
+                hubContainer.innerHTML = `<div class="empty-state">Ничего не найдено</div>`;
+            }
+        }
+
+        function createCard(item) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const isInternal = item.link && item.link.startsWith('#page-');
+            const linkAttr = isInternal ? `onclick="switchPage('${item.link.replace('#page-', '')}')"` : `href="${item.link}"`;
+            card.innerHTML = `
+                <img class="card-icon" src="${item.icon}" alt="" loading="lazy">
+                <div class="card-content">
+                    <div class="card-title">${item.title}</div>
+                    <div class="card-desc">${item.description}</div>
+                    <a class="card-btn" ${linkAttr}>${item.button_text}</a>
+                </div>
+            `;
+            return card;
+        }
+
+        async function loadScreenshotsAuto() {
+            const container = document.getElementById('screenshots-container');
+            container.innerHTML = '';
+            
+            const extensions = ['png', 'jpg', 'jpeg', 'webp'];
+            let loadedCount = 0;
+
+            for (let i = 1; i <= 15; i++) {
+                let found = false;
+                for (const ext of extensions) {
+                    const src = `Screen/screen${i}.${ext}`;
+                    const resData = await checkResourceExists(src);
+                    if (resData && resData.exists) {
+                        const img = document.createElement('img');
+                        img.className = 'screenshot-img';
+                        img.src = src;
+                        img.loading = "lazy";
+                        img.onclick = () => openModal(src);
+                        container.appendChild(img);
+                        loadedCount++;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found && i > 3 && loadedCount === 0) break;
+            }
+
+            if (loadedCount === 0) {
+                container.innerHTML = `<div class="empty-state">Скриншоты отсутствуют</div>`;
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return 'Файл';
+            const k = 1024;
+            const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function checkResourceExists(url) {
+            return new Promise((resolve) => {
+                fetch(url, { method: 'HEAD' })
+                    .then(res => {
+                        if (res.ok) {
+                            const size = res.headers.get('content-length');
+                            resolve({ exists: true, size: size ? parseInt(size) : 0 });
+                        } else resolve(false);
+                    })
+                    .catch(() => resolve(false));
+            });
+        }
+
+        async function parseAndKitResources() {
+            const container = document.getElementById('andkit-container');
+            container.innerHTML = `<div class="empty-state">Загрузка файлов...</div>`;
+            andkitResources = [];
+
+            const imageExts = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'];
+            const audioExts = ['mp3', 'ogg', 'wav', 'm4a'];
+
+            for (const path of loadedResourcePaths) {
+                const resData = await checkResourceExists(path);
+                if (resData && resData.exists) {
+                    const cleanPath = path.replace(/^Resource\//, '');
+                    const parts = cleanPath.split('/');
+                    const fileName = parts.pop();
+                    const folder = parts.join('/');
+                    const ext = fileName.split('.').pop().toLowerCase();
+                    const type = imageExts.includes(ext) ? 'image' : (audioExts.includes(ext) ? 'audio' : 'other');
+
+                    andkitResources.push({
+                        name: fileName,
+                        folder: folder ? folder : '',
+                        path: path,
+                        size: resData.size,
+                        type: type,
+                        ext: ext
+                    });
+                }
+            }
+
+            renderAndKit();
+        }
+
+        function setAndKitFilter(filter, btn) {
+            currentAndkitFilter = filter;
+            document.querySelectorAll('.filter-tags .tag-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAndKit();
+        }
+
+        function filterAndKit() {
+            renderAndKit();
+        }
+
+        function toggleAudio(src, btn) {
+            if (activeAudio && activeAudio.src === new URL(src, window.location.href).href) {
+                if (activeAudio.paused) {
+                    activeAudio.play();
+                    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+                } else {
+                    activeAudio.pause();
+                    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+                }
+                return;
+            }
+
+            if (activeAudio) {
+                activeAudio.pause();
+                document.querySelectorAll('.audio-play-btn').forEach(b => {
+                    b.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+                });
+            }
+
+            activeAudio = new Audio(src);
+            activeAudio.play();
+            btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
+            activeAudio.onended = () => {
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+            };
+        }
+
+        function renderAndKit() {
+            const container = document.getElementById('andkit-container');
+            const searchVal = document.getElementById('andkit-search').value.toLowerCase();
+            container.innerHTML = '';
+
+            const filtered = andkitResources.filter(res => {
+                const matchesSearch = res.name.toLowerCase().includes(searchVal) || res.folder.toLowerCase().includes(searchVal);
+                const matchesFilter = currentAndkitFilter === 'all' || res.type === currentAndkitFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            document.getElementById('res-count-badge').innerText = `${filtered.length} файлов`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state">Ресурсы не найдены</div>`;
+                return;
+            }
+
+            filtered.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+
+                let previewContent = '';
+                if (res.type === 'image') {
+                    previewContent = `<img src="${res.path}" alt="${res.name}" loading="lazy" onclick="openModal('${res.path}')">`;
+                } else if (res.type === 'audio') {
+                    previewContent = `
+                        <div class="audio-player-wrapper">
+                            <button class="audio-play-btn" onclick="toggleAudio('${res.path}', this)">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    previewContent = `<span style="font-size:2rem">📄</span>`;
+                }
+
+                const folderBadge = res.folder ? `<div class="folder-badge">${res.folder}</div>` : '';
+
+                card.innerHTML = `
+                    <div class="resource-preview">
+                        ${folderBadge}
+                        ${previewContent}
+                    </div>
+                    <div class="resource-name" title="${res.name}">${res.name}</div>
+                    <div class="resource-meta">${formatBytes(res.size)}</div>
+                    <div class="resource-actions">
+                        <a class="res-btn" href="${res.path}" download="${res.name}">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Скачать
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderData(data) {
+            if (data.resources && Array.isArray(data.resources)) {
+                loadedResourcePaths = data.resources;
+            }
+
+            if (data.app_info) {
+                document.getElementById('app-icon').src = data.app_info.logo_icon || '';
+                document.getElementById('app-title').innerText = data.app_info.title || 'Andbrawl';
+                document.getElementById('brand-logo').innerText = data.app_info.title || 'Andbrawl';
+                document.getElementById('app-subtitle').innerText = data.app_info.subtitle || '';
+                
+                const dlBtn = document.getElementById('download-btn');
+                dlBtn.innerText = data.app_info.download_button_text || 'Скачать';
+                dlBtn.href = data.app_info.download_url || '#';
+            }
+
+            const dropdown = document.getElementById('dropdown');
+            const hubContainer = document.getElementById('hub-container');
+            dropdown.innerHTML = '';
+            hubContainer.innerHTML = '';
+
+            let items = [];
+            if (data.menu_options && data.menu_options.items) {
+                items = [...data.menu_options.items];
+            }
+
+            const hasAndKit = items.some(i => i.id === 'andkit' || i.link === '#page-andkit');
+            if (!hasAndKit) {
+                items.push({
+                    "id": "andkit",
+                    "title": "AndKit",
+                    "description": "Библиотека ресурсов игры, звуки, текстуры и файлы.",
+                    "icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fcc200'%3E%3Cpath d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5 8h-2v2h-2v-2H9v-2h2v-2h2v2h2v2z'/%3E%3C/svg%3E",
+                    "button_text": "Открыть AndKit",
+                    "link": "#page-andkit"
+                });
+            }
+
+            globalHubItems = items;
+
+            items.forEach(item => {
+                const isInternal = item.link && item.link.startsWith('#page-');
+                
+                const link = document.createElement('a');
+                link.className = 'menu-item';
+                if (isInternal) {
+                    link.setAttribute('onclick', `switchPage('${item.link.replace('#page-', '')}')`);
+                } else {
+                    link.href = item.link;
+                }
+                
+                if (item.icon.startsWith('data:') || item.icon.endsWith('.png') || item.icon.endsWith('.jpg') || item.icon.endsWith('.svg')) {
+                    link.innerHTML = `<img src="${item.icon}" alt=""> <span>${item.title}</span>`;
+                } else {
+                    link.innerHTML = `<span class="icon">${item.icon}</span> <span>${item.title}</span>`;
+                }
+                dropdown.appendChild(link);
+                hubContainer.appendChild(createCard(item));
+            });
+
+            const quickContainer = document.getElementById('quick-links-container');
+            quickContainer.innerHTML = '';
+            if (data.quick_links && data.quick_links.length > 0) {
+                data.quick_links.forEach(q => {
+                    const btn = document.createElement('a');
+                    btn.className = 'quick-btn';
+                    btn.href = q.link;
+                    btn.innerHTML = `<span>${q.icon}</span> <span>${q.title}</span>`;
+                    quickContainer.appendChild(btn);
+                });
+            } else {
+                quickContainer.innerHTML = `<div class="empty-state">Отсутствует</div>`;
+            }
+
+            const creatorsContainer = document.getElementById('creators-container');
+            creatorsContainer.innerHTML = '';
+            if (data.creators && data.creators.length > 0) {
+                data.creators.forEach(c => {
+                    const card = document.createElement('a');
+                    card.className = 'creator-card';
+                    card.href = c.link;
+                    card.target = "_blank";
+                    card.rel = "noopener noreferrer";
+                    card.innerHTML = `
+                        <img class="creator-avatar" src="${c.avatar}" alt="" loading="lazy">
+                        <div class="creator-info">
+                            <div class="creator-name">${c.name}</div>
+                            <div class="creator-tag">${c.tag}</div>
+                        </div>
+                    `;
+                    creatorsContainer.appendChild(card);
+                });
+            } else {
+                creatorsContainer.innerHTML = `<div class="empty-state">Отсутствует</div>`;
+            }
+
+            loadScreenshotsAuto();
+        }
+
+        initTheme();
+
+        fetch('setting.json')
+            .then(res => res.json())
+            .then(data => renderData(data));
+    </script>
+</body>
+</html>
