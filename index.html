@@ -1003,36 +1003,23 @@
             return card;
         }
 
-        async function loadScreenshotsAuto() {
+        function loadScreenshotsAuto(screenshots) {
             const container = document.getElementById('screenshots-container');
             container.innerHTML = '';
             
-            const extensions = ['png', 'jpg', 'jpeg', 'webp'];
-            let loadedCount = 0;
-
-            for (let i = 1; i <= 15; i++) {
-                let found = false;
-                for (const ext of extensions) {
-                    const src = `Screen/screen${i}.${ext}`;
-                    const resData = await checkResourceExists(src);
-                    if (resData && resData.exists) {
-                        const img = document.createElement('img');
-                        img.className = 'screenshot-img';
-                        img.src = src;
-                        img.loading = "lazy";
-                        img.onclick = () => openModal(src);
-                        container.appendChild(img);
-                        loadedCount++;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found && i > 3 && loadedCount === 0) break;
-            }
-
-            if (loadedCount === 0) {
+            if (!screenshots || !Array.isArray(screenshots) || screenshots.length === 0) {
                 container.innerHTML = `<div class="empty-state">Скриншоты отсутствуют</div>`;
+                return;
             }
+
+            screenshots.forEach(src => {
+                const img = document.createElement('img');
+                img.className = 'screenshot-img';
+                img.src = src;
+                img.loading = "lazy";
+                img.onclick = () => openModal(src);
+                container.appendChild(img);
+            });
         }
 
         function formatBytes(bytes) {
@@ -1280,7 +1267,7 @@
                 creatorsContainer.innerHTML = `<div class="empty-state">Отсутствует</div>`;
             }
 
-            loadScreenshotsAuto();
+            loadScreenshotsAuto(data.screenshots);
         }
 
         initTheme();

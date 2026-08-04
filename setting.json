@@ -34,6 +34,11 @@
       "link": "https://andbrawl.com/rules"
     }
   ],
+  "screenshots": [
+  "Screen/screen1.png",
+  "Screen/screen2.png",
+  "Screen/screen3.png"
+],
   "resources": [
     "Resource/lodo.png",
 "Resource/Sounds/menu.mp3",
