@@ -209,6 +209,7 @@
             object-fit: cover;
             border: 3px solid var(--border-color);
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            content-visibility: auto;
         }
 
         .title {
@@ -454,6 +455,8 @@
             align-items: center;
             gap: 14px;
             transition: background var(--transition), border-color var(--transition);
+            content-visibility: auto;
+            contain-intrinsic-size: 80px;
         }
 
         .card-icon {
@@ -526,6 +529,8 @@
             text-align: center;
             position: relative;
             transition: background var(--transition), transform 0.1s;
+            content-visibility: auto;
+            contain-intrinsic-size: 210px;
         }
 
         .resource-card:hover {
@@ -547,10 +552,17 @@
             position: relative;
         }
 
-        .resource-preview img {
+        .resource-preview img, .resource-preview video {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            will-change: opacity;
+        }
+
+        .resource-preview img.loaded, .resource-preview video.loaded {
+            opacity: 1;
         }
 
         .folder-badge {
@@ -564,6 +576,7 @@
             font-size: 0.65rem;
             color: var(--accent-yellow);
             font-weight: 800;
+            z-index: 2;
         }
 
         .resource-name {
@@ -688,12 +701,17 @@
             visibility: visible;
         }
 
-        .modal-img {
+        .modal-img, .modal-video {
             max-width: 100%;
             max-height: 90vh;
             border-radius: 16px;
             object-fit: contain;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .modal-img.active, .modal-video.active {
+            display: block;
         }
 
         .modal-close {
@@ -711,6 +729,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 1010;
         }
 
         .toast {
@@ -855,6 +874,7 @@
             <div class="filter-tags">
                 <button class="tag-btn active" onclick="setAndKitFilter('all', this)">Все</button>
                 <button class="tag-btn" onclick="setAndKitFilter('image', this)">Картинки</button>
+                <button class="tag-btn" onclick="setAndKitFilter('video', this)">Видео</button>
                 <button class="tag-btn" onclick="setAndKitFilter('audio', this)">Звуки</button>
             </div>
 
@@ -870,6 +890,7 @@
     <div class="modal" id="modal" onclick="closeModal()">
         <button class="modal-close" aria-label="Закрыть" onclick="closeModal()">&times;</button>
         <img class="modal-img" id="modal-img" src="" alt="Preview">
+        <video class="modal-video" id="modal-video" controls playsinline></video>
     </div>
 
     <button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollToTop()" aria-label="Наверх">
@@ -888,6 +909,7 @@
         let currentAndkitFilter = 'all';
         let activeAudio = null;
         let loadedResourcePaths = [];
+        let searchTimeout = null;
 
         function initTheme() {
             const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -955,36 +977,56 @@
             } else {
                 btn.classList.remove('visible');
             }
-        });
+        }, { passive: true });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openModal(src) {
-            document.getElementById('modal-img').src = src;
+        function openModal(src, type = 'image') {
+            const modalImg = document.getElementById('modal-img');
+            const modalVideo = document.getElementById('modal-video');
+            modalImg.classList.remove('active');
+            modalVideo.classList.remove('active');
+            modalVideo.pause();
+
+            if (type === 'video') {
+                modalVideo.src = src;
+                modalVideo.classList.add('active');
+                modalVideo.play();
+            } else {
+                modalImg.src = src;
+                modalImg.classList.add('active');
+            }
             document.getElementById('modal').classList.add('active');
         }
 
         function closeModal() {
+            const modalVideo = document.getElementById('modal-video');
+            modalVideo.pause();
+            modalVideo.src = '';
             document.getElementById('modal').classList.remove('active');
         }
 
         function filterHub() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const hubContainer = document.getElementById('hub-container');
-            hubContainer.innerHTML = '';
-            
-            const filtered = globalHubItems.filter(item => 
-                item.title.toLowerCase().includes(query) || 
-                (item.description && item.description.toLowerCase().includes(query))
-            );
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = document.getElementById('search-input').value.toLowerCase();
+                const hubContainer = document.getElementById('hub-container');
+                
+                const filtered = globalHubItems.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    (item.description && item.description.toLowerCase().includes(query))
+                );
 
-            if (filtered.length > 0) {
-                filtered.forEach(item => hubContainer.appendChild(createCard(item)));
-            } else {
-                hubContainer.innerHTML = `<div class="empty-state">Ничего не найдено</div>`;
-            }
+                if (filtered.length > 0) {
+                    const fragment = document.createDocumentFragment();
+                    filtered.forEach(item => fragment.appendChild(createCard(item)));
+                    hubContainer.replaceChildren(fragment);
+                } else {
+                    hubContainer.innerHTML = `<div class="empty-state">Ничего не найдено</div>`;
+                }
+            }, 100);
         }
 
         function createCard(item) {
@@ -1005,21 +1047,22 @@
 
         function loadScreenshotsAuto(screenshots) {
             const container = document.getElementById('screenshots-container');
-            container.innerHTML = '';
             
             if (!screenshots || !Array.isArray(screenshots) || screenshots.length === 0) {
                 container.innerHTML = `<div class="empty-state">Скриншоты отсутствуют</div>`;
                 return;
             }
 
+            const fragment = document.createDocumentFragment();
             screenshots.forEach(src => {
                 const img = document.createElement('img');
                 img.className = 'screenshot-img';
                 img.src = src;
                 img.loading = "lazy";
-                img.onclick = () => openModal(src);
-                container.appendChild(img);
+                img.onclick = () => openModal(src, 'image');
+                fragment.appendChild(img);
             });
+            container.replaceChildren(fragment);
         }
 
         function formatBytes(bytes) {
@@ -1030,49 +1073,52 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
-        function checkResourceExists(url) {
-            return new Promise((resolve) => {
-                fetch(url, { method: 'HEAD' })
-                    .then(res => {
-                        if (res.ok) {
-                            const size = res.headers.get('content-length');
-                            resolve({ exists: true, size: size ? parseInt(size) : 0 });
-                        } else resolve(false);
-                    })
-                    .catch(() => resolve(false));
-            });
-        }
-
-        async function parseAndKitResources() {
+        function parseAndKitResources() {
             const container = document.getElementById('andkit-container');
             container.innerHTML = `<div class="empty-state">Загрузка файлов...</div>`;
             andkitResources = [];
 
             const imageExts = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'];
+            const videoExts = ['mp4', 'webm', 'ogg', 'mov'];
             const audioExts = ['mp3', 'ogg', 'wav', 'm4a'];
 
-            for (const path of loadedResourcePaths) {
-                const resData = await checkResourceExists(path);
-                if (resData && resData.exists) {
-                    const cleanPath = path.replace(/^Resource\//, '');
-                    const parts = cleanPath.split('/');
-                    const fileName = parts.pop();
-                    const folder = parts.join('/');
-                    const ext = fileName.split('.').pop().toLowerCase();
-                    const type = imageExts.includes(ext) ? 'image' : (audioExts.includes(ext) ? 'audio' : 'other');
+            const imagePromises = loadedResourcePaths.map(path => {
+                const cleanPath = path.replace(/^Resource\//, '');
+                const parts = cleanPath.split('/');
+                const fileName = parts.pop();
+                const folder = parts.join('/');
+                const ext = fileName.split('.').pop().toLowerCase();
+                
+                let type = 'other';
+                if (imageExts.includes(ext)) type = 'image';
+                else if (videoExts.includes(ext)) type = 'video';
+                else if (audioExts.includes(ext)) type = 'audio';
 
-                    andkitResources.push({
-                        name: fileName,
-                        folder: folder ? folder : '',
-                        path: path,
-                        size: resData.size,
-                        type: type,
-                        ext: ext
-                    });
-                }
-            }
+                return {
+                    name: fileName,
+                    folder: folder || '',
+                    path: path,
+                    size: 0,
+                    type: type,
+                    ext: ext
+                };
+            });
 
+            andkitResources = imagePromises;
             renderAndKit();
+
+            loadedResourcePaths.forEach((path, index) => {
+                fetch(path, { method: 'HEAD' }).then(res => {
+                    if (res.ok) {
+                        const size = res.headers.get('content-length');
+                        if (size && andkitResources[index]) {
+                            andkitResources[index].size = parseInt(size);
+                            const sizeElem = document.getElementById(`res-size-${index}`);
+                            if (sizeElem) sizeElem.innerText = formatBytes(andkitResources[index].size);
+                        }
+                    }
+                }).catch(() => {});
+            });
         }
 
         function setAndKitFilter(filter, btn) {
@@ -1083,7 +1129,10 @@
         }
 
         function filterAndKit() {
-            renderAndKit();
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderAndKit();
+            }, 100);
         }
 
         function toggleAudio(src, btn) {
@@ -1117,7 +1166,6 @@
         function renderAndKit() {
             const container = document.getElementById('andkit-container');
             const searchVal = document.getElementById('andkit-search').value.toLowerCase();
-            container.innerHTML = '';
 
             const filtered = andkitResources.filter(res => {
                 const matchesSearch = res.name.toLowerCase().includes(searchVal) || res.folder.toLowerCase().includes(searchVal);
@@ -1132,13 +1180,17 @@
                 return;
             }
 
-            filtered.forEach(res => {
+            const fragment = document.createDocumentFragment();
+
+            filtered.forEach((res, idx) => {
                 const card = document.createElement('div');
                 card.className = 'resource-card';
 
                 let previewContent = '';
                 if (res.type === 'image') {
-                    previewContent = `<img src="${res.path}" alt="${res.name}" loading="lazy" onclick="openModal('${res.path}')">`;
+                    previewContent = `<img src="${res.path}" alt="${res.name}" loading="lazy" onload="this.classList.add('loaded')" onclick="openModal('${res.path}', 'image')">`;
+                } else if (res.type === 'video') {
+                    previewContent = `<video src="${res.path}" preload="metadata" muted playsinline oncanplay="this.classList.add('loaded')" onclick="openModal('${res.path}', 'video')"></video>`;
                 } else if (res.type === 'audio') {
                     previewContent = `
                         <div class="audio-player-wrapper">
@@ -1159,7 +1211,7 @@
                         ${previewContent}
                     </div>
                     <div class="resource-name" title="${res.name}">${res.name}</div>
-                    <div class="resource-meta">${formatBytes(res.size)}</div>
+                    <div class="resource-meta" id="res-size-${idx}">${formatBytes(res.size)}</div>
                     <div class="resource-actions">
                         <a class="res-btn" href="${res.path}" download="${res.name}">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -1167,8 +1219,10 @@
                         </a>
                     </div>
                 `;
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            container.replaceChildren(fragment);
         }
 
         function renderData(data) {
@@ -1189,8 +1243,6 @@
 
             const dropdown = document.getElementById('dropdown');
             const hubContainer = document.getElementById('hub-container');
-            dropdown.innerHTML = '';
-            hubContainer.innerHTML = '';
 
             let items = [];
             if (data.menu_options && data.menu_options.items) {
@@ -1211,6 +1263,9 @@
 
             globalHubItems = items;
 
+            const dropdownFrag = document.createDocumentFragment();
+            const hubFrag = document.createDocumentFragment();
+
             items.forEach(item => {
                 const isInternal = item.link && item.link.startsWith('#page-');
                 
@@ -1227,27 +1282,31 @@
                 } else {
                     link.innerHTML = `<span class="icon">${item.icon}</span> <span>${item.title}</span>`;
                 }
-                dropdown.appendChild(link);
-                hubContainer.appendChild(createCard(item));
+                dropdownFrag.appendChild(link);
+                hubFrag.appendChild(createCard(item));
             });
 
+            dropdown.replaceChildren(dropdownFrag);
+            hubContainer.replaceChildren(hubFrag);
+
             const quickContainer = document.getElementById('quick-links-container');
-            quickContainer.innerHTML = '';
             if (data.quick_links && data.quick_links.length > 0) {
+                const quickFrag = document.createDocumentFragment();
                 data.quick_links.forEach(q => {
                     const btn = document.createElement('a');
                     btn.className = 'quick-btn';
                     btn.href = q.link;
                     btn.innerHTML = `<span>${q.icon}</span> <span>${q.title}</span>`;
-                    quickContainer.appendChild(btn);
+                    quickFrag.appendChild(btn);
                 });
+                quickContainer.replaceChildren(quickFrag);
             } else {
                 quickContainer.innerHTML = `<div class="empty-state">Отсутствует</div>`;
             }
 
             const creatorsContainer = document.getElementById('creators-container');
-            creatorsContainer.innerHTML = '';
             if (data.creators && data.creators.length > 0) {
+                const creatorsFrag = document.createDocumentFragment();
                 data.creators.forEach(c => {
                     const card = document.createElement('a');
                     card.className = 'creator-card';
@@ -1261,8 +1320,9 @@
                             <div class="creator-tag">${c.tag}</div>
                         </div>
                     `;
-                    creatorsContainer.appendChild(card);
+                    creatorsFrag.appendChild(card);
                 });
+                creatorsContainer.replaceChildren(creatorsFrag);
             } else {
                 creatorsContainer.innerHTML = `<div class="empty-state">Отсутствует</div>`;
             }
