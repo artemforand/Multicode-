@@ -541,32 +541,29 @@ window.pgnData = {
         }
       ]
     },
+{
+  "id": "fonts",
+  "title": "Системные шрифты HorizonOS",
+  "blocks": [
     {
-      "id": "fonts",
-      "title": "Системные шрифты HorizonOS",
-      "blocks": [
+      "type": "grid3",
+      "items": [
         {
-          "type": "grid3",
-          "items": [
-            {
-              "cardTitle": "Google Sans",
-              "description": "Основной системный шрифт.",
-              "list": ["bold", "medium", "regular"]
-            },
-            {
-              "cardTitle": "Comfortaa",
-              "description": "Скругленный стиль.",
-              "list": ["Comfotiaa bold", "Comfotiaa medium", "Comfotiaa regular"]
-            },
-            {
-              "cardTitle": "Ubuntu",
-              "description": "Фирменный шрифт.",
-              "list": ["ubuntu"]
-            }
-          ]
+          "cardTitle": "Google Sans",
+          "description": "Основной системный шрифт. Доступные варианты: bold, medium, regular."
+        },
+        {
+          "cardTitle": "Comfortaa",
+          "description": "Скругленный стиль. Доступные варианты: Comfotiaa bold, Comfotiaa medium, Comfotiaa regular."
+        },
+        {
+          "cardTitle": "Ubuntu",
+          "description": "Фирменный шрифт. Доступный вариант: ubuntu."
         }
       ]
-    },
+    }
+  ]
+},
     {
       "id": "system",
       "title": "Системные переменные HorizonOS",
@@ -593,17 +590,16 @@ window.pgnData = {
         }
       ]
     },
+{
+  "id": "system-commands",
+  "title": "Системные команды и Уведомления",
+  "blocks": [
     {
-      "id": "system-commands",
-      "title": "Системные команды и Уведомления",
-      "blocks": [
-        {
-          "type": "codeBlock",
-          "title": "Команды system",
-          "code": "background.rgb r g b\nnew.notification ГлавныйТекст Текст Кнопка t\nshow.toast текст\n\nsystem open.app.is.code code\nsystem save name данные\nsystem read.save name переменная\nsystem delete.save name\nsystem notoff.screen\nsystem off.screen\nsystem create.app name app.id.adk icon code"
-        }
-      ]
+      "type": "codeBlock",
+      "title": "Команды system",
+      "code": "background.rgb r g b — меняет цвет фона\nnew.notification ГлавныйТекст Текст Кнопка t — создаёт системное уведомление\nshow.toast текст — показывает всплывающее сообщение\n\nsystem open.app.is.code code — открывает приложение по коду\nsystem save name данные — сохраняет данные\nsystem read.save name переменная — загружает сохранённые данные в переменную\nsystem delete.save name — удаляет сохранённые данные\nsystem notoff.screen — запрещает выключение экрана\nsystem off.screen — разрешает выключение экрана\nsystem create.app name app.id.adk icon code — создаёт приложение с указанными данными"
     }
   ]
+}
+  ]
 };
-
