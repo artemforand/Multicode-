@@ -5,11 +5,13 @@ window.pgnData = {
     { "id": "operators", "title": "🧮 Математика", "isAxeon": false },
     { "id": "strings", "title": "🔤 Строки", "isAxeon": false },
     { "id": "axeon", "title": "⚡ Axeon Объекты", "isAxeon": true },
-    { "id": "control-for", "title": "🔄 Циклы & Условия", "isAxeon": false },
-    { "id": "objects", "title": "🎨 Графика sRect", "isAxeon": false },
-    { "id": "texts", "title": "📝 Тексты", "isAxeon": false },
+    { "id": "object-events", "title": "👆 Управление и касания", "isAxeon": true },
+    { "id": "control-for", "title": "🔄 Циклы, Условия & Функции", "isAxeon": false },
+    { "id": "objects", "title": "🎨 Графика sRect & Rect", "isAxeon": false },
+    { "id": "texts", "title": "📝 Тексты & Ввод", "isAxeon": false },
     { "id": "fonts", "title": "🔤 Шрифты", "isAxeon": false },
-    { "id": "system", "title": "⚙️ Системные $system", "isAxeon": false }
+    { "id": "system", "title": "⚙️ Системные $system", "isAxeon": false },
+    { "id": "system-commands", "title": "💻 Команды system", "isAxeon": false }
   ],
   "groups": [
     {
@@ -24,27 +26,29 @@ window.pgnData = {
     {
       "groupTitle": "Axeon Движок",
       "items": [
-        { "id": "axeon", "title": "Свойства объектов (Axeon) ⚡", "isHighlight": true }
+        { "id": "axeon", "title": "Свойства объектов (Axeon) ⚡", "isHighlight": true },
+        { "id": "object-events", "title": "События и методы объектов (object.*)" }
       ]
     },
     {
       "groupTitle": "Управление кодом",
       "items": [
-        { "id": "control-for", "title": "Цикл for / if / timer" }
+        { "id": "control-for", "title": "Циклы / if / timer / function" }
       ]
     },
     {
       "groupTitle": "Графика и Текст",
       "items": [
-        { "id": "objects", "title": "Графические объекты (sRect)" },
-        { "id": "texts", "title": "Тексты и блоки TextWH" },
+        { "id": "objects", "title": "Графические объекты (sRect / rect)" },
+        { "id": "texts", "title": "Тексты, TextWH и Поля ввода" },
         { "id": "fonts", "title": "Системные шрифты" }
       ]
     },
     {
       "groupTitle": "Система",
       "items": [
-        { "id": "system", "title": "Системные переменные $system" }
+        { "id": "system", "title": "Системные переменные $system" },
+        { "id": "system-commands", "title": "Системные команды и Уведомления" }
       ]
     }
   ],
@@ -212,8 +216,51 @@ window.pgnData = {
       ]
     },
     {
+      "id": "object-events",
+      "title": "События и методы управления объектами (object.*)",
+      "blocks": [
+        {
+          "type": "subTitle",
+          "title": "Обработка касаний"
+        },
+        {
+          "type": "codeBlock",
+          "title": "touch.object",
+          "code": "<span class=\"cmt\">-- Вызов функции при прикосновении пальцем к объекту</span>\ntouch.object name func\n\n<span class=\"cmt\">-- Синонимы вызова функции:</span>\ntouch.object name func()\ntouch.object name func( n )"
+        },
+        {
+          "type": "subTitle",
+          "title": "Методы модификации объектов (object.)"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Описание"],
+          "rows": [
+            ["<code>object.x name знач</code> / <code>object.y name знач</code>", "Установить координату X / Y"],
+            ["<code>object.w name знач</code> / <code>object.h name знач</code>", "Установить ширину / высоту"],
+            ["<code>object.sx name знач</code> / <code>object.sy name знач</code>", "Изменить координату X / Y (смещение)"],
+            ["<code>object.sw name знач</code> / <code>object.sh name знач</code>", "Изменить ширину / высоту"],
+            ["<code>object.size name знач</code> / <code>object.ssize name знач</code>", "Установить / изменить размер"],
+            ["<code>object.position name x y</code>", "Установить позицию объекта"],
+            ["<code>object.anchor_point name x y</code>", "Установить точку привязки"],
+            ["<code>object.opacity name знач</code> / <code>object.sopacity name знач</code>", "Установить / изменить непрозрачность (0-100)"],
+            ["<code>object.color.rgb name r g b [a]</code>", "Установить RGB цвет и непрозрачность"],
+            ["<code>object.rgb name r g b</code> / <code>object.hex name hex</code>", "Установить цвет (RGB или HEX)"],
+            ["<code>object.Mx name знач</code> / <code>object.My name знач</code>", "Масштабирование по X / Y"],
+            ["<code>object.turn name град</code>", "Установить поворот"],
+            ["<code>object.turn_object name target</code>", "Установить вращение по отношению к объекту"],
+            ["<code>object.show name</code> / <code>object.hide name</code>", "Показать / скрыть объект"],
+            ["<code>object.delete name</code>", "Удалить объект"],
+            ["<code>object.layer_above name</code> / <code>object.layer_down name</code>", "Переместить на слой выше / ниже"],
+            ["<code>object.outline.w name знач</code> / <code>object.outline.sw name знач</code>", "Установить / изменить ширину обводки"],
+            ["<code>object.outline.rgb name r g b [a]</code>", "Установить цвет и непрозрачность обводки"]
+          ]
+        }
+      ]
+    },
+    {
       "id": "control-for",
-      "title": "Управление кодом: Циклы и Условия",
+      "title": "Управление кодом: Циклы, Условия и Функции",
       "blocks": [
         {
           "type": "subTitle",
@@ -241,6 +288,15 @@ window.pgnData = {
           "type": "codeBlock",
           "title": "Интервальный таймер",
           "code": "<span class=\"kwd\">timer</span> name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n    <span class=\"cmt\">-- Код цикла таймера</span>\n}timerend_name\n\n<span class=\"cmt\">-- Пример:</span>\n<span class=\"kwd\">timer</span> n <span class=\"num\">0 60</span> ( i ) {\n    <span class=\"cmt\">-- Код</span>\n}timerend_n"
+        },
+        {
+          "type": "subTitle",
+          "title": "Функции function"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Создание и вызов функций",
+          "code": "<span class=\"kwd\">function</span> name ( i ) {\n    <span class=\"cmt\">-- Код функции</span>\n}functend_name\n\n<span class=\"cmt\">-- Примечания:</span>\n<span class=\"cmt\">-- Переменная i берётся из текущего файла или структуры. Если передавать не нужно, ставьте пробел: ( )</span>\n\n<span class=\"cmt\">-- Варианты вызова функции:</span>\nname()\nname( i ) <span class=\"cmt\">-- Передает локальную i в функцию (объявлять заново в функции не требуется)</span>"
         }
       ]
     },
@@ -250,7 +306,7 @@ window.pgnData = {
       "blocks": [
         {
           "type": "subTitle",
-          "title": "Прямоугольник new.sRect"
+          "title": "Прямоугольник с pro-углами new.sRect"
         },
         {
           "type": "html",
@@ -262,6 +318,19 @@ window.pgnData = {
           "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\n<span class=\"cmt\">-- Пример (рекомендуемое качество точек 100-200):</span>\nnew.sRect name <span class=\"num\">0 0 100 100 15 15 0 0 100 0</span>"
         },
         {
+          "type": "subTitle",
+          "title": "Обычный прямоугольник new.rect"
+        },
+        {
+          "type": "codeBlock",
+          "title": "new.rect",
+          "code": "new.rect name x y шир выс скруг\n\n<span class=\"cmt\">-- Пример:</span>\nnew.rect name <span class=\"num\">0 0 100 100 15</span>"
+        },
+        {
+          "type": "subTitle",
+          "title": "Параметры графических объектов"
+        },
+        {
           "type": "codeBlock",
           "title": "Цвет и Непрозрачность",
           "code": "<span class=\"cmt\">-- Установить RGB цвет и непрозрачность (0-100)</span>\nobject.color.rgb name r g b [непрозрачность]\nobject.color.rgb name <span class=\"num\">255 255 255</span>\nobject.color.rgb name <span class=\"num\">255 255 255 100</span>\n\n<span class=\"cmt\">-- Установить только непрозрачность (0-100)</span>\nobject.opacity name непрозрачность\nobject.opacity name <span class=\"num\">100</span>"
@@ -270,12 +339,25 @@ window.pgnData = {
     },
     {
       "id": "texts",
-      "title": "Текстовые элементы",
+      "title": "Текстовые элементы и поля ввода",
       "blocks": [
         {
+          "type": "subTitle",
+          "title": "Создание и управление текстом"
+        },
+        {
           "type": "codeBlock",
-          "title": "Создание и управление текстом",
-          "code": "<span class=\"cmt\">-- Обычный текст:</span>\nnew.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100</span>\n\n<span class=\"cmt\">-- Текст с шириной, высотой и выравниванием (left / center / right):</span>\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100 1000 100</span> center\n\n<span class=\"cmt\">-- Динамическое изменение текста:</span>\ntext.change имя новый_текст\n\n<span class=\"cmt\">-- Цвет и Прозрачность текста:</span>\ntext.color.rgb name r g b [непрозрачность]\ntext.opacity name непрозрачность(0-100)"
+          "title": "Создание текста",
+          "code": "<span class=\"cmt\">-- Обычный текст:</span>\nnew.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100</span>\n\n<span class=\"cmt\">-- Текст с шириной, высотой и выравниванием (left / center / right):</span>\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100 1000 100</span> center\n\n<span class=\"cmt\">-- Динамическое изменение текста:</span>\ntext.change name newText\ntext.change name love\n\n<span class=\"cmt\">-- Цвет и Прозрачность текста:</span>\ntext.color.rgb name r g b [непрозрачность]\ntext.opacity name непрозрачность(0-100)"
+        },
+        {
+          "type": "subTitle",
+          "title": "Многострочное текстовое поле"
+        },
+        {
+          "type": "codeBlock",
+          "title": "textField.multiLine",
+          "code": "<span class=\"cmt\">-- Создание текстового поля:</span>\nnew.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name <span class=\"num\">0 0 250 100</span> medium <span class=\"num\">36</span> Введи_текст\n\n<span class=\"cmt\">-- Установить текст в текстовое поле:</span>\ntext.textField.multiLine name text\n\n<span class=\"cmt\">-- Установить фокус на текстовое поле:</span>\nfocus.textField.multiLine name\n\n<span class=\"cmt\">-- Отключить клавиатуру:</span>\ndisable.keyboard"
         }
       ]
     },
@@ -332,6 +414,34 @@ window.pgnData = {
             ["<code>$system.date1</code>", "Нагрузка системы (0 - 100%)"],
             ["<code>$system.time.sec / min / day / month / yers / wday</code>", "Время и дата (<code>wday</code> — день недели)"]
           ]
+        }
+      ]
+    },
+    {
+      "id": "system-commands",
+      "title": "Системные команды и Уведомления",
+      "blocks": [
+        {
+          "type": "subTitle",
+          "title": "Интерфейс и Уведомления"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Фон, тосты и уведомления",
+          "code": "<span class=\"cmt\">-- Установить цвет фона</span>\nbackground.rgb r g b\n\n<span class=\"cmt\">-- Создать уведомление (t — задержка появления в секундах, от 0 до 5)</span>\nnew.notification ГлавныйТекст Текст ТекстКнопки t\n\n<span class=\"cmt\">-- Показать тост-уведомление (время отображения выбирается системой)</span>\nshow.toast текст"
+        },
+        {
+          "type": "subTitle",
+          "title": "Команды system"
+        },
+        {
+          "type": "html",
+          "html": "<p>У всех системных команд в начале указывается ключевое слово <code>system</code>.</p>"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Команды system",
+          "code": "<span class=\"cmt\">-- Открыть код в новом приложении</span>\nsystem open.app.is.code code\n\n<span class=\"cmt\">-- Сохранение и работа с данными (через файлы)</span>\nsystem save name данные\nsystem read.save name переменная\nsystem delete.save name\n\n<span class=\"cmt\">-- Управление выключением экрана</span>\nsystem notoff.screen   <span class=\"cmt\">-- отключает выключение экрана</span>\nsystem off.screen      <span class=\"cmt\">-- включает выключение экрана</span>\n\n<span class=\"cmt\">-- Создание нового приложения</span>\nsystem create.app name app.id.adk icon code"
         }
       ]
     }
