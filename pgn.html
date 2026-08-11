@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PGN Graphics — Официальная Документация HorizonOS</title>
+    <title>PGN Graphics & Axeon Engine — Documentation</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,30 +11,32 @@
     
     <style>
         :root {
-            --bg-page: #060911;
-            --bg-sidebar: #0b0f19;
-            --bg-header: rgba(11, 15, 25, 0.85);
-            --bg-card: rgba(18, 24, 38, 0.6);
-            --bg-card-hover: rgba(26, 34, 52, 0.8);
-            --bg-code: #080c14;
+            --bg-page: #05070f;
+            --bg-sidebar: #090d16;
+            --bg-header: rgba(9, 13, 22, 0.9);
+            --bg-card: rgba(15, 21, 36, 0.6);
+            --bg-card-hover: rgba(22, 31, 52, 0.85);
+            --bg-code: #060911;
             
-            --border: rgba(255, 255, 255, 0.07);
-            --border-hover: rgba(99, 102, 241, 0.4);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.4);
             
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --text-muted: #64748b;
             
             --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.35);
+            --primary-glow: rgba(99, 102, 241, 0.4);
             --cyan: #38bdf8;
-            --cyan-glow: rgba(56, 189, 248, 0.25);
+            --cyan-glow: rgba(56, 189, 248, 0.3);
             --emerald: #10b981;
             --amber: #f59e0b;
             --rose: #f43f5e;
             --purple: #a855f7;
+            --purple-glow: rgba(168, 85, 247, 0.35);
             
-            --sidebar-w: 290px;
+            --sidebar-w: 270px;
+            --toc-w: 220px;
             --header-h: 68px;
         }
 
@@ -45,17 +47,17 @@
             scroll-behavior: smooth;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        html, body {
+            overflow-x: clip;
             background-color: var(--bg-page);
             color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Header Navigation --- */
+        /* --- Header --- */
         .header {
             position: fixed;
             top: 0;
@@ -63,10 +65,10 @@
             right: 0;
             height: var(--header-h);
             background: var(--bg-header);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            z-index: 50;
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -81,10 +83,10 @@
         }
 
         .brand-logo {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--primary), var(--cyan));
-            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), var(--purple), var(--cyan));
+            border-radius: 12px;
             display: grid;
             place-items: center;
             font-weight: 800;
@@ -97,17 +99,21 @@
             font-weight: 800;
             font-size: 17px;
             letter-spacing: -0.4px;
-            color: var(--text-main);
+            background: linear-gradient(135deg, #fff 60%, var(--text-sub));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .brand-badge {
             font-size: 11px;
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 2px 8px;
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            padding: 2px 10px;
             border-radius: 99px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
         }
 
         .search-box {
@@ -117,7 +123,7 @@
 
         .search-box input {
             width: 100%;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 21, 36, 0.8);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 8px 14px 8px 36px;
@@ -128,8 +134,8 @@
         }
 
         .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px var(--purple-glow);
         }
 
         .search-box svg {
@@ -150,14 +156,14 @@
             cursor: pointer;
         }
 
-        /* --- Layout --- */
+        /* --- Layout Structure --- */
         .layout {
             display: flex;
             padding-top: var(--header-h);
             min-height: 100vh;
         }
 
-        /* --- Sidebar Navigation --- */
+        /* --- Left Sidebar --- */
         .sidebar {
             width: var(--sidebar-w);
             background-color: var(--bg-sidebar);
@@ -167,11 +173,11 @@
             bottom: 0;
             left: 0;
             overflow-y: auto;
-            padding: 28px 18px;
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            z-index: 40;
+            gap: 20px;
+            z-index: 800;
             transition: transform 0.3s ease;
         }
 
@@ -184,7 +190,7 @@
             font-weight: 800;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             padding: 0 8px;
         }
 
@@ -198,10 +204,10 @@
         .nav-item a {
             display: flex;
             align-items: center;
-            padding: 9px 12px;
+            padding: 8px 12px;
             color: var(--text-sub);
             text-decoration: none;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 500;
             border-radius: 8px;
             transition: all 0.15s ease;
@@ -209,33 +215,75 @@
 
         .nav-item a:hover {
             color: var(--text-main);
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .nav-item a.active {
-            color: var(--cyan);
-            background: rgba(56, 189, 248, 0.1);
-            font-weight: 600;
+        /* --- Right TOC Sidebar --- */
+        .right-sidebar {
+            width: var(--toc-w);
+            position: fixed;
+            top: calc(var(--header-h) + 24px);
+            right: 28px;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            backdrop-filter: blur(12px);
+            z-index: 300;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* --- Main Content --- */
+        .toc-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--purple);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toc-list a {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .toc-list a:hover { color: var(--text-main); }
+
+        /* --- Main Content Area --- */
         .main-container {
             margin-left: var(--sidebar-w);
+            margin-right: calc(var(--toc-w) + 40px);
             flex: 1;
             display: flex;
             justify-content: center;
+            width: calc(100% - var(--sidebar-w) - var(--toc-w) - 40px);
         }
 
         .content {
             width: 100%;
             max-width: 920px;
-            padding: 44px 52px 90px 52px;
+            padding: 36px 44px 90px 44px;
         }
 
-        /* Hero Header */
         .doc-hero {
-            margin-bottom: 48px;
-            padding-bottom: 32px;
+            margin-bottom: 28px;
+            padding-bottom: 24px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -245,35 +293,131 @@
             gap: 8px;
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             font-weight: 500;
         }
 
         .doc-title {
-            font-size: 40px;
+            font-size: 38px;
             font-weight: 800;
             letter-spacing: -1.2px;
             line-height: 1.15;
-            margin-bottom: 14px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--text-sub));
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--purple) 70%, var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .doc-subtitle {
-            font-size: 16.5px;
+            font-size: 15.5px;
             color: var(--text-sub);
             line-height: 1.6;
         }
 
-        /* Content Sections */
+        /* ИСПРАВЛЕННАЯ ЛИПКАЯ ПАНЕЛЬ С КАТЕГОРИЯМИ (FIXED STICKY PANEL) */
+        .sticky-category-wrapper {
+            position: sticky;
+            top: var(--header-h);
+            z-index: 900;
+            margin: 0 -44px 40px -44px;
+            padding: 12px 44px;
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .category-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 4px;
+            padding-top: 2px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+        }
+
+        .category-bar::-webkit-scrollbar { height: 4px; }
+        .category-bar::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.3);
+            border-radius: 4px;
+        }
+
+        .cat-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 15px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-sub);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .cat-chip:hover {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.18);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+        }
+
+        .cat-chip.axeon-chip {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #e9d5ff;
+        }
+
+        .cat-chip.axeon-chip:hover, .cat-chip.axeon-chip.active {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(99, 102, 241, 0.35));
+            border-color: var(--purple);
+            color: #fff;
+            box-shadow: 0 0 18px var(--purple-glow);
+        }
+
+        .cat-chip.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(99, 102, 241, 0.25));
+            border-color: var(--cyan);
+            box-shadow: 0 0 16px var(--cyan-glow);
+        }
+
+        .cat-chip .chip-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: background 0.2s;
+        }
+
+        .cat-chip:hover .chip-dot, .cat-chip.active .chip-dot {
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        .cat-chip.axeon-chip .chip-dot {
+            background: var(--purple);
+            box-shadow: 0 0 8px var(--purple);
+        }
+
+        /* --- Content Blocks --- */
         section {
             margin-bottom: 64px;
-            scroll-margin-top: calc(var(--header-h) + 28px);
+            scroll-margin-top: calc(var(--header-h) + 70px);
         }
 
         h2 {
-            font-size: 25px;
+            font-size: 24px;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--text-main);
@@ -287,102 +431,61 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: var(--border);
+            background: linear-gradient(90deg, var(--border), transparent);
         }
 
         h3 {
-            font-size: 17.5px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--cyan);
-            margin: 28px 0 12px 0;
+            margin: 24px 0 12px 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        p {
-            color: var(--text-sub);
-            font-size: 15px;
-            margin-bottom: 16px;
-        }
+        p { color: var(--text-sub); font-size: 14.5px; margin-bottom: 16px; }
 
-        /* Grid Cards */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 18px;
-            margin: 20px 0;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin: 20px 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 20px 0; }
 
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 22px;
+            padding: 20px;
             backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
             background: var(--bg-card-hover);
-            border-color: var(--border-hover);
+            border-color: var(--border-glow);
             transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
 
-        /* Callout Boxes */
         .callout {
-            border-radius: 12px;
-            padding: 18px 22px;
+            border-radius: 14px;
+            padding: 20px 22px;
             margin: 22px 0;
             font-size: 14.5px;
             display: flex;
             gap: 16px;
             align-items: flex-start;
             border: 1px solid transparent;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
         }
 
-        .callout-icon {
-            flex-shrink: 0;
-            width: 22px;
-            height: 22px;
-            margin-top: 2px;
-        }
+        .callout-icon { flex-shrink: 0; font-size: 20px; line-height: 1; }
+        .callout-danger { background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.35); color: #ffe4e6; }
+        .callout-warning { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.35); color: #fef3c7; }
+        .callout-info { background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.35); color: #e0f2fe; }
+        .callout-purple { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.4); color: #f3e8ff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.15); }
+        .callout-title { font-weight: 700; margin-bottom: 4px; font-size: 15px; }
 
-        .callout-danger {
-            background: rgba(244, 63, 94, 0.08);
-            border-color: rgba(244, 63, 94, 0.3);
-            color: #ffe4e6;
-        }
-        .callout-danger .callout-icon { fill: var(--rose); }
-
-        .callout-warning {
-            background: rgba(245, 158, 11, 0.08);
-            border-color: rgba(245, 158, 11, 0.3);
-            color: #fef3c7;
-        }
-        .callout-warning .callout-icon { fill: var(--amber); }
-
-        .callout-info {
-            background: rgba(56, 189, 248, 0.08);
-            border-color: rgba(56, 189, 248, 0.3);
-            color: #e0f2fe;
-        }
-        .callout-info .callout-icon { fill: var(--cyan); }
-
-        .callout-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-            font-size: 15px;
-        }
-
-        /* Code Blocks */
         .code-block {
             position: relative;
             margin: 18px 0 24px 0;
@@ -418,22 +521,10 @@
             font-family: inherit;
         }
 
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: var(--text-main);
-        }
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.12); color: var(--text-main); }
 
-        pre {
-            padding: 18px;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13.5px;
-            line-height: 1.65;
-        }
-
-        code {
-            font-family: 'JetBrains Mono', monospace;
-        }
+        pre { padding: 18px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.65; }
+        code { font-family: 'JetBrains Mono', monospace; }
 
         p code, li code, td code {
             background: rgba(255, 255, 255, 0.08);
@@ -444,7 +535,6 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* Syntax Highlighting */
         .kwd { color: var(--purple); font-weight: 700; }
         .var { color: var(--cyan); }
         .num { color: var(--amber); }
@@ -452,79 +542,36 @@
         .op  { color: var(--rose); font-weight: 600; }
         .cmt { color: var(--text-muted); font-style: italic; }
 
-        /* Tables */
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin: 22px 0;
-            background: var(--bg-card);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            text-align: left;
-        }
-
-        th {
-            background: rgba(15, 23, 42, 0.7);
-            padding: 14px 18px;
-            font-weight: 700;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 12px 18px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-sub);
-        }
-
+        .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin: 22px 0; background: var(--bg-card); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+        th { background: rgba(15, 21, 36, 0.85); padding: 14px 18px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); white-space: nowrap; }
+        td { padding: 12px 18px; border-bottom: 1px solid var(--border); color: var(--text-sub); }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 9px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-global { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-local { background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3); }
+        .badge-axeon { background: rgba(168, 85, 247, 0.18); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+
+        @media (max-width: 1200px) {
+            .right-sidebar { display: none; }
+            .main-container { margin-right: 0; width: calc(100% - var(--sidebar-w)); }
         }
 
-        .badge-global {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--emerald);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .badge-local {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-        }
-
-        /* Responsive */
         @media (max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
-            .main-container { margin-left: 0; }
-            .content { padding: 28px 20px 60px 20px; }
+            .main-container { margin-left: 0; width: 100%; }
+            .content { padding: 24px 18px 60px 18px; }
+            .sticky-category-wrapper { margin: 0 -18px 32px -18px; padding: 10px 18px; }
             .mobile-toggle { display: block; }
-            .search-box { width: 180px; }
+            .search-box { width: 170px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
     <header class="header">
         <div style="display: flex; align-items: center; gap: 16px;">
             <button class="mobile-toggle" id="menuToggle" aria-label="Открыть меню">
@@ -533,440 +580,263 @@
             <a href="#" class="header-brand">
                 <div class="brand-logo">PGN</div>
                 <span class="brand-title">PGN GRAPHICS</span>
-                <span class="brand-badge">HorizonOS</span>
+                <span class="brand-badge">JSON Fetch Engine</span>
             </a>
         </div>
 
-        <div class="search-box">
-            <svg viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.39A7.9 7.9 0 1 0 15 16.29l5.39 5.4a1 1 0 0 0 1.42-1.42zM10 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/></svg>
-            <input type="text" id="docSearch" placeholder="Поиск по языку...">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.39A7.9 7.9 0 1 0 15 16.29l5.39 5.4a1 1 0 0 0 1.42-1.42zM10 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/></svg>
+                <input type="text" id="docSearch" placeholder="Поиск по документации...">
+            </div>
         </div>
     </header>
 
     <div class="layout">
-        <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div>
-                <div class="nav-group-title">Основы языка</div>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#vars" class="active">Переменные и Область</a></li>
-                    <li class="nav-item"><a href="#spaces-rule">Правило пробелов ⚠️</a></li>
-                    <li class="nav-item"><a href="#operators">Операции и Математика</a></li>
-                    <li class="nav-item"><a href="#strings">Строки и Автосклеивание</a></li>
-                    <li class="nav-item"><a href="#quirks">Особенности синтаксиса</a></li>
-                </ul>
-            </div>
+        <nav class="sidebar" id="sidebar"></nav>
 
-            <div>
-                <div class="nav-group-title">Управление кодом</div>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#control-for">Цикл for</a></li>
-                    <li class="nav-item"><a href="#control-if">Условие if</a></li>
-                    <li class="nav-item"><a href="#control-timer">Таймер timer</a></li>
-                </ul>
+        <aside class="right-sidebar">
+            <div class="toc-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
+                Быстрый переход
             </div>
+            <ul class="toc-list" id="tocList"></ul>
+        </aside>
 
-            <div>
-                <div class="nav-group-title">Графика и Текст</div>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#objects">Графические объекты (sRect)</a></li>
-                    <li class="nav-item"><a href="#texts">Тексты и блоки TextWH</a></li>
-                    <li class="nav-item"><a href="#fonts">Системные шрифты</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <div class="nav-group-title">Система</div>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#system">Системные переменные $system</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
         <div class="main-container">
             <main class="content">
-                
-                <!-- Hero -->
                 <div class="doc-hero">
                     <div class="doc-breadcrumb">
                         <span>Документация</span>
                         <span>/</span>
-                        <span style="color: var(--cyan);">Язык PGN</span>
+                        <span style="color: var(--purple);">Язык PGN & Axeon Engine</span>
                     </div>
-                    <h1 class="doc-title">PGN Graphics & Language</h1>
-                    <p class="doc-subtitle">Полное справочное руководство по синтаксису, операторам, графическим объектам и системным API HorizonOS.</p>
+                    <h1 class="doc-title">PGN Graphics & Axeon Engine</h1>
+                    <p class="doc-subtitle">Документация автоматически подгружает данные из файла <code>pgn-data.json</code>.</p>
                 </div>
 
-                <!-- SECTION: SPACES RULE -->
-                <section id="spaces-rule">
-                    <h2>Критическое правило: Пробелы в коде</h2>
-                    
-                    <div class="callout callout-danger">
-                        <svg class="callout-icon" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.15 14.1H3.85L12 5.45zM11 10h2v4h-2zm0 5h2v2h-2z"/></svg>
-                        <div>
-                            <div class="callout-title">ВСЕГДА ИСПОЛЬЗУЙТЕ ПРОБЕЛЫ!</div>
-                            В PGN GRAPHICS парсер требует обязательного разделения пробелами для всех токенов, операторов, переменных и кавычек. Слитно писать нельзя!
-                        </div>
-                    </div>
+                <!-- Фиксированная липкая панель -->
+                <div class="sticky-category-wrapper" id="stickyWrapper">
+                    <nav class="category-bar" id="categoryBar"></nav>
+                </div>
 
-                    <div class="grid-2">
-                        <div class="card" style="border-color: rgba(244, 63, 94, 0.4);">
-                            <h3 style="color: var(--rose); margin-top:0;">❌ Неправильно (Ошибка парсера)</h3>
-                            <div class="code-block">
-                                <pre><code><span class="var">name</span>=<span class="num">123</span>
-<span class="var">n</span> <span class="op">$=</span> <span class="str">"text"</span>
-<span class="var">val</span> = <span class="num">1</span>+<span class="num">2</span></code></pre>
-                            </div>
-                        </div>
-
-                        <div class="card" style="border-color: rgba(16, 185, 129, 0.4);">
-                            <h3 style="color: var(--emerald); margin-top:0;">✅ Правильно (Работает)</h3>
-                            <div class="code-block">
-                                <pre><code><span class="var">name</span> = <span class="num">123</span>
-<span class="var">n</span> <span class="op">$=</span> <span class="str">" text "</span>
-<span class="var">val</span> = <span class="num">1</span> + <span class="num">2</span></code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SECTION: VARIABLES -->
-                <section id="vars">
-                    <h2>Переменные и Область видимости</h2>
-                    <p>В PGN GRAPHICS переменные делятся на глобальные и локальные. Регистр символов учитывается.</p>
-
-                    <div class="grid-2">
-                        <div class="card">
-                            <span class="badge badge-global">Глобальные</span>
-                            <h3 style="margin-top:10px;">Глобальный контекст</h3>
-                            <p>Доступны во всех файлах и во всех структурах проекта.</p>
-                            <div class="code-block">
-                                <div class="code-header"><span>Создание</span></div>
-                                <pre><code><span class="var">name</span> = <span class="num">123</span></code></pre>
-                            </div>
-                            <p style="font-size: 13px;"><strong>Получение:</strong> внутри математических операций — просто <code>name</code>, вне операций — с префиксом <code>_name</code>.</p>
-                        </div>
-
-                        <div class="card">
-                            <span class="badge badge-local">Локальные</span>
-                            <h3 style="margin-top:10px;">Локальный контекст</h3>
-                            <p><strong>Можно создавать где угодно!</strong> Работают в текущем файле или внутри структур (<code>if</code>, <code>for</code>, <code>timer</code>).</p>
-                            <div class="code-block">
-                                <div class="code-header"><span>Создание</span></div>
-                                <pre><code><span class="kwd">local</span> <span class="var">name</span> = <span class="num">123</span></code></pre>
-                            </div>
-                            <p style="font-size: 13px;"><strong>Получение:</strong> всегда через префикс <code>*name</code> (и внутри, и вне выражений).</p>
-                        </div>
-                    </div>
-
-                    <div class="callout callout-info">
-                        <svg class="callout-icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
-                        <div>
-                            <div class="callout-title">Множественная инициализация</div>
-                            Можно создавать несколько переменных в одну строку через запятую:
-                            <code style="margin-top: 6px; display: inline-block;">name = 10 , n = 2</code>
-                            <p style="margin-top: 6px; font-size: 13px;"><em>Обратите внимание:</em> ключевое слово <code>local</code> работает только для первой переменной после него (например, в <code>local name = 10 , n = 2</code> переменная <code>n</code> станет глобальной).</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SECTION: OPERATORS -->
-                <section id="operators">
-                    <h2>Математика и Операции</h2>
-                    <p>Запись арифметики: <code>переменная = значение1 [оператор] значение2</code> (сохраняя пробелы вокруг операторов!).</p>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Оператор</th>
-                                    <th>Название</th>
-                                    <th>Формула / Поведение</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><code>+</code></td><td>Сложение</td><td><code>знач1 + знач2</code></td></tr>
-                                <tr><td><code>-</code></td><td>Вычитание</td><td><code>знач1 - знач2</code></td></tr>
-                                <tr><td><code>*</code></td><td>Умножение</td><td><code>знач1 * знач2</code></td></tr>
-                                <tr><td><code>/</code></td><td>Деление</td><td><code>знач1 / знач2</code></td></tr>
-                                <tr><td><code>//</code></td><td>Целочисленное деление</td><td>Деление без остатка</td></tr>
-                                <tr><td><code>^</code></td><td>Возведение в степень</td><td><code>знач1 ^ знач2</code></td></tr>
-                                <tr><td><code>%</code></td><td>Процент</td><td>Вычисление процента</td></tr>
-                                <tr><td><code>%/</code></td><td>Округление к кратному</td><td><code>округлить( знач1 / знач2 ) * знач2</code></td></tr>
-                                <tr><td><code>rand</code></td><td>Случайное число</td><td>Рандомное значение в диапазоне</td></tr>
-                                <tr><td><code>~</code></td><td>Линейная интерполяция</td><td><code>знач1 + ( знач2 - знач1 ) * 0.1</code></td></tr>
-                                <tr><td><code>wrap</code></td><td>Заворачивание остатка</td><td><code>зн1 - ( зн2 + 1 ) * округлить(зн1) / (( зн2 + 1 )) + 1</code></td></tr>
-                                <tr><td><code>min</code> / <code>max</code></td><td>Минимум / Максимум</td><td>Возвращает меньшее или большее значение</td></tr>
-                                <tr><td><code>&gt;|</code></td><td>Обратный минимум</td><td>Работает как <code>max</code></td></tr>
-                                <tr><td><code>&lt;|</code></td><td>Обратный максимум</td><td>Работает как <code>min</code></td></tr>
-                                <tr><td><code>&lt;</code></td><td>Условие "меньше"</td><td>Если знач2 &gt; знач1, устанавливает <code>1</code></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h3>Присваивание, Проверка на nil и Консоль</h3>
-                    <div class="code-block">
-                        <div class="code-header"><span>Особые операторы</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code>n <span class="op">+=</span> <span class="num">10</span>        <span class="cmt">-- Прибавляет 10 к текущему значению (работает с любым оператором)</span>
-name <span class="op">??=</span> <span class="num">100</span>   <span class="cmt">-- Если переменная НЕ СОЗДАНА (или равна nil / 0) — создать и записать значение</span>
-n <span class="op">$=</span> <span class="str">" тут что угодно "</span> <span class="cmt">-- Вывод строки/значения в консоль</span></code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: STRINGS -->
-                <section id="strings">
-                    <h2>Работа со строками</h2>
-                    <p>PGN поддерживает автоматическое склеивание строк и переменных, а также специальные символы конкатенации.</p>
-
-                    <div class="code-block">
-                        <div class="code-header"><span>Конкатенация</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="cmt">-- Операторы конкатенации:</span>
-..             <span class="cmt">-- Склеить со следующим словом</span>
-/n             <span class="cmt">-- Перевести на новую строку и склеить следующее слово</span>
-
-<span class="cmt">-- Строка перед которой НЕ нужно писать .. склеивается сама:</span>
-Name = .. text
-N = name name .. text <span class="str">" строчка "</span>
-
-<span class="cmt">-- Итог N: "texttexttextстрочка"</span></code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: QUIRKS -->
-                <section id="quirks">
-                    <h2>Особенности и Лайфхаки</h2>
-
-                    <div class="callout callout-warning">
-                        <svg class="callout-icon" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.45l8.15 14.1H3.85L12 5.45zM11 10h2v4h-2zm0 5h2v2h-2z"/></svg>
-                        <div>
-                            <div class="callout-title">Временные решения интерпретатора</div>
-                            <ul style="padding-left: 18px; margin-top: 6px;">
-                                <li><strong>Запись нуля как числа:</strong> При <code>n = 0</code> ноль запишется как <em>строка</em>. Чтобы записать численный 0, используйте: <code>n = 0 + 0</code>.</li>
-                                <li><strong>Отрицательные числа:</strong> Чтобы сделать число отрицательным, умножайте его: <code>n = 10 * -1</code>.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <h3>Динамический подставной вызов</h3>
-                    <p>Значения с префиксами <code>_</code> и <code>*</code> заменяются на содержимое переменных в командах:</p>
-                    <div class="code-block">
-                        <div class="code-header"><span>Динамический вызов</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code>д = .. new.rect
-_д name <span class="num">0 0 100 100 12</span> <span class="cmt">-- Вызовет new.rect с аргументами</span>
-
-<span class="cmt">-- Ограничение: не работает напрямую в присваивании переменных!</span>
-д = .. name            <span class="cmt">-- ❌ Ошибка!</span>
-_д = .. text           <span class="cmt">-- ❌ Ошибка!</span></code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: CONTROL FLOW -->
-                <section id="control-for">
-                    <h2>Цикл for</h2>
-                    <div class="code-block">
-                        <div class="code-header"><span>Конструкция цикла</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="kwd">for</span> name от до шаг запись_в_переменную {
-    <span class="cmt">-- Исполняемый код</span>
-}forend_name
-
-<span class="cmt">-- Пример использования:</span>
-<span class="kwd">for</span> n <span class="num">1 100 1</span> i {
-    <span class="kwd">local</span> n = <span class="var">*i</span> * <span class="num">100</span>
-}forend_n</code></pre>
-                    </div>
-                </section>
-
-                <section id="control-if">
-                    <h2>Условие if</h2>
-                    <p>Операторы проверки: <code>=</code>, <code>==</code>, <code>≈</code>, <code>≠</code>, <code>&gt;</code>, <code>&lt;</code>, <code>≥</code>, <code>≤</code>. Поддерживается передача локальной переменной в контекст блока.</p>
-                    <div class="code-block">
-                        <div class="code-header"><span>Логическое ветвление</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="kwd">if</span> name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {
-    <span class="cmt">-- Исполняемый код</span>
-}ifend_name
-
-<span class="cmt">-- Пример:</span>
-<span class="kwd">if</span> n <span class="num">1</span> = <span class="num">2</span> ( n ) {
-    <span class="cmt">-- Выполнится если 1 равно 2</span>
-}ifend_n</code></pre>
-                    </div>
-                </section>
-
-                <section id="control-timer">
-                    <h2>Таймер timer</h2>
-                    <div class="code-block">
-                        <div class="code-header"><span>Интервальный таймер</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="kwd">timer</span> name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {
-    <span class="cmt">-- Код цикла таймера</span>
-}timerend_name
-
-<span class="cmt">-- Пример:</span>
-<span class="kwd">timer</span> n <span class="num">0 60</span> ( i ) {
-    <span class="cmt">-- Код</span>
-}timerend_n</code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: OBJECTS -->
-                <section id="objects">
-                    <h2>Графические объекты</h2>
-                    
-                    <h3>Прямоугольник new.sRect</h3>
-                    <p>Создает векторный прямоугольник с раздельной настройкой скругления каждого из 4 углов.</p>
-                    <div class="code-block">
-                        <div class="code-header"><span>new.sRect</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code>new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот
-
-<span class="cmt">-- Пример (рекомендуемое качество точек 100-200):</span>
-new.sRect name <span class="num">0 0 100 100 15 15 0 0 100 0</span></code></pre>
-                    </div>
-
-                    <h3>Параметры объектов</h3>
-                    <div class="code-block">
-                        <div class="code-header"><span>Цвет и Непрозрачность</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="cmt">-- Установить RGB цвет и непрозрачность (0-100)</span>
-object.color.rgb name r g b [непрозрачность]
-object.color.rgb name <span class="num">255 255 255</span>
-object.color.rgb name <span class="num">255 255 255 100</span>
-
-<span class="cmt">-- Установить только непрозрачность (0-100)</span>
-object.opacity name непрозрачность
-object.opacity name <span class="num">100</span></code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: TEXTS -->
-                <section id="texts">
-                    <h2>Текстовые элементы</h2>
-
-                    <div class="code-block">
-                        <div class="code-header"><span>Создание и управление текстом</span><button class="copy-btn">Скопировать</button></div>
-                        <pre><code><span class="cmt">-- Обычный текст:</span>
-new.text name text x y размер шрифт непрозрачность(0-100)
-new.text name myText <span class="num">0 0 36</span> medium <span class="num">100</span>
-
-<span class="cmt">-- Текст с шириной, высотой и выравниванием (left / center / right):</span>
-new.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание
-new.TextWH n MyText <span class="num">0 0 36</span> medium <span class="num">100 1000 100</span> center
-
-<span class="cmt">-- Динамическое изменение текста:</span>
-text.change имя новый_текст
-
-<span class="cmt">-- Цвет и Прозрачность текста:</span>
-text.color.rgb name r g b [непрозрачность]
-text.opacity name непрозрачность(0-100)</code></pre>
-                    </div>
-                </section>
-
-                <!-- SECTION: FONTS -->
-                <section id="fonts">
-                    <h2>Системные шрифты HorizonOS</h2>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h3>Google Sans</h3>
-                            <p>Основной системный шрифт.</p>
-                            <ul style="list-style: none; margin-top: 8px;">
-                                <li><code>bold</code></li>
-                                <li><code>medium</code></li>
-                                <li><code>regular</code></li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h3>Comfortaa</h3>
-                            <p>Скругленный стиль.</p>
-                            <p style="font-size: 12px; color: var(--rose); margin-top:4px;">⚠️ Без кириллицы</p>
-                            <ul style="list-style: none; margin-top: 6px;">
-                                <li><code>Comfotiaa bold</code></li>
-                                <li><code>Comfotiaa medium</code></li>
-                                <li><code>Comfotiaa regular</code></li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h3>Ubuntu</h3>
-                            <p>Фирменный шрифт от сикода.</p>
-                            <ul style="list-style: none; margin-top: 8px;">
-                                <li><code>ubuntu</code></li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SECTION: SYSTEM -->
-                <section id="system">
-                    <h2>Системные переменные HorizonOS</h2>
-                    <p>Предопределенные глобальные значения с префиксом <code>$system.</code>:</p>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Переменная</th>
-                                    <th>Описание</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td><code>$system.fps</code></td><td>Текущий кадровейт (FPS)</td></tr>
-                                <tr><td><code>$system.color.r / .g / .b</code></td><td>Системный цвет акцентов и кнопок</td></tr>
-                                <tr><td><code>$system.colorText.r / .g / .b</code></td><td>Системный цвет текста</td></tr>
-                                <tr><td><code>$system.colorBg.r / .g / .b</code></td><td>Системный цвет фона</td></tr>
-                                <tr><td><code>$system.version.os</code></td><td>Версия HorizonOS</td></tr>
-                                <tr><td><code>$system.version.ape</code></td><td>Версия ядра APE</td></tr>
-                                <tr><td><code>$system.vesion.pgn</code></td><td>Версия PGN GRAPHICS</td></tr>
-                                <tr><td><code>$system.version.desing</code></td><td>Версия темы дизайна</td></tr>
-                                <tr><td><code>$system.version.nameDesing</code></td><td>Имя системного дизайна</td></tr>
-                                <tr><td><code>$system.width</code> / <code>$system.height</code></td><td>Ширина и высота экрана</td></tr>
-                                <tr><td><code>$system.topScreen</code> / <code>$system.downScreen</code></td><td>Верхняя и нижняя границы</td></tr>
-                                <tr><td><code>$system.leftScreen</code> / <code>$system.rightScreen</code></td><td>Левая и правая границы</td></tr>
-                                <tr><td><code>$system.date1</code></td><td>Нагрузка системы (0 - 100%)</td></tr>
-                                <tr>
-                                    <td><code>$system.time.sec / min / day / month / yers / wday</code></td>
-                                    <td>Время и дата (<code>wday</code> — день недели)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
+                <!-- Целевой контейнер для динамической отрисовки из JSON -->
+                <div id="dynamicContent"></div>
             </main>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <script src="pgn-data.js"></script>
     <script>
-        // Mobile Navigation Toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
+        async function loadPGNDatabase() {
+            try {
+                const response = await fetch('pgn-data.json');
+                if (!response.ok) {
+                    throw new Error(`Ошибка сети: ${response.status} ${response.statusText}`);
+                }
+                const db = await response.json();
+                renderApp(db);
+                return;
+            } catch (error) {
+                console.warn("Fetch не сработал (возможно протокол file://). Переход на window.pgnData:", error);
+            }
 
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
+            if (window.pgnData) {
+                renderApp(window.pgnData);
+            } else {
+                document.getElementById('dynamicContent').innerHTML = `
+                    <div class="callout callout-danger">
+                        <div class="callout-icon">⚠️</div>
+                        <div>
+                            <div class="callout-title">Ошибка загрузки базы данных</div>
+                            <div>Не удалось подгрузить ни <code>pgn-data.json</code> через fetch, ни <code>pgn-data.js</code> из скриптов.</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
-        // Copy Code Functionality
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const pre = btn.parentElement.nextElementSibling;
-                navigator.clipboard.writeText(pre.innerText).then(() => {
-                    const originalText = btn.innerText;
-                    btn.innerText = 'Скопировано!';
-                    btn.style.color = 'var(--emerald)';
-                    setTimeout(() => {
-                        btn.innerText = originalText;
-                        btn.style.color = '';
-                    }, 2000);
+        // Отрисовка приложения на основе полученных JSON данных
+        function renderApp(db) {
+            // 1. Отрисовка чипсов в липкой панели
+            const categoryBar = document.getElementById('categoryBar');
+            categoryBar.innerHTML = db.categories.map(cat => `
+                <a href="#${cat.id}" class="cat-chip ${cat.isAxeon ? 'axeon-chip' : ''}">
+                    <span class="chip-dot"></span>${cat.title}
+                </a>
+            `).join('');
+
+            // 2. Отрисовка левого меню навигации
+            const sidebar = document.getElementById('sidebar');
+            sidebar.innerHTML = db.groups.map(group => `
+                <div>
+                    <div class="nav-group-title">${group.groupTitle}</div>
+                    <ul class="nav-list">
+                        ${group.items.map(item => `
+                            <li class="nav-item">
+                                <a href="#${item.id}" ${item.isHighlight ? 'style="color: var(--purple); font-weight:700;"' : ''}>
+                                    ${item.title}
+                                </a>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            // 3. Отрисовка правого меню быстрого перехода
+            const tocList = document.getElementById('tocList');
+            tocList.innerHTML = db.categories.map(cat => `
+                <li><a href="#${cat.id}" ${cat.isAxeon ? 'style="color: var(--purple); font-weight:600;"' : ''}>• ${cat.title}</a></li>
+            `).join('');
+
+            // 4. Отрисовка основных секций документации
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = db.sections.map(sec => `
+                <section id="${sec.id}">
+                    <h2>${sec.title}</h2>
+                    ${sec.blocks.map(block => renderBlock(block)).join('')}
+                </section>
+            `).join('');
+
+            bindEvents();
+            setupIntersectionObserver();
+        }
+
+        function renderBlock(block) {
+            switch (block.type) {
+                case 'html':
+                    return block.html;
+                case 'subTitle':
+                    return `<h3>${block.title}</h3>`;
+                case 'callout':
+                    return `
+                        <div class="callout callout-${block.style}">
+                            <div class="callout-icon">${block.icon}</div>
+                            <div>
+                                <div class="callout-title">${block.title}</div>
+                                <div>${block.text}</div>
+                            </div>
+                        </div>
+                    `;
+                case 'grid2':
+                    return `
+                        <div class="grid-2">
+                            ${block.items.map(card => `
+                                <div class="card" ${card.cardStyle ? `style="${card.cardStyle}"` : ''}>
+                                    ${card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : ''}
+                                    <h3 style="${card.titleColor ? `color:${card.titleColor};` : ''} margin-top:10px;">${card.cardTitle}</h3>
+                                    ${card.description ? `<p>${card.description}</p>` : ''}
+                                    ${card.code ? `
+                                        <div class="code-block">
+                                            <div class="code-header"><span>${card.codeTitle || 'Код'}</span></div>
+                                            <pre><code>${card.code}</code></pre>
+                                        </div>
+                                    ` : ''}
+                                    ${card.footerText ? `<p style="font-size: 13px;">${card.footerText}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                case 'grid3':
+                    return `
+                        <div class="grid-3">
+                            ${block.items.map(card => `
+                                <div class="card">
+                                    ${card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : ''}
+                                    <h3 style="margin-top:10px;">${card.cardTitle}</h3>
+                                    <p>${card.description}</p>
+                                    ${card.codeSample ? `<code style="display:block; margin-top:8px;">${card.codeSample}</code>` : ''}
+                                    ${card.list ? `
+                                        <ul style="list-style: none; margin-top: 8px;">
+                                            ${card.list.map(li => `<li><code>${li}</code></li>`).join('')}
+                                        </ul>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                case 'codeBlock':
+                    return `
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>${block.title}</span>
+                                <button class="copy-btn">Скопировать</button>
+                            </div>
+                            <pre><code>${block.code}</code></pre>
+                        </div>
+                    `;
+                case 'table':
+                    return `
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>${block.headers.map(h => `<th>${h}</th>`).join('')}</tr>
+                                </thead>
+                                <tbody>
+                                    ${block.rows.map(row => `
+                                        <tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                default:
+                    return '';
+            }
+        }
+
+        function bindEvents() {
+            // Копирование кода
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const pre = btn.parentElement.nextElementSibling;
+                    navigator.clipboard.writeText(pre.innerText).then(() => {
+                        const originalText = btn.innerText;
+                        btn.innerText = 'Скопировано!';
+                        btn.style.color = 'var(--emerald)';
+                        setTimeout(() => {
+                            btn.innerText = originalText;
+                            btn.style.color = '';
+                        }, 2000);
+                    });
                 });
             });
+        }
+
+        function setupIntersectionObserver() {
+            const observerOptions = { root: null, rootMargin: '-20% 0px -70% 0px', threshold: 0 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        document.querySelectorAll('.cat-chip').forEach(chip => {
+                            chip.classList.toggle('active', chip.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('section[id]').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // Переключатель мобильного меню
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
         });
 
-        // Interactive Live Search
-        const searchInput = document.getElementById('docSearch');
-        searchInput.addEventListener('input', (e) => {
+        // Живой поиск
+        document.getElementById('docSearch').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            document.querySelectorAll('.nav-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(query) ? 'block' : 'none';
+            document.querySelectorAll('section[id]').forEach(sec => {
+                const text = sec.textContent.toLowerCase();
+                sec.style.display = text.includes(query) ? 'block' : 'none';
             });
         });
+
+        // Запуск при загрузке страницы
+        loadPGNDatabase();
     </script>
 </body>
 </html>
