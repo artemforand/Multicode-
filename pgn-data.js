@@ -2,8 +2,10 @@ window.pgnData = {
   "categories": [
     { "id": "spaces-rule", "title": "⚠️ Пробелы", "isAxeon": false },
     { "id": "vars", "title": "📦 Переменные", "isAxeon": false },
-    { "id": "operators", "title": "🧮 Математика", "isAxeon": false },
-    { "id": "strings", "title": "🔤 Строки", "isAxeon": false },
+    { "id": "operators", "title": "🧮 Математика и Операции", "isAxeon": false },
+    { "id": "strings", "title": "🔤 Строки и Склеивание", "isAxeon": false },
+    { "id": "apps", "title": "📱 Приложения и ID", "isAxeon": false },
+    { "id": "app-icons", "title": "🎨 Иконки приложений", "isAxeon": false },
     { "id": "axeon", "title": "⚡ Axeon Объекты", "isAxeon": true },
     { "id": "object-events", "title": "👆 Управление и касания", "isAxeon": true },
     { "id": "control-for", "title": "🔄 Циклы, Условия & Функции", "isAxeon": false },
@@ -18,16 +20,23 @@ window.pgnData = {
       "groupTitle": "Основы языка",
       "items": [
         { "id": "spaces-rule", "title": "Правило пробелов ⚠️" },
-        { "id": "vars", "title": "Переменные и Область" },
-        { "id": "operators", "title": "Операции и Математика" },
-        { "id": "strings", "title": "Строки и Автосклеивание" }
+        { "id": "vars", "title": "Переменные (Создание и Чтение)" },
+        { "id": "operators", "title": "Математика и Операторы" },
+        { "id": "strings", "title": "Строки и Склеивание" }
+      ]
+    },
+    {
+      "groupTitle": "HorizonOS Приложения",
+      "items": [
+        { "id": "apps", "title": "Формат ID приложений" },
+        { "id": "app-icons", "title": "Векторные иконки" }
       ]
     },
     {
       "groupTitle": "Axeon Движок",
       "items": [
         { "id": "axeon", "title": "Свойства объектов (Axeon) ⚡", "isHighlight": true },
-        { "id": "object-events", "title": "События и методы объектов (object.*)" }
+        { "id": "object-events", "title": "Управление объектами и касания" }
       ]
     },
     {
@@ -87,39 +96,105 @@ window.pgnData = {
     },
     {
       "id": "vars",
-      "title": "Переменные и Область видимости",
+      "title": "Переменные: Полное руководство",
       "blocks": [
         {
-          "type": "html",
-          "html": "<p>В PGN GRAPHICS переменные делятся на глобальные и локальные. Регистр символов учитывается.</p>"
+          "type": "callout",
+          "style": "purple",
+          "icon": "📦",
+          "title": "1. Создание переменных (Запись)",
+          "text": "• <b>Глобальная переменная:</b> создается простым объявлением <code>name = 123</code>. Работает во всех файлах и структурах.<br>• <b>Локальная переменная:</b> создается через <code>local name = 123</code>. Работает только внутри текущего блока (if, for) или одного файла."
+        },
+        {
+          "type": "subTitle",
+          "title": "Запись нескольких переменных в одну строку"
+        },
+        {
+          "type": "callout",
+          "style": "warning",
+          "icon": "⚠️",
+          "title": "Ограничение для local",
+          "text": "Создавать несколько локальных переменных в одну строку через запятую НЕЛЬЗЯ. Слово <code>local</code> применяется только к первой переменной!"
         },
         {
           "type": "grid2",
           "items": [
             {
-              "badge": { "text": "Глобальные", "class": "badge-global" },
-              "cardTitle": "Глобальный контекст",
-              "description": "Доступны во всех файлах и во всех структурах проекта.",
-              "codeTitle": "Создание",
-              "code": "<span class=\"var\">name</span> = <span class=\"num\">123</span>",
-              "footerText": "<strong>Получение:</strong> внутри математических операций — просто <code>name</code>, вне операций — с префиксом <code>_name</code>."
+              "cardTitle": "Глобальные (Работает)",
+              "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
+              "titleColor": "var(--emerald)",
+              "codeTitle": "Обе переменные глобальные",
+              "code": "name = <span class=\"num\">10</span> , n = <span class=\"num\">2</span>"
             },
             {
-              "badge": { "text": "Локальные", "class": "badge-local" },
-              "cardTitle": "Локальный контекст",
-              "description": "<strong>Можно создавать где угодно!</strong> Работают в текущем файле или внутри структур (<code>if</code>, <code>for</code>, <code>timer</code>).",
-              "codeTitle": "Создание",
-              "code": "<span class=\"kwd\">local</span> <span class=\"var\">name</span> = <span class=\"num\">123</span>",
-              "footerText": "<strong>Получение:</strong> всегда через префикс <code>*name</code> (и внутри, и вне выражений)."
+              "cardTitle": "Локальные (Внимание!)",
+              "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
+              "titleColor": "var(--rose)",
+              "codeTitle": "name — локальная, n — ГЛОБАЛЬНАЯ",
+              "code": "<span class=\"kwd\">local</span> name = <span class=\"num\">10</span> , n = <span class=\"num\">2</span>"
             }
           ]
         },
         {
+          "type": "subTitle",
+          "title": "2. Чтение переменных (Получение значения)"
+        },
+        {
+          "type": "table",
+          "headers": ["Где используется", "Глобальная", "Локальная", "Пример кода"],
+          "rows": [
+            ["В математических выражениях", "Просто имя (без символов)", "Знак астериск *", "<code>a = b + 1</code> или <code>a = *b + 1</code>"],
+            ["В командах и аргументах", "Префикс подчеркивания _", "Знак астериск *", "<code>object.x box _a</code> или <code>object.x box *b</code>"]
+          ]
+        },
+        {
+          "type": "grid2",
+          "items": [
+            {
+              "cardTitle": "✅ Правильное чтение в выражениях",
+              "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
+              "titleColor": "var(--emerald)",
+              "codeTitle": "Только имя без _",
+              "code": "b = <span class=\"num\">10</span>\na = b + <span class=\"num\">1</span>"
+            },
+            {
+              "cardTitle": "❌ Запрещено использовать _ в выражениях",
+              "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
+              "titleColor": "var(--rose)",
+              "codeTitle": "Так писать НЕЛЬЗЯ",
+              "code": "b = <span class=\"num\">10</span>\na = _b + <span class=\"num\">1</span>"
+            }
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "3. Особенности и Системные поведение"
+        },
+        {
+          "type": "table",
+          "headers": ["Действие", "Запись в коде", "Почему именно так?"],
+          "rows": [
+            ["Запись Числа 0", "<code>n = 0 + 0</code>", "Запись <code>n = 0</code> автоматически сохранит 0 как СТРОКУ. Чтобы записалось ЧИСЛО, добавьте <code>+ 0</code>"],
+            ["Отрицательное число", "<code>n = 10 * -1</code>", "Умножение на -1 переводит число в отрицательное"],
+            ["Запись если пусто / 0", "<code>name ??= 100</code>", "Записывает значение 100, только если в <code>name</code> записано 0 или nil (ничего)"],
+            ["Вывод в консоль", "<code>n $= \" текст \"</code>", "Выводит содержимое переменной или текст в консоль"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "4. Динамические команды из переменных"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Вызов команд через подстановку",
+          "code": "д = .. new.rect\n_д name <span class=\"num\">0 0 100 100 12</span>"
+        },
+        {
           "type": "callout",
-          "style": "info",
-          "icon": "💡",
-          "title": "Множественная инициализация",
-          "text": "Можно создавать несколько переменных в одну строку через запятую: <code style=\"margin-top: 6px; display: inline-block;\">name = 10 , n = 2</code><p style=\"margin-top: 6px; font-size: 13px;\"><em>Обратите внимание:</em> ключевое слово <code>local</code> работает только для первой переменной после него.</p>"
+          "style": "danger",
+          "icon": "⛔",
+          "title": "Важное ограничение подстановки",
+          "text": "Конструкция <code>_д</code> работает только для вызова команд. Использовать её для создания или перезаписи переменных (например <code>_д = .. text</code>) НЕЛЬЗЯ!"
         }
       ]
     },
@@ -128,49 +203,91 @@ window.pgnData = {
       "title": "Математика и Операции",
       "blocks": [
         {
-          "type": "html",
-          "html": "<p>Запись арифметики: <code>переменная = значение1 [оператор] значение2</code> (сохраняя пробелы вокруг операторов!).</p>"
+          "type": "callout",
+          "style": "purple",
+          "icon": "🧮",
+          "title": "Правило записи операций",
+          "text": "Формула: <code>переменная = значение1 оператор значение2</code><br>Пробелы с обеих сторон оператора ОБЯЗАТЕЛЬНЫ!"
         },
         {
           "type": "table",
-          "headers": ["Оператор", "Название", "Формула / Поведение"],
+          "headers": ["Оператор", "Название", "Описание / Формула"],
           "rows": [
-            ["<code>+</code>", "Сложение", "<code>знач1 + знач2</code>"],
-            ["<code>-</code>", "Вычитание", "<code>знач1 - знач2</code>"],
-            ["<code>*</code>", "Умножение", "<code>знач1 * знач2</code>"],
-            ["<code>/</code>", "Деление", "<code>знач1 / знач2</code>"],
-            ["<code>//</code>", "Целочисленное деление", "Деление без остатка"],
-            ["<code>^</code>", "Возведение в степень", "<code>знач1 ^ знач2</code>"],
+            ["<code>+</code>", "Сложение", "<code>значение1 + значение2</code>"],
+            ["<code>-</code>", "Вычитание", "<code>значение1 - значение2</code>"],
+            ["<code>*</code>", "Умножение", "<code>значение1 * значение2</code>"],
+            ["<code>/</code>", "Деление", "<code>значение1 / значение2</code>"],
+            ["<code>//</code>", "Деление без остатка", "Целочисленное деление"],
+            ["<code>^</code>", "Возведение в степень", "<code>значение1 ^ значение2</code>"],
             ["<code>%</code>", "Процент", "Вычисление процента"],
-            ["<code>%/</code>", "Округление к кратному", "<code>округлить( знач1 / знач2 ) * знач2</code>"],
-            ["<code>rand</code>", "Случайное число", "Рандомное значение в диапазоне"],
-            ["<code>~</code>", "Линейная интерполяция", "<code>знач1 + ( знач2 - знач1 ) * 0.1</code>"],
-            ["<code>wrap</code>", "Заворачивание остатка", "<code>зн1 - ( зн2 + 1 ) * округлить(зн1) / (( зн2 + 1 )) + 1</code>"],
-            ["<code>min</code> / <code>max</code>", "Минимум / Максимум", "Возвращает меньшее или большее значение"],
-            ["<code>&gt;|</code>", "Обратный минимум", "Работает как <code>max</code>"],
-            ["<code>&lt;|</code>", "Обратный максимум", "Работает как <code>min</code>"],
-            ["<code>&lt;</code>", "Условие 'меньше'", "Если знач2 &gt; знач1, устанавливает <code>1</code>"]
+            ["<code>%/</code>", "Округление к кратному", "<code>(округлить(значение1 / значение2)) * значение2</code>"],
+            ["<code>rand</code>", "Рандом", "Генерация случайного числа"],
+            ["<code>~</code>", "Линейная интерполяция", "<code>знач1 + (знач2 - знач1) * 0.1</code>"],
+            ["<code>wrap</code>", "Остаток от деления wrap", "<code>зн1 - (зн2 + 1) * округлить(зн1) / ((зн2 + 1)) + 1</code>"],
+            ["<code>min</code>", "Минимум", "Выбирает наименьшее значение"],
+            ["<code>max</code>", "Максимум", "Выбирает наибольшее значение"],
+            ["<code>&gt;|</code>", "Минимум наоборот", "Работает как максимум"],
+            ["<code>&lt;|</code>", "Максимум наоборот", "Работает как минимум"],
+            ["<code>&lt;</code>", "Сравнение меньше", "Если первое значение меньше второго — установит 1"],
+            ["<code>+=</code>", "Прибавление к себе", "<code>n += 10</code> (увеличивает n на 10)"],
+            ["<code>??=</code>", "Запись если пусто", "Записывает значение, если переменная равна nil или 0"],
+            ["<code>$=</code>", "Вывод в консоль", "Печатает значение в консоль"]
           ]
-        },
-        {
-          "type": "codeBlock",
-          "title": "Особые операторы",
-          "code": "n <span class=\"op\">+=</span> <span class=\"num\">10</span>        <span class=\"cmt\">-- Прибавляет 10 к текущему значению (работает с любым оператором)</span>\nname <span class=\"op\">??=</span> <span class=\"num\">100</span>   <span class=\"cmt\">-- Если переменная НЕ СОЗДАНА (или равна nil / 0) — создать и записать значение</span>\nn <span class=\"op\">$=</span> <span class=\"str\">\" тут что угодно \"</span> <span class=\"cmt\">-- Вывод строки/значения в консоль</span>"
         }
       ]
     },
     {
       "id": "strings",
-      "title": "Работа со строками",
+      "title": "Работа со строками и Склеивание",
       "blocks": [
         {
-          "type": "html",
-          "html": "<p>PGN поддерживает автоматическое склеивание строк и переменных, а также специальные символы конкатенации.</p>"
+          "type": "subTitle",
+          "title": "Автосклеивание"
         },
         {
           "type": "codeBlock",
-          "title": "Конкатенация",
-          "code": "<span class=\"cmt\">-- Операторы конкатенации:</span>\n..             <span class=\"cmt\">-- Склеить со следующим словом</span>\n/n             <span class=\"cmt\">-- Перевести на новую строку и склеить следующее слово</span>\n\n<span class=\"cmt\">-- Строка перед которой НЕ нужно писать .. склеивается сама:</span>\nName = .. text\nN = name name .. text <span class=\"str\">\" строчка \"</span>\n\n<span class=\"cmt\">-- Итог N: \"texttexttextстрочка\"</span>"
+          "title": "Пример автосклеивания",
+          "code": "Name = .. text\nN = name name .. text <span class=\"str\">\" строчка \"</span>"
+        },
+        {
+          "type": "callout",
+          "style": "purple",
+          "icon": "🔤",
+          "title": "Правила склеивания",
+          "text": "• Для привязки первого слова используется <code>.. слово</code>.<br>• Текст в кавычках <code>\" строчка \"</code> склеивается автоматически без символов <code>..</code>.<br>• Переменная N из примера выше станет равна <code>texttexttextстрочка</code>.<br>• Для переноса текста на новую строку используйте <code>/n</code>."
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "title": "Формат ID приложений HorizonOS",
+      "blocks": [
+        {
+          "type": "callout",
+          "style": "warning",
+          "icon": "❗️",
+          "title": "Важно соблюдать структуру ID",
+          "text": "ID приложения обязательно указывается в формате <code>app.ТутЛюбойID.adk</code>. В текущих версиях отсутствие префикса/суффикса не критично, но в следующих обновлениях программы со старым форматом перестанут работать!"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Пример корректного ID",
+          "code": "app.MyAwesomeGame.adk\n\nsystem create.app myApp app.MyAwesomeGame.adk iconCode mainCode"
+        }
+      ]
+    },
+    {
+      "id": "app-icons",
+      "title": "Формат векторных иконок приложений",
+      "blocks": [
+        {
+          "type": "html",
+          "html": "<p>Иконки приложений задаются в виде массива векторных полигонов и скругленных прямоугольников.</p>"
+        },
+        {
+          "type": "codeBlock",
+          "title": "Структура массива иконки",
+          "code": "[\n  [\n    [точки_полигона],\n    [смещение_x, смещение_y, масштаб_x, масштаб_y, прозрачность_0_1, ['system'|'custom', r, g, b]]\n  ]\n]\n\n[\n  [\n    [<span class=\"str\">\"Round.Rect\"</span>, скругление_углов],\n    [x, y, ширина, высота, прозрачность_0_1, [<span class=\"str\">'system'</span>, r, g, b], поворот]\n  ]\n]"
         }
       ]
     },
@@ -182,78 +299,145 @@ window.pgnData = {
           "type": "callout",
           "style": "purple",
           "icon": "⚡",
-          "title": "Автоматические переменные объектов",
-          "text": "При создании графического объекта (<code>sRect</code>, <code>text</code> и др.) движок Axeon автоматически генерирует его внутренние свойства (например, <code>object.x</code>, <code>object.y</code>, <code>object.w</code>, <code>object.h</code>). С помощью быстрых операторов Axeon можно напрямую читать, суммировать и объединять их с переменными."
+          "title": "Получение параметров объекта в переменную",
+          "text": "Специальные операторы Axeon позволяют считывать данные объектов (например, <code>object.x</code>, <code>object.w</code>) прямо в переменные."
         },
         {
           "type": "grid3",
           "items": [
             {
-              "badge": { "text": "Присваивание ==", "class": "badge-axeon" },
-              "cardTitle": "Чтение свойства",
-              "description": "Записывает значение свойства объекта напрямую в переменную:",
-              "codeSample": "name == object.x name"
+              "badge": { "text": "Запись ==", "class": "badge-axeon" },
+              "cardTitle": "Записать в переменную",
+              "description": "Считывает свойство и сохраняет в переменную:",
+              "codeSample": "varName == object.x myRect"
             },
             {
-              "badge": { "text": "Сложение =+=", "class": "badge-axeon" },
-              "cardTitle": "Прибавление значения",
-              "description": "Прибавляет значение свойства объекта к численной переменной:",
-              "codeSample": "name =+= object.x name"
+              "badge": { "text": "Прибавить =+=", "class": "badge-axeon" },
+              "cardTitle": "Прибавить к переменной",
+              "description": "Считывает свойство и прибавляет к переменной:",
+              "codeSample": "varName =+= object.w myRect"
             },
             {
-              "badge": { "text": "Склейка =..=", "class": "badge-axeon" },
-              "cardTitle": "Добавление строки",
-              "description": "Склеивает значение свойства объекта с текстом переменной:",
-              "codeSample": "name =..= object.x name"
+              "badge": { "text": "Склеить =..=", "class": "badge-axeon" },
+              "cardTitle": "Присоединить текст",
+              "description": "Считывает свойство и добавляет в конец строки:",
+              "codeSample": "varName =..= object.x myRect"
             }
           ]
         },
         {
           "type": "codeBlock",
-          "title": "Работа со свойствами объектов",
-          "code": "<span class=\"cmt\">-- 1. Получение координаты X объекта 'myRect' и запись её в переменную 'pos'</span>\npos <span class=\"op\">==</span> object.x myRect\n\n<span class=\"cmt\">-- 2. Прибавление координаты X объекта 'myRect' к имеющейся переменной 'score'</span>\nscore <span class=\"op\">=+=</span> object.x myRect\n\n<span class=\"cmt\">-- 3. Присоединение текстового представления координаты X к строковой переменной 'log'</span>\nlog <span class=\"op\">=..=</span> object.x myRect\n\n<span class=\"cmt\">-- Практический пример:</span>\nnew.sRect playerBox <span class=\"num\">100 200 50 50 10 10 10 10 100 0</span>\nposX <span class=\"op\">==</span> object.x playerBox     <span class=\"cmt\">-- posX = 100</span>\ntotal <span class=\"op\">=+=</span> object.x playerBox    <span class=\"cmt\">-- total = total + 100</span>\ninfo <span class=\"op\">=..=</span> object.x playerBox    <span class=\"cmt\">-- info = info .. \"100\"</span>"
+          "title": "Примеры получения значений",
+          "code": "pos <span class=\"op\">==</span> object.x myRect\nscore <span class=\"op\">=+=</span> object.w myRect\nlog <span class=\"op\">=..=</span> object.x myRect"
         }
       ]
     },
     {
       "id": "object-events",
-      "title": "События и методы управления объектами (object.*)",
+      "title": "Управление объектами и Касания (object.*)",
       "blocks": [
         {
+          "type": "callout",
+          "style": "purple",
+          "icon": "💡",
+          "title": "Как работает управление объектами",
+          "text": "Вся графика на экране управляется через команду <b>object.СВОЙСТВО</b>.<br><br><b>Главные правила:</b><br>• <b>X и Y</b> — позиция на экране (X: влево/вправо, Y: вверх/вниз).<br>• <b>W и H</b> — размеры (W: ширина, H: высота).<br>• <b>Буква S в названии (sx, sy, sw, sh...)</b> — означает <i>Сдвинуть/Изменить</i> текущее значение, а не задать его заново."
+        },
+        {
           "type": "subTitle",
-          "title": "Обработка касаний"
+          "title": "1. Касания (Touch)"
         },
         {
           "type": "codeBlock",
-          "title": "touch.object",
-          "code": "<span class=\"cmt\">-- Вызов функции при прикосновении пальцем к объекту</span>\ntouch.object name func\n\n<span class=\"cmt\">-- Синонимы вызова функции:</span>\ntouch.object name func()\ntouch.object name func( n )"
+          "title": "Реакция на прикосновение пальца",
+          "code": "touch.object btn myFunc\ntouch.object btn myFunc()\ntouch.object btn myFunc( n )"
         },
         {
           "type": "subTitle",
-          "title": "Методы модификации объектов (object.)"
+          "title": "2. Установка точных параметров (Задать с нуля)"
         },
         {
           "type": "table",
-          "headers": ["Команда", "Описание"],
+          "headers": ["Команда", "Что делает (простым языком)", "Пример кода"],
           "rows": [
-            ["<code>object.x name знач</code> / <code>object.y name знач</code>", "Установить координату X / Y"],
-            ["<code>object.w name знач</code> / <code>object.h name знач</code>", "Установить ширину / высоту"],
-            ["<code>object.sx name знач</code> / <code>object.sy name знач</code>", "Изменить координату X / Y (смещение)"],
-            ["<code>object.sw name знач</code> / <code>object.sh name знач</code>", "Изменить ширину / высоту"],
-            ["<code>object.size name знач</code> / <code>object.ssize name знач</code>", "Установить / изменить размер"],
-            ["<code>object.position name x y</code>", "Установить позицию объекта"],
-            ["<code>object.anchor_point name x y</code>", "Установить точку привязки"],
-            ["<code>object.opacity name знач</code> / <code>object.sopacity name знач</code>", "Установить / изменить непрозрачность (0-100)"],
-            ["<code>object.color.rgb name r g b [a]</code>", "Установить RGB цвет и непрозрачность"],
-            ["<code>object.rgb name r g b</code> / <code>object.hex name hex</code>", "Установить цвет (RGB или HEX)"],
-            ["<code>object.Mx name знач</code> / <code>object.My name знач</code>", "Масштабирование по X / Y"],
-            ["<code>object.turn name град</code>", "Установить поворот"],
-            ["<code>object.turn_object name target</code>", "Установить вращение по отношению к объекту"],
-            ["<code>object.show name</code> / <code>object.hide name</code>", "Показать / скрыть объект"],
-            ["<code>object.delete name</code>", "Удалить объект"],
-            ["<code>object.layer_above name</code> / <code>object.layer_down name</code>", "Переместить на слой выше / ниже"],
-            ["<code>object.outline.w name знач</code> / <code>object.outline.sw name знач</code>", "Установить / изменить ширину обводки"],
-            ["<code>object.outline.rgb name r g b [a]</code>", "Установить цвет и непрозрачность обводки"]
+            ["<code>object.x</code>", "Ставит объект на точную позицию X (по горизонтали)", "<code>object.x box 100</code>"],
+            ["<code>object.y</code>", "Ставит объект на точную позицию Y (по вертикали)", "<code>object.y box 200</code>"],
+            ["<code>object.position</code>", "Ставит объект сразу по X и Y за одну команду", "<code>object.position box 100 200</code>"],
+            ["<code>object.w</code>", "Задает точную ширину объекта", "<code>object.w box 150</code>"],
+            ["<code>object.h</code>", "Задает точную высоту объекта", "<code>object.h box 80</code>"],
+            ["<code>object.size</code>", "Задает одинаковый размер и ширине, и высоте", "<code>object.size box 100</code>"],
+            ["<code>object.opacity</code>", "Прозрачность от 0 (невидимый) до 100 (виден полностью)", "<code>object.opacity box 50</code>"],
+            ["<code>object.turn</code>", "Поворачивает объект на указанный угол (в градусах)", "<code>object.turn box 45</code>"],
+            ["<code>object.rgb</code>", "Красит объект в цвет (Красный, Зеленый, Синий от 0 до 255)", "<code>object.rgb box 255 0 0</code>"],
+            ["<code>object.hex</code>", "Красит объект с помощью HEX-кода цвета", "<code>object.hex box #FF0000</code>"],
+            ["<code>object.Mx</code>", "Масштабирует (растягивает) объект по ширине", "<code>object.Mx box 2</code>"],
+            ["<code>object.My</code>", "Масштабирует (растягивает) объект по высоте", "<code>object.My box 2</code>"],
+            ["<code>object.anchor_point</code>", "Задает точку привязки (центр вращения/растяжения)", "<code>object.anchor_point box 0.5 0.5</code>"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "3. Изменение параметров (Буква S = Прибавить / Отнять)"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Что делает (простым языком)", "Пример кода"],
+          "rows": [
+            ["<code>object.sx</code>", "Сдвигает объект по горизонтали на указанное число", "<code>object.sx box 10</code>"],
+            ["<code>object.sy</code>", "Сдвигает объект по вертикали на указанное число", "<code>object.sy box -5</code>"],
+            ["<code>object.sw</code>", "Изменяет (увеличивает или уменьшает) ширину", "<code>object.sw box 20</code>"],
+            ["<code>object.sh</code>", "Изменяет (увеличивает или уменьшает) высоту", "<code>object.sh box -10</code>"],
+            ["<code>object.ssize</code>", "Изменяет сразу ширину и высоту на одно число", "<code>object.ssize box 15</code>"],
+            ["<code>object.sopacity</code>", "Изменяет текущую прозрачность", "<code>object.sopacity box -20</code>"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "4. Поворот к другому объекту"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Что делает", "Пример"],
+          "rows": [
+            ["<code>object.turn_object</code>", "Поворачивает первый объект лицом к второму объекту", "<code>object.turn_object player enemy</code>"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "5. Видимость и Удаление"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Что делает", "Пример"],
+          "rows": [
+            ["<code>object.hide</code>", "Прячет объект (становится невидимым)", "<code>object.hide box</code>"],
+            ["<code>object.show</code>", "Показывает спрятанный объект обратно", "<code>object.show box</code>"],
+            ["<code>object.delete</code>", "Полностью удаляет объект из памяти", "<code>object.delete box</code>"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "6. Слои (Кто поверх кого лежит)"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Что делает", "Пример"],
+          "rows": [
+            ["<code>object.layer_above</code>", "Поднимает объект на один слой выше", "<code>object.layer_above box</code>"],
+            ["<code>object.layer_down</code>", "Опускает объект на один слой ниже", "<code>object.layer_down box</code>"]
+          ]
+        },
+        {
+          "type": "subTitle",
+          "title": "7. Обводка и Рамка объекта (Outline)"
+        },
+        {
+          "type": "table",
+          "headers": ["Команда", "Что делает", "Пример"],
+          "rows": [
+            ["<code>object.outline.w</code>", "Задает толщину контура (рамки) вокруг объекта", "<code>object.outline.w box 4</code>"],
+            ["<code>object.outline.sw</code>", "Изменяет толщину контура относительно текущей", "<code>object.outline.sw box 2</code>"],
+            ["<code>object.outline.rgb</code>", "Задает цвет и прозрачность контура (R, G, B, Alpha)", "<code>object.outline.rgb box 255 255 0 100</code>"]
           ]
         }
       ]
@@ -269,7 +453,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Конструкция цикла",
-          "code": "<span class=\"kwd\">for</span> name от до шаг запись_в_переменную {\n    <span class=\"cmt\">-- Исполняемый код</span>\n}forend_name\n\n<span class=\"cmt\">-- Пример использования:</span>\n<span class=\"kwd\">for</span> n <span class=\"num\">1 100 1</span> i {\n    <span class=\"kwd\">local</span> n = <span class=\"var\">*i</span> * <span class=\"num\">100</span>\n}forend_n"
+          "code": "<span class=\"kwd\">for</span> name от до шаг счетчик {\n\n}forend_name\n\n<span class=\"kwd\">for</span> n <span class=\"num\">1 100 1</span> i {\n    <span class=\"kwd\">local</span> stepPos = <span class=\"var\">*i</span> * <span class=\"num\">100</span>\n    object.x box <span class=\"var\">*stepPos</span>\n}forend_n"
         },
         {
           "type": "subTitle",
@@ -278,7 +462,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Логическое ветвление",
-          "code": "<span class=\"kwd\">if</span> name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {\n    <span class=\"cmt\">-- Исполняемый код</span>\n}ifend_name\n\n<span class=\"cmt\">-- Пример:</span>\n<span class=\"kwd\">if</span> n <span class=\"num\">1</span> = <span class=\"num\">2</span> ( n ) {\n    <span class=\"cmt\">-- Выполнится если 1 равно 2</span>\n}ifend_n"
+          "code": "<span class=\"kwd\">if</span> name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {\n\n}ifend_name\n\n<span class=\"kwd\">if</span> check <span class=\"var\">*n</span> = <span class=\"num\">2</span> ( n ) {\n\n}ifend_check"
         },
         {
           "type": "subTitle",
@@ -287,7 +471,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Интервальный таймер",
-          "code": "<span class=\"kwd\">timer</span> name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n    <span class=\"cmt\">-- Код цикла таймера</span>\n}timerend_name\n\n<span class=\"cmt\">-- Пример:</span>\n<span class=\"kwd\">timer</span> n <span class=\"num\">0 60</span> ( i ) {\n    <span class=\"cmt\">-- Код</span>\n}timerend_n"
+          "code": "<span class=\"kwd\">timer</span> name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n\n}timerend_name\n\n<span class=\"kwd\">timer</span> myTimer <span class=\"num\">1 60</span> ( i ) {\n\n}timerend_myTimer"
         },
         {
           "type": "subTitle",
@@ -296,7 +480,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Создание и вызов функций",
-          "code": "<span class=\"kwd\">function</span> name ( i ) {\n    <span class=\"cmt\">-- Код функции</span>\n}functend_name\n\n<span class=\"cmt\">-- Примечания:</span>\n<span class=\"cmt\">-- Переменная i берётся из текущего файла или структуры. Если передавать не нужно, ставьте пробел: ( )</span>\n\n<span class=\"cmt\">-- Варианты вызова функции:</span>\nname()\nname( i ) <span class=\"cmt\">-- Передает локальную i в функцию (объявлять заново в функции не требуется)</span>"
+          "code": "<span class=\"kwd\">function</span> name ( аргумент ) {\n\n}functend_name\n\nname()\nname( <span class=\"var\">*i</span> )"
         }
       ]
     },
@@ -309,13 +493,9 @@ window.pgnData = {
           "title": "Прямоугольник с pro-углами new.sRect"
         },
         {
-          "type": "html",
-          "html": "<p>Создает векторный прямоугольник с раздельной настройкой скругления каждого из 4 углов.</p>"
-        },
-        {
           "type": "codeBlock",
           "title": "new.sRect",
-          "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\n<span class=\"cmt\">-- Пример (рекомендуемое качество точек 100-200):</span>\nnew.sRect name <span class=\"num\">0 0 100 100 15 15 0 0 100 0</span>"
+          "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\nnew.sRect name <span class=\"num\">0 0 100 100 15 15 0 0 100 0</span>"
         },
         {
           "type": "subTitle",
@@ -324,7 +504,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "new.rect",
-          "code": "new.rect name x y шир выс скруг\n\n<span class=\"cmt\">-- Пример:</span>\nnew.rect name <span class=\"num\">0 0 100 100 15</span>"
+          "code": "new.rect name x y шир выс скруг\n\nnew.rect name <span class=\"num\">0 0 100 100 15</span>"
         },
         {
           "type": "subTitle",
@@ -333,7 +513,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Цвет и Непрозрачность",
-          "code": "<span class=\"cmt\">-- Установить RGB цвет и непрозрачность (0-100)</span>\nobject.color.rgb name r g b [непрозрачность]\nobject.color.rgb name <span class=\"num\">255 255 255</span>\nobject.color.rgb name <span class=\"num\">255 255 255 100</span>\n\n<span class=\"cmt\">-- Установить только непрозрачность (0-100)</span>\nobject.opacity name непрозрачность\nobject.opacity name <span class=\"num\">100</span>"
+          "code": "object.color.rgb name r g b [непрозрачность(0-100)]\nobject.opacity name непрозрачность(0-100)"
         }
       ]
     },
@@ -348,7 +528,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Создание текста",
-          "code": "<span class=\"cmt\">-- Обычный текст:</span>\nnew.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100</span>\n\n<span class=\"cmt\">-- Текст с шириной, высотой и выравниванием (left / center / right):</span>\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100 1000 100</span> center\n\n<span class=\"cmt\">-- Динамическое изменение текста:</span>\ntext.change name newText\ntext.change name love\n\n<span class=\"cmt\">-- Цвет и Прозрачность текста:</span>\ntext.color.rgb name r g b [непрозрачность]\ntext.opacity name непрозрачность(0-100)"
+          "code": "new.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100</span>\n\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100 1000 100</span> center\n\ntext.change name newText\n\ntext.color.rgb name r g b [непрозрачность(0-100)]\ntext.opacity name непрозрачность(0-100)"
         },
         {
           "type": "subTitle",
@@ -357,7 +537,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "textField.multiLine",
-          "code": "<span class=\"cmt\">-- Создание текстового поля:</span>\nnew.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name <span class=\"num\">0 0 250 100</span> medium <span class=\"num\">36</span> Введи_текст\n\n<span class=\"cmt\">-- Установить текст в текстовое поле:</span>\ntext.textField.multiLine name text\n\n<span class=\"cmt\">-- Установить фокус на текстовое поле:</span>\nfocus.textField.multiLine name\n\n<span class=\"cmt\">-- Отключить клавиатуру:</span>\ndisable.keyboard"
+          "code": "new.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name <span class=\"num\">0 0 250 100</span> medium <span class=\"num\">36</span> Введи_текст\n\ntext.textField.multiLine name text\nfocus.textField.multiLine name\ndisable.keyboard"
         }
       ]
     },
@@ -375,12 +555,12 @@ window.pgnData = {
             },
             {
               "cardTitle": "Comfortaa",
-              "description": "Скругленный стиль. <span style='color:var(--rose); font-size:12px;'>⚠️ Без кириллицы</span>",
+              "description": "Скругленный стиль.",
               "list": ["Comfotiaa bold", "Comfotiaa medium", "Comfotiaa regular"]
             },
             {
               "cardTitle": "Ubuntu",
-              "description": "Фирменный шрифт от сикода.",
+              "description": "Фирменный шрифт.",
               "list": ["ubuntu"]
             }
           ]
@@ -391,10 +571,6 @@ window.pgnData = {
       "id": "system",
       "title": "Системные переменные HorizonOS",
       "blocks": [
-        {
-          "type": "html",
-          "html": "<p>Предопределенные глобальные значения с префиксом <code>$system.</code>:</p>"
-        },
         {
           "type": "table",
           "headers": ["Переменная", "Описание"],
@@ -412,7 +588,7 @@ window.pgnData = {
             ["<code>$system.topScreen</code> / <code>$system.downScreen</code>", "Верхняя и нижняя границы"],
             ["<code>$system.leftScreen</code> / <code>$system.rightScreen</code>", "Левая и правая границы"],
             ["<code>$system.date1</code>", "Нагрузка системы (0 - 100%)"],
-            ["<code>$system.time.sec / min / day / month / yers / wday</code>", "Время и дата (<code>wday</code> — день недели)"]
+            ["<code>$system.time.sec / min / day / month / yers / wday</code>", "Время и дата (wday — день недели)"]
           ]
         }
       ]
@@ -422,26 +598,9 @@ window.pgnData = {
       "title": "Системные команды и Уведомления",
       "blocks": [
         {
-          "type": "subTitle",
-          "title": "Интерфейс и Уведомления"
-        },
-        {
-          "type": "codeBlock",
-          "title": "Фон, тосты и уведомления",
-          "code": "<span class=\"cmt\">-- Установить цвет фона</span>\nbackground.rgb r g b\n\n<span class=\"cmt\">-- Создать уведомление (t — задержка появления в секундах, от 0 до 5)</span>\nnew.notification ГлавныйТекст Текст ТекстКнопки t\n\n<span class=\"cmt\">-- Показать тост-уведомление (время отображения выбирается системой)</span>\nshow.toast текст"
-        },
-        {
-          "type": "subTitle",
-          "title": "Команды system"
-        },
-        {
-          "type": "html",
-          "html": "<p>У всех системных команд в начале указывается ключевое слово <code>system</code>.</p>"
-        },
-        {
           "type": "codeBlock",
           "title": "Команды system",
-          "code": "<span class=\"cmt\">-- Открыть код в новом приложении</span>\nsystem open.app.is.code code\n\n<span class=\"cmt\">-- Сохранение и работа с данными (через файлы)</span>\nsystem save name данные\nsystem read.save name переменная\nsystem delete.save name\n\n<span class=\"cmt\">-- Управление выключением экрана</span>\nsystem notoff.screen   <span class=\"cmt\">-- отключает выключение экрана</span>\nsystem off.screen      <span class=\"cmt\">-- включает выключение экрана</span>\n\n<span class=\"cmt\">-- Создание нового приложения</span>\nsystem create.app name app.id.adk icon code"
+          "code": "background.rgb r g b\nnew.notification ГлавныйТекст Текст Кнопка t\nshow.toast текст\n\nsystem open.app.is.code code\nsystem save name данные\nsystem read.save name переменная\nsystem delete.save name\nsystem notoff.screen\nsystem off.screen\nsystem create.app name app.id.adk icon code"
         }
       ]
     }
