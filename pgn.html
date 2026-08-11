@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PGN Graphics & Axeon Engine — Documentation</title>
+    <title>PGN Graphics — Documentation</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
         :root {
             --bg-page: #05070f;
             --bg-sidebar: #090d16;
-            --bg-header: rgba(9, 13, 22, 0.9);
+            --bg-header: rgba(9, 13, 22, 0.95);
             --bg-card: rgba(15, 21, 36, 0.6);
             --bg-card-hover: rgba(22, 31, 52, 0.85);
             --bg-code: #060911;
@@ -37,7 +37,7 @@
             
             --sidebar-w: 270px;
             --toc-w: 220px;
-            --header-h: 68px;
+            --header-h: 64px;
         }
 
         * {
@@ -48,7 +48,7 @@
         }
 
         html, body {
-            overflow-x: clip;
+            overflow-x: hidden;
             background-color: var(--bg-page);
             color: var(--text-main);
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -68,57 +68,59 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
+            z-index: 1100;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 28px;
+            padding: 0 20px;
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
         }
 
         .brand-logo {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--primary), var(--purple), var(--cyan));
-            border-radius: 12px;
+            border-radius: 10px;
             display: grid;
             place-items: center;
             font-weight: 800;
-            font-size: 15px;
+            font-size: 14px;
             color: #fff;
-            box-shadow: 0 0 20px var(--primary-glow);
+            box-shadow: 0 0 15px var(--primary-glow);
+            flex-shrink: 0;
         }
 
         .brand-title {
             font-weight: 800;
-            font-size: 17px;
+            font-size: 16px;
             letter-spacing: -0.4px;
             background: linear-gradient(135deg, #fff 60%, var(--text-sub));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            white-space: nowrap;
         }
 
         .brand-badge {
-            font-size: 11px;
+            font-size: 10px;
             background: rgba(168, 85, 247, 0.15);
             color: #c084fc;
             border: 1px solid rgba(168, 85, 247, 0.35);
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 99px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+            white-space: nowrap;
         }
 
         .search-box {
             position: relative;
-            width: 260px;
+            width: 220px;
         }
 
         .search-box input {
@@ -126,7 +128,7 @@
             background: rgba(15, 21, 36, 0.8);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 8px 14px 8px 36px;
+            padding: 8px 12px 8px 34px;
             font-size: 13px;
             color: var(--text-main);
             outline: none;
@@ -140,7 +142,7 @@
 
         .search-box svg {
             position: absolute;
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             width: 15px;
@@ -154,6 +156,33 @@
             border: none;
             color: var(--text-main);
             cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+        }
+
+        .mobile-toggle:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Overlay for Mobile Sidebar --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* --- Layout Structure --- */
@@ -173,12 +202,12 @@
             bottom: 0;
             left: 0;
             overflow-y: auto;
-            padding: 24px 16px;
+            padding: 20px 14px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            z-index: 800;
-            transition: transform 0.3s ease;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .sidebar::-webkit-scrollbar { width: 4px; }
@@ -278,12 +307,12 @@
         .content {
             width: 100%;
             max-width: 920px;
-            padding: 36px 44px 90px 44px;
+            padding: 32px 40px 90px 40px;
         }
 
         .doc-hero {
-            margin-bottom: 28px;
-            padding-bottom: 24px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -293,41 +322,39 @@
             gap: 8px;
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 500;
         }
 
         .doc-title {
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 800;
-            letter-spacing: -1.2px;
-            line-height: 1.15;
-            margin-bottom: 12px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #ffffff 30%, var(--purple) 70%, var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .doc-subtitle {
-            font-size: 15.5px;
+            font-size: 15px;
             color: var(--text-sub);
             line-height: 1.6;
         }
 
-        /* ИСПРАВЛЕННАЯ ЛИПКАЯ ПАНЕЛЬ С КАТЕГОРИЯМИ (FIXED STICKY PANEL) */
+        /* STICKY CATEGORY PANEL */
         .sticky-category-wrapper {
             position: sticky;
             top: var(--header-h);
-            z-index: 900;
-            margin: 0 -44px 40px -44px;
-            padding: 12px 44px;
-            background: rgba(9, 13, 22, 0.92);
+            z-index: 800;
+            margin: 0 -40px 36px -40px;
+            padding: 12px 40px;
+            background: rgba(9, 13, 22, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.08);
-            transition: background 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         .category-bar {
@@ -364,28 +391,7 @@
             cursor: pointer;
         }
 
-        .cat-chip:hover {
-            color: #fff;
-            background: rgba(99, 102, 241, 0.18);
-            border-color: rgba(99, 102, 241, 0.4);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-        }
-
-        .cat-chip.axeon-chip {
-            background: rgba(168, 85, 247, 0.12);
-            border-color: rgba(168, 85, 247, 0.3);
-            color: #e9d5ff;
-        }
-
-        .cat-chip.axeon-chip:hover, .cat-chip.axeon-chip.active {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(99, 102, 241, 0.35));
-            border-color: var(--purple);
-            color: #fff;
-            box-shadow: 0 0 18px var(--purple-glow);
-        }
-
-        .cat-chip.active {
+        .cat-chip:hover, .cat-chip.active {
             color: #fff;
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(99, 102, 241, 0.25));
             border-color: var(--cyan);
@@ -405,23 +411,18 @@
             box-shadow: 0 0 8px var(--cyan);
         }
 
-        .cat-chip.axeon-chip .chip-dot {
-            background: var(--purple);
-            box-shadow: 0 0 8px var(--purple);
-        }
-
         /* --- Content Blocks --- */
         section {
-            margin-bottom: 64px;
+            margin-bottom: 50px;
             scroll-margin-top: calc(var(--header-h) + 70px);
         }
 
         h2 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--text-main);
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -435,78 +436,67 @@
         }
 
         h3 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--cyan);
-            margin: 24px 0 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            margin: 20px 0 10px 0;
         }
 
-        p { color: var(--text-sub); font-size: 14.5px; margin-bottom: 16px; }
+        p { color: var(--text-sub); font-size: 14px; margin-bottom: 14px; }
 
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin: 20px 0; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 20px 0; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 18px 0; }
 
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 20px;
+            padding: 18px;
             backdrop-filter: blur(10px);
             transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .card:hover {
             background: var(--bg-card-hover);
             border-color: var(--border-glow);
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
 
         .callout {
             border-radius: 14px;
-            padding: 20px 22px;
-            margin: 22px 0;
-            font-size: 14.5px;
+            padding: 16px 18px;
+            margin: 18px 0;
+            font-size: 14px;
             display: flex;
-            gap: 16px;
+            gap: 14px;
             align-items: flex-start;
             border: 1px solid transparent;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
         }
 
-        .callout-icon { flex-shrink: 0; font-size: 20px; line-height: 1; }
+        .callout-icon { flex-shrink: 0; font-size: 18px; line-height: 1; }
         .callout-danger { background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.35); color: #ffe4e6; }
         .callout-warning { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.35); color: #fef3c7; }
         .callout-info { background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.35); color: #e0f2fe; }
-        .callout-purple { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.4); color: #f3e8ff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.15); }
-        .callout-title { font-weight: 700; margin-bottom: 4px; font-size: 15px; }
+        .callout-title { font-weight: 700; margin-bottom: 4px; font-size: 14.5px; }
 
         .code-block {
-            position: relative;
-            margin: 18px 0 24px 0;
+            margin: 16px 0;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
             background: var(--bg-code);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         .code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 18px;
+            padding: 8px 14px;
             background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid var(--border);
             font-size: 12px;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
         }
 
         .copy-btn {
@@ -514,83 +504,83 @@
             border: 1px solid var(--border);
             color: var(--text-sub);
             border-radius: 6px;
-            padding: 4px 10px;
+            padding: 4px 8px;
             font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
         }
 
-        .copy-btn:hover { background: rgba(255, 255, 255, 0.12); color: var(--text-main); }
-
-        pre { padding: 18px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.65; }
-        code { font-family: 'JetBrains Mono', monospace; }
+        pre { padding: 14px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; }
 
         p code, li code, td code {
             background: rgba(255, 255, 255, 0.08);
             color: #38bdf8;
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-size: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
         }
 
-        .kwd { color: var(--purple); font-weight: 700; }
-        .var { color: var(--cyan); }
-        .num { color: var(--amber); }
-        .str { color: var(--emerald); }
-        .op  { color: var(--rose); font-weight: 600; }
-        .cmt { color: var(--text-muted); font-style: italic; }
+        .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin: 18px 0; background: var(--bg-card); }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+        th { background: rgba(15, 21, 36, 0.85); padding: 12px 14px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); white-space: nowrap; }
+        td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); }
 
-        .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin: 22px 0; background: var(--bg-card); }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
-        th { background: rgba(15, 21, 36, 0.85); padding: 14px 18px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); white-space: nowrap; }
-        td { padding: 12px 18px; border-bottom: 1px solid var(--border); color: var(--text-sub); }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(255, 255, 255, 0.02); }
-
-        .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800; text-transform: uppercase; }
         .badge-global { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
         .badge-local { background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3); }
-        .badge-axeon { background: rgba(168, 85, 247, 0.18); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
 
+        /* --- Mobile Responsiveness --- */
         @media (max-width: 1200px) {
             .right-sidebar { display: none; }
             .main-container { margin-right: 0; width: calc(100% - var(--sidebar-w)); }
         }
 
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-container { margin-left: 0; width: 100%; }
-            .content { padding: 24px 18px 60px 18px; }
-            .sticky-category-wrapper { margin: 0 -18px 32px -18px; padding: 10px 18px; }
             .mobile-toggle { display: block; }
-            .search-box { width: 170px; }
+            
+            .sidebar { 
+                transform: translateX(-100%); 
+                width: 280px;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            }
+            .sidebar.open { transform: translateX(0); }
+
+            .main-container { margin-left: 0; width: 100%; }
+            .content { padding: 20px 16px 60px 16px; }
+            .sticky-category-wrapper { margin: 0 -16px 24px -16px; padding: 10px 16px; }
+        }
+
+        @media (max-width: 600px) {
+            .brand-badge { display: none; }
+            .brand-title { font-size: 14px; }
+            .search-box { width: 140px; }
+            .doc-title { font-size: 26px; }
+            .doc-subtitle { font-size: 14px; }
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
             <button class="mobile-toggle" id="menuToggle" aria-label="Открыть меню">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <a href="#" class="header-brand">
                 <div class="brand-logo">PGN</div>
                 <span class="brand-title">PGN GRAPHICS</span>
-                <span class="brand-badge">JSON Fetch Engine</span>
+                <span class="brand-badge">Developer</span>
             </a>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
             <div class="search-box">
                 <svg viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.39A7.9 7.9 0 1 0 15 16.29l5.39 5.4a1 1 0 0 0 1.42-1.42zM10 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/></svg>
-                <input type="text" id="docSearch" placeholder="Поиск по документации...">
+                <input type="text" id="docSearch" placeholder="Поиск...">
             </div>
         </div>
     </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="layout">
         <nav class="sidebar" id="sidebar"></nav>
@@ -609,18 +599,18 @@
                     <div class="doc-breadcrumb">
                         <span>Документация</span>
                         <span>/</span>
-                        <span style="color: var(--purple);">Язык PGN & Axeon Engine</span>
+                        <span style="color: var(--purple);">PGN Graphics</span>
                     </div>
-                    <h1 class="doc-title">PGN Graphics & Axeon Engine</h1>
-                    <p class="doc-subtitle">Документация автоматически подгружает данные из файла <code>pgn-data.json</code>.</p>
+                    <h1 class="doc-title">PGN Graphics</h1>
+                    <p class="doc-subtitle">Официальное руководство пользователя и справочник по языку PGN Graphics.</p>
                 </div>
 
-                <!-- Фиксированная липкая панель -->
+                <!-- Липкая панель с категориями -->
                 <div class="sticky-category-wrapper" id="stickyWrapper">
                     <nav class="category-bar" id="categoryBar"></nav>
                 </div>
 
-                <!-- Целевой контейнер для динамической отрисовки из JSON -->
+                <!-- Динамический контент -->
                 <div id="dynamicContent"></div>
             </main>
         </div>
@@ -631,14 +621,13 @@
         async function loadPGNDatabase() {
             try {
                 const response = await fetch('pgn-data.json');
-                if (!response.ok) {
-                    throw new Error(`Ошибка сети: ${response.status} ${response.statusText}`);
+                if (response.ok) {
+                    const db = await response.json();
+                    renderApp(db);
+                    return;
                 }
-                const db = await response.json();
-                renderApp(db);
-                return;
             } catch (error) {
-                console.warn("Fetch не сработал (возможно протокол file://). Переход на window.pgnData:", error);
+                console.warn("Fetch не сработал. Использование window.pgnData:", error);
             }
 
             if (window.pgnData) {
@@ -648,25 +637,24 @@
                     <div class="callout callout-danger">
                         <div class="callout-icon">⚠️</div>
                         <div>
-                            <div class="callout-title">Ошибка загрузки базы данных</div>
-                            <div>Не удалось подгрузить ни <code>pgn-data.json</code> через fetch, ни <code>pgn-data.js</code> из скриптов.</div>
+                            <div class="callout-title">Ошибка загрузки данных</div>
+                            <div>Не удалось загрузить базу данных документации.</div>
                         </div>
                     </div>
                 `;
             }
         }
 
-        // Отрисовка приложения на основе полученных JSON данных
         function renderApp(db) {
-            // 1. Отрисовка чипсов в липкой панели
+            // 1. Категории
             const categoryBar = document.getElementById('categoryBar');
             categoryBar.innerHTML = db.categories.map(cat => `
-                <a href="#${cat.id}" class="cat-chip ${cat.isAxeon ? 'axeon-chip' : ''}">
+                <a href="#${cat.id}" class="cat-chip">
                     <span class="chip-dot"></span>${cat.title}
                 </a>
             `).join('');
 
-            // 2. Отрисовка левого меню навигации
+            // 2. Левое меню
             const sidebar = document.getElementById('sidebar');
             sidebar.innerHTML = db.groups.map(group => `
                 <div>
@@ -683,13 +671,13 @@
                 </div>
             `).join('');
 
-            // 3. Отрисовка правого меню быстрого перехода
+            // 3. Правое меню
             const tocList = document.getElementById('tocList');
             tocList.innerHTML = db.categories.map(cat => `
-                <li><a href="#${cat.id}" ${cat.isAxeon ? 'style="color: var(--purple); font-weight:600;"' : ''}>• ${cat.title}</a></li>
+                <li><a href="#${cat.id}">• ${cat.title}</a></li>
             `).join('');
 
-            // 4. Отрисовка основных секций документации
+            // 4. Секции
             const container = document.getElementById('dynamicContent');
             container.innerHTML = db.sections.map(sec => `
                 <section id="${sec.id}">
@@ -722,34 +710,15 @@
                     return `
                         <div class="grid-2">
                             ${block.items.map(card => `
-                                <div class="card" ${card.cardStyle ? `style="${card.cardStyle}"` : ''}>
+                                <div class="card">
                                     ${card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : ''}
-                                    <h3 style="${card.titleColor ? `color:${card.titleColor};` : ''} margin-top:10px;">${card.cardTitle}</h3>
+                                    <h3 style="margin-top:8px;">${card.cardTitle}</h3>
                                     ${card.description ? `<p>${card.description}</p>` : ''}
                                     ${card.code ? `
                                         <div class="code-block">
                                             <div class="code-header"><span>${card.codeTitle || 'Код'}</span></div>
                                             <pre><code>${card.code}</code></pre>
                                         </div>
-                                    ` : ''}
-                                    ${card.footerText ? `<p style="font-size: 13px;">${card.footerText}</p>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                case 'grid3':
-                    return `
-                        <div class="grid-3">
-                            ${block.items.map(card => `
-                                <div class="card">
-                                    ${card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : ''}
-                                    <h3 style="margin-top:10px;">${card.cardTitle}</h3>
-                                    <p>${card.description}</p>
-                                    ${card.codeSample ? `<code style="display:block; margin-top:8px;">${card.codeSample}</code>` : ''}
-                                    ${card.list ? `
-                                        <ul style="list-style: none; margin-top: 8px;">
-                                            ${card.list.map(li => `<li><code>${li}</code></li>`).join('')}
-                                        </ul>
                                     ` : ''}
                                 </div>
                             `).join('')}
@@ -793,18 +762,13 @@
                     navigator.clipboard.writeText(pre.innerText).then(() => {
                         const originalText = btn.innerText;
                         btn.innerText = 'Скопировано!';
-                        btn.style.color = 'var(--emerald)';
-                        setTimeout(() => {
-                            btn.innerText = originalText;
-                            btn.style.color = '';
-                        }, 2000);
+                        setTimeout(() => { btn.innerText = originalText; }, 2000);
                     });
                 });
             });
         }
 
         function setupIntersectionObserver() {
-            const observerOptions = { root: null, rootMargin: '-20% 0px -70% 0px', threshold: 0 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -814,28 +778,43 @@
                         });
                     }
                 });
-            }, observerOptions);
+            }, { rootMargin: '-20% 0px -70% 0px' });
 
-            document.querySelectorAll('section[id]').forEach(section => {
-                observer.observe(section);
-            });
+            document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
         }
 
-        // Переключатель мобильного меню
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('open');
+        // --- Мобильная навигация и закрытие по клику вне/на ссылки ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        sidebar.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                closeSidebar();
+            }
         });
 
-        // Живой поиск
+        // Поиск
         document.getElementById('docSearch').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
             document.querySelectorAll('section[id]').forEach(sec => {
-                const text = sec.textContent.toLowerCase();
-                sec.style.display = text.includes(query) ? 'block' : 'none';
+                sec.style.display = sec.textContent.toLowerCase().includes(query) ? 'block' : 'none';
             });
         });
 
-        // Запуск при загрузке страницы
         loadPGNDatabase();
     </script>
 </body>
