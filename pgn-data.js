@@ -79,18 +79,18 @@ window.pgnData = {
           "type": "grid2",
           "items": [
             {
-              "cardTitle": "❌ Неправильно (Ошибка парсера)",
+              "cardTitle": "❌ Неправильно: cal = 2 + 2",
               "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
               "titleColor": "var(--rose)",
               "codeTitle": "Некорректно",
-              "code": "<span class=\"var\">name</span>=<span class=\"num\">123</span>\n<span class=\"var\">n</span> <span class=\"op\">$=</span> <span class=\"str\">\"text\"</span>\n<span class=\"var\">val</span> = <span class=\"num\">1</span>+<span class=\"num\">2</span>"
+              "code": "name=123\nn $= \"text\"\nval = 1+2"
             },
             {
-              "cardTitle": "✅ Правильно (Работает)",
+              "cardTitle": "✅ Правильно: cal = 2 + 2",
               "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
               "titleColor": "var(--emerald)",
               "codeTitle": "Валидный код",
-              "code": "<span class=\"var\">name</span> = <span class=\"num\">123</span>\n<span class=\"var\">n</span> <span class=\"op\">$=</span> <span class=\"str\">\" text \"</span>\n<span class=\"var\">val</span> = <span class=\"num\">1</span> + <span class=\"num\">2</span>"
+              "code": "name = 123\nn $= \" text \"\nval = 1 + 2"
             }
           ]
         }
@@ -126,14 +126,14 @@ window.pgnData = {
               "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
               "titleColor": "var(--emerald)",
               "codeTitle": "Обе переменные глобальные",
-              "code": "name = <span class=\"num\">10</span> , n = <span class=\"num\">2</span>"
+              "code": "name = 10 , n = 2"
             },
             {
               "cardTitle": "Локальные (Внимание!)",
               "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
               "titleColor": "var(--rose)",
               "codeTitle": "name — локальная, n — ГЛОБАЛЬНАЯ",
-              "code": "<span class=\"kwd\">local</span> name = <span class=\"num\">10</span> , n = <span class=\"num\">2</span>"
+              "code": "local name = 10 , n = 2"
             }
           ]
         },
@@ -157,14 +157,14 @@ window.pgnData = {
               "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
               "titleColor": "var(--emerald)",
               "codeTitle": "Только имя без _",
-              "code": "b = <span class=\"num\">10</span>\na = b + <span class=\"num\">1</span>"
+              "code": "b = 10\na = b + 1"
             },
             {
               "cardTitle": "❌ Запрещено использовать _ в выражениях",
               "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
               "titleColor": "var(--rose)",
               "codeTitle": "Так писать НЕЛЬЗЯ",
-              "code": "b = <span class=\"num\">10</span>\na = _b + <span class=\"num\">1</span>"
+              "code": "b = 10\na = _b + 1"
             }
           ]
         },
@@ -189,7 +189,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Вызов команд через подстановку",
-          "code": "д = .. new.rect\n_д name <span class=\"num\">0 0 100 100 12</span>"
+          "code": "д = .. new.rect\n_д name 0 0 100 100 12"
         },
         {
           "type": "callout",
@@ -249,7 +249,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Пример автосклеивания",
-          "code": "Name = .. text\nN = name name .. text <span class=\"str\">\" строчка \"</span>"
+          "code": "Name = .. text\nN = name name .. text \" строчка \""
         },
         {
           "type": "callout",
@@ -289,7 +289,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Структура массива иконки",
-          "code": "[\n  [\n    [точки_полигона],\n    [смещение_x, смещение_y, масштаб_x, масштаб_y, прозрачность_0_1, ['system'|'custom', r, g, b]]\n  ]\n]\n\n[\n  [\n    [<span class=\"str\">\"Round.Rect\"</span>, скругление_углов],\n    [x, y, ширина, высота, прозрачность_0_1, [<span class=\"str\">'system'</span>, r, g, b], поворот]\n  ]\n]"
+          "code": "[\n  [\n    [точки_полигона],\n    [смещение_x, смещение_y, масштаб_x, масштаб_y, прозрачность_0_1, ['system'|'custom', r, g, b]]\n  ]\n]\n\n[\n  [\n    [\"Round.Rect\", скругление_углов],\n    [x, y, ширина, высота, прозрачность_0_1, ['system', r, g, b], поворот]\n  ]\n]"
         }
       ]
     },
@@ -330,7 +330,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Примеры получения значений",
-          "code": "pos <span class=\"op\">==</span> object.x myRect\nscore <span class=\"op\">=+=</span> object.w myRect\nlog <span class=\"op\">=..=</span> object.x myRect"
+          "code": "pos == object.x myRect\nscore =+= object.w myRect\nlog =..= object.x myRect"
         }
       ]
     },
@@ -348,17 +348,17 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "1. Создание и добавление объектов",
-          "code": "group.container myGroup <span class=\"num\">200 200</span>\ngroup.add_object myGroup myBox\ngroup.add_text myGroup myText\ngroup.add_group myGroup subGroup\ngroup.add_teg myGroup myTag"
+          "code": "group.container myGroup 200 200\ngroup.add_object myGroup myBox\ngroup.add_text myGroup myText\ngroup.add_group myGroup subGroup\ngroup.add_teg myGroup myTag"
         },
         {
           "type": "codeBlock",
           "title": "2. Установка параметров",
-          "code": "group.x myGroup <span class=\"num\">100</span>\ngroup.y myGroup <span class=\"num\">150</span>\ngroup.position myGroup <span class=\"num\">100 150</span>\ngroup.w myGroup <span class=\"num\">300</span>\ngroup.h myGroup <span class=\"num\">400</span>\ngroup.size myGroup <span class=\"num\">300 400</span>\ngroup.opacity myGroup <span class=\"num\">80</span>\ngroup.turn myGroup <span class=\"num\">90</span>"
+          "code": "group.x myGroup 100\ngroup.y myGroup 150\ngroup.position myGroup 100 150\ngroup.w myGroup 300\ngroup.h myGroup 400\ngroup.size myGroup 300 400\ngroup.opacity myGroup 80\ngroup.turn myGroup 90"
         },
         {
           "type": "codeBlock",
           "title": "3. Изменение параметров (Относительное)",
-          "code": "group.sx myGroup <span class=\"num\">10</span>\ngroup.sy myGroup <span class=\"num\">-5</span>\ngroup.sw myGroup <span class=\"num\">20</span>\ngroup.sh myGroup <span class=\"num\">-10</span>\ngroup.sopacity myGroup <span class=\"num\">-15</span>"
+          "code": "group.sx myGroup 10\ngroup.sy myGroup -5\ngroup.sw myGroup 20\ngroup.sh myGroup -10\ngroup.sopacity myGroup -15"
         },
         {
           "type": "codeBlock",
@@ -386,12 +386,12 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "2. Установка точных параметров",
-          "code": "object.x box <span class=\"num\">100</span>\nobject.y box <span class=\"num\">200</span>\nobject.position box <span class=\"num\">100 200</span>\nobject.w box <span class=\"num\">150</span>\nobject.h box <span class=\"num\">80</span>\nobject.size box <span class=\"num\">100</span>\nobject.opacity box <span class=\"num\">50</span>\nobject.turn box <span class=\"num\">45</span>\nobject.rgb box <span class=\"num\">255 0 0</span>\nobject.hex box <span class=\"str\">#FF0000</span>\nobject.Mx box <span class=\"num\">2</span>\nobject.My box <span class=\"num\">2</span>\nobject.anchor_point box <span class=\"num\">0.5 0.5</span>"
+          "code": "object.x box 100\nobject.y box 200\nobject.position box 100 200\nobject.w box 150\nobject.h box 80\nobject.size box 100\nobject.opacity box 50\nobject.turn box 45\nobject.rgb box 255 0 0\nobject.hex box #FF0000\nobject.Mx box 2\nobject.My box 2\nobject.anchor_point box 0.5 0.5"
         },
         {
           "type": "codeBlock",
           "title": "3. Изменение параметров (Сдвиг)",
-          "code": "object.sx box <span class=\"num\">10</span>\nobject.sy box <span class=\"num\">-5</span>\nobject.sw box <span class=\"num\">20</span>\nobject.sh box <span class=\"num\">-10</span>\nobject.ssize box <span class=\"num\">15</span>\nobject.sopacity box <span class=\"num\">-20</span>"
+          "code": "object.sx box 10\nobject.sy box -5\nobject.sw box 20\nobject.sh box -10\nobject.ssize box 15\nobject.sopacity box -20"
         },
         {
           "type": "codeBlock",
@@ -411,7 +411,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "7. Обводка и Рамка объекта (Outline)",
-          "code": "object.outline.w box <span class=\"num\">4</span>\nobject.outline.sw box <span class=\"num\">2</span>\nobject.outline.rgb box <span class=\"num\">255 255 0 100</span>"
+          "code": "object.outline.w box 4\nobject.outline.sw box 2\nobject.outline.rgb box 255 255 0 100"
         }
       ]
     },
@@ -426,7 +426,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Конструкция цикла",
-          "code": "<span class=\"kwd\">for</span> name от до шаг счетчик {\n\n}forend_name\n\n<span class=\"kwd\">for</span> n <span class=\"num\">1 100 1</span> i {\n    <span class=\"kwd\">local</span> stepPos = <span class=\"var\">*i</span> * <span class=\"num\">100</span>\n    object.x box <span class=\"var\">*stepPos</span>\n}forend_n"
+          "code": "for name от до шаг счетчик {\n\n}forend_name\n\nfor n 1 100 1 i {\n    local stepPos = *i * 100\n    object.x box *stepPos\n}forend_n"
         },
         {
           "type": "subTitle",
@@ -435,7 +435,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Логическое ветвление",
-          "code": "<span class=\"kwd\">if</span> name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {\n\n}ifend_name\n\n<span class=\"kwd\">if</span> check <span class=\"var\">*n</span> = <span class=\"num\">2</span> ( n ) {\n\n}ifend_check"
+          "code": "if name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {\n\n}ifend_name\n\nif check *n = 2 ( n ) {\n\n}ifend_check"
         },
         {
           "type": "subTitle",
@@ -444,7 +444,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Интервальный таймер",
-          "code": "<span class=\"kwd\">timer</span> name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n\n}timerend_name\n\n<span class=\"kwd\">timer</span> myTimer <span class=\"num\">1 60</span> ( i ) {\n\n}timerend_myTimer"
+          "code": "timer name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n\n}timerend_name\n\ntimer myTimer 1 60 ( i ) {\n\n}timerend_myTimer"
         },
         {
           "type": "subTitle",
@@ -453,7 +453,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Создание и вызов функций",
-          "code": "<span class=\"kwd\">function</span> name ( аргумент ) {\n\n}functend_name\n\nname()\nname( <span class=\"var\">*i</span> )"
+          "code": "function name ( аргумент ) {\n\n}functend_name\n\nname()\nname( *i )"
         }
       ]
     },
@@ -468,7 +468,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "new.sRect",
-          "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\nnew.sRect name <span class=\"num\">0 0 100 100 15 15 0 0 100 0</span>"
+          "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\nnew.sRect name 0 0 100 100 15 15 0 0 100 0"
         },
         {
           "type": "subTitle",
@@ -477,7 +477,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "new.rect",
-          "code": "new.rect name x y шир выс скруг\n\nnew.rect name <span class=\"num\">0 0 100 100 15</span>"
+          "code": "new.rect name x y шир выс скруг\n\nnew.rect name 0 0 100 100 15"
         },
         {
           "type": "subTitle",
@@ -501,7 +501,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "Создание текста",
-          "code": "new.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100</span>\n\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText <span class=\"num\">0 0 36</span> medium <span class=\"num\">100 1000 100</span> center\n\ntext.change name newText\n\ntext.color.rgb name r g b [непрозрачность(0-100)]\ntext.opacity name непрозрачность(0-100)"
+          "code": "new.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText 0 0 36 medium 100\n\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText 0 0 36 medium 100 1000 100 center\n\ntext.change name newText\n\ntext.color.rgb name r g b [непрозрачность(0-100)]\ntext.opacity name непрозрачность(0-100)"
         },
         {
           "type": "subTitle",
@@ -510,7 +510,7 @@ window.pgnData = {
         {
           "type": "codeBlock",
           "title": "textField.multiLine",
-          "code": "new.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name <span class=\"num\">0 0 250 100</span> medium <span class=\"num\">36</span> Введи_текст\n\ntext.textField.multiLine name text\nfocus.textField.multiLine name\ndisable.keyboard"
+          "code": "new.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name 0 0 250 100 medium 36 Введи_текст\n\ntext.textField.multiLine name text\nfocus.textField.multiLine name\ndisable.keyboard"
         }
       ]
     },
