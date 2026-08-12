@@ -7,6 +7,7 @@ window.pgnData = {
     { "id": "apps", "title": "📱 Приложения и ID", "isAxeon": false },
     { "id": "app-icons", "title": "🎨 Иконки приложений", "isAxeon": false },
     { "id": "axeon", "title": "⚡ Axeon Объекты", "isAxeon": true },
+    { "id": "groups-axeon", "title": "📁 Группы group.*", "isAxeon": true },
     { "id": "object-events", "title": "👆 Управление и касания", "isAxeon": true },
     { "id": "control-for", "title": "🔄 Циклы, Условия & Функции", "isAxeon": false },
     { "id": "objects", "title": "🎨 Графика sRect & Rect", "isAxeon": false },
@@ -36,6 +37,7 @@ window.pgnData = {
       "groupTitle": "Axeon Движок",
       "items": [
         { "id": "axeon", "title": "Свойства объектов (Axeon) ⚡", "isHighlight": true },
+        { "id": "groups-axeon", "title": "Управление группами (group.*)" },
         { "id": "object-events", "title": "Управление объектами и касания" }
       ]
     },
@@ -333,6 +335,39 @@ window.pgnData = {
       ]
     },
     {
+      "id": "groups-axeon",
+      "title": "Управление группами и контейнерами (group.*)",
+      "blocks": [
+        {
+          "type": "callout",
+          "style": "purple",
+          "icon": "📁",
+          "title": "Как работают группы",
+          "text": "Группы позволяют объединять объекты и управлять ими одновременно с помощью команд <b>group.СВОЙСТВО</b>."
+        },
+        {
+          "type": "codeBlock",
+          "title": "1. Создание и добавление объектов",
+          "code": "group.container myGroup <span class=\"num\">200 200</span>\ngroup.add_object myGroup myBox\ngroup.add_text myGroup myText\ngroup.add_group myGroup subGroup\ngroup.add_teg myGroup myTag"
+        },
+        {
+          "type": "codeBlock",
+          "title": "2. Установка параметров",
+          "code": "group.x myGroup <span class=\"num\">100</span>\ngroup.y myGroup <span class=\"num\">150</span>\ngroup.position myGroup <span class=\"num\">100 150</span>\ngroup.w myGroup <span class=\"num\">300</span>\ngroup.h myGroup <span class=\"num\">400</span>\ngroup.size myGroup <span class=\"num\">300 400</span>\ngroup.opacity myGroup <span class=\"num\">80</span>\ngroup.turn myGroup <span class=\"num\">90</span>"
+        },
+        {
+          "type": "codeBlock",
+          "title": "3. Изменение параметров (Относительное)",
+          "code": "group.sx myGroup <span class=\"num\">10</span>\ngroup.sy myGroup <span class=\"num\">-5</span>\ngroup.sw myGroup <span class=\"num\">20</span>\ngroup.sh myGroup <span class=\"num\">-10</span>\ngroup.sopacity myGroup <span class=\"num\">-15</span>"
+        },
+        {
+          "type": "codeBlock",
+          "title": "4. Управление, Видимость и Слои",
+          "code": "group.hide myGroup\ngroup.show myGroup\ngroup.delete myGroup\ngroup.layer_above myGroup\ngroup.layer_down myGroup"
+        }
+      ]
+    },
+    {
       "id": "object-events",
       "title": "Управление объектами и Касания (object.*)",
       "blocks": [
@@ -341,104 +376,42 @@ window.pgnData = {
           "style": "purple",
           "icon": "💡",
           "title": "Как работает управление объектами",
-          "text": "Вся графика на экране управляется через команду <b>object.СВОЙСТВО</b>.<br><br><b>Главные правила:</b><br>• <b>X и Y</b> — позиция на экране (X: влево/вправо, Y: вверх/вниз).<br>• <b>W и H</b> — размеры (W: ширина, H: высота).<br>• <b>Буква S в названии (sx, sy, sw, sh...)</b> — означает <i>Сдвинуть/Изменить</i> текущее значение, а не задать его заново."
-        },
-        {
-          "type": "subTitle",
-          "title": "1. Касания (Touch)"
+          "text": "Вся графика на экране управляется через команду <b>object.СВОЙСТВО</b>."
         },
         {
           "type": "codeBlock",
-          "title": "Реакция на прикосновение пальца",
+          "title": "1. Касания (Touch)",
           "code": "touch.object btn myFunc\ntouch.object btn myFunc()\ntouch.object btn myFunc( n )"
         },
         {
-          "type": "subTitle",
-          "title": "2. Установка точных параметров (Задать с нуля)"
+          "type": "codeBlock",
+          "title": "2. Установка точных параметров",
+          "code": "object.x box <span class=\"num\">100</span>\nobject.y box <span class=\"num\">200</span>\nobject.position box <span class=\"num\">100 200</span>\nobject.w box <span class=\"num\">150</span>\nobject.h box <span class=\"num\">80</span>\nobject.size box <span class=\"num\">100</span>\nobject.opacity box <span class=\"num\">50</span>\nobject.turn box <span class=\"num\">45</span>\nobject.rgb box <span class=\"num\">255 0 0</span>\nobject.hex box <span class=\"str\">#FF0000</span>\nobject.Mx box <span class=\"num\">2</span>\nobject.My box <span class=\"num\">2</span>\nobject.anchor_point box <span class=\"num\">0.5 0.5</span>"
         },
         {
-          "type": "table",
-          "headers": ["Команда", "Что делает (простым языком)", "Пример кода"],
-          "rows": [
-            ["<code>object.x</code>", "Ставит объект на точную позицию X (по горизонтали)", "<code>object.x box 100</code>"],
-            ["<code>object.y</code>", "Ставит объект на точную позицию Y (по вертикали)", "<code>object.y box 200</code>"],
-            ["<code>object.position</code>", "Ставит объект сразу по X и Y за одну команду", "<code>object.position box 100 200</code>"],
-            ["<code>object.w</code>", "Задает точную ширину объекта", "<code>object.w box 150</code>"],
-            ["<code>object.h</code>", "Задает точную высоту объекта", "<code>object.h box 80</code>"],
-            ["<code>object.size</code>", "Задает одинаковый размер и ширине, и высоте", "<code>object.size box 100</code>"],
-            ["<code>object.opacity</code>", "Прозрачность от 0 (невидимый) до 100 (виден полностью)", "<code>object.opacity box 50</code>"],
-            ["<code>object.turn</code>", "Поворачивает объект на указанный угол (в градусах)", "<code>object.turn box 45</code>"],
-            ["<code>object.rgb</code>", "Красит объект в цвет (Красный, Зеленый, Синий от 0 до 255)", "<code>object.rgb box 255 0 0</code>"],
-            ["<code>object.hex</code>", "Красит объект с помощью HEX-кода цвета", "<code>object.hex box #FF0000</code>"],
-            ["<code>object.Mx</code>", "Масштабирует (растягивает) объект по ширине", "<code>object.Mx box 2</code>"],
-            ["<code>object.My</code>", "Масштабирует (растягивает) объект по высоте", "<code>object.My box 2</code>"],
-            ["<code>object.anchor_point</code>", "Задает точку привязки (центр вращения/растяжения)", "<code>object.anchor_point box 0.5 0.5</code>"]
-          ]
+          "type": "codeBlock",
+          "title": "3. Изменение параметров (Сдвиг)",
+          "code": "object.sx box <span class=\"num\">10</span>\nobject.sy box <span class=\"num\">-5</span>\nobject.sw box <span class=\"num\">20</span>\nobject.sh box <span class=\"num\">-10</span>\nobject.ssize box <span class=\"num\">15</span>\nobject.sopacity box <span class=\"num\">-20</span>"
         },
         {
-          "type": "subTitle",
-          "title": "3. Изменение параметров (Буква S = Прибавить / Отнять)"
+          "type": "codeBlock",
+          "title": "4. Поворот к другому объекту",
+          "code": "object.turn_object player enemy"
         },
         {
-          "type": "table",
-          "headers": ["Команда", "Что делает (простым языком)", "Пример кода"],
-          "rows": [
-            ["<code>object.sx</code>", "Сдвигает объект по горизонтали на указанное число", "<code>object.sx box 10</code>"],
-            ["<code>object.sy</code>", "Сдвигает объект по вертикали на указанное число", "<code>object.sy box -5</code>"],
-            ["<code>object.sw</code>", "Изменяет (увеличивает или уменьшает) ширину", "<code>object.sw box 20</code>"],
-            ["<code>object.sh</code>", "Изменяет (увеличивает или уменьшает) высоту", "<code>object.sh box -10</code>"],
-            ["<code>object.ssize</code>", "Изменяет сразу ширину и высоту на одно число", "<code>object.ssize box 15</code>"],
-            ["<code>object.sopacity</code>", "Изменяет текущую прозрачность", "<code>object.sopacity box -20</code>"]
-          ]
+          "type": "codeBlock",
+          "title": "5. Видимость и Удаление",
+          "code": "object.hide box\nobject.show box\nobject.delete box"
         },
         {
-          "type": "subTitle",
-          "title": "4. Поворот к другому объекту"
+          "type": "codeBlock",
+          "title": "6. Слои (Порядок отображения)",
+          "code": "object.layer_above box\nobject.layer_down box"
         },
         {
-          "type": "table",
-          "headers": ["Команда", "Что делает", "Пример"],
-          "rows": [
-            ["<code>object.turn_object</code>", "Поворачивает первый объект лицом к второму объекту", "<code>object.turn_object player enemy</code>"]
-          ]
-        },
-        {
-          "type": "subTitle",
-          "title": "5. Видимость и Удаление"
-        },
-        {
-          "type": "table",
-          "headers": ["Команда", "Что делает", "Пример"],
-          "rows": [
-            ["<code>object.hide</code>", "Прячет объект (становится невидимым)", "<code>object.hide box</code>"],
-            ["<code>object.show</code>", "Показывает спрятанный объект обратно", "<code>object.show box</code>"],
-            ["<code>object.delete</code>", "Полностью удаляет объект из памяти", "<code>object.delete box</code>"]
-          ]
-        },
-        {
-          "type": "subTitle",
-          "title": "6. Слои (Кто поверх кого лежит)"
-        },
-        {
-          "type": "table",
-          "headers": ["Команда", "Что делает", "Пример"],
-          "rows": [
-            ["<code>object.layer_above</code>", "Поднимает объект на один слой выше", "<code>object.layer_above box</code>"],
-            ["<code>object.layer_down</code>", "Опускает объект на один слой ниже", "<code>object.layer_down box</code>"]
-          ]
-        },
-        {
-          "type": "subTitle",
-          "title": "7. Обводка и Рамка объекта (Outline)"
-        },
-        {
-          "type": "table",
-          "headers": ["Команда", "Что делает", "Пример"],
-          "rows": [
-            ["<code>object.outline.w</code>", "Задает толщину контура (рамки) вокруг объекта", "<code>object.outline.w box 4</code>"],
-            ["<code>object.outline.sw</code>", "Изменяет толщину контура относительно текущей", "<code>object.outline.sw box 2</code>"],
-            ["<code>object.outline.rgb</code>", "Задает цвет и прозрачность контура (R, G, B, Alpha)", "<code>object.outline.rgb box 255 255 0 100</code>"]
-          ]
+          "type": "codeBlock",
+          "title": "7. Обводка и Рамка объекта (Outline)",
+          "code": "object.outline.w box <span class=\"num\">4</span>\nobject.outline.sw box <span class=\"num\">2</span>\nobject.outline.rgb box <span class=\"num\">255 255 0 100</span>"
         }
       ]
     },
@@ -541,29 +514,29 @@ window.pgnData = {
         }
       ]
     },
-{
-  "id": "fonts",
-  "title": "Системные шрифты HorizonOS",
-  "blocks": [
     {
-      "type": "grid3",
-      "items": [
+      "id": "fonts",
+      "title": "Системные шрифты HorizonOS",
+      "blocks": [
         {
-          "cardTitle": "Google Sans",
-          "description": "Основной системный шрифт. Доступные варианты: bold, medium, regular."
-        },
-        {
-          "cardTitle": "Comfortaa",
-          "description": "Скругленный стиль. Доступные варианты: Comfotiaa bold, Comfotiaa medium, Comfotiaa regular."
-        },
-        {
-          "cardTitle": "Ubuntu",
-          "description": "Фирменный шрифт. Доступный вариант: ubuntu."
+          "type": "grid3",
+          "items": [
+            {
+              "cardTitle": "Google Sans",
+              "description": "Основной системный шрифт. Доступные варианты: bold, medium, regular."
+            },
+            {
+              "cardTitle": "Comfortaa",
+              "description": "Скругленный стиль. Доступные варианты: Comfotiaa bold, Comfotiaa medium, Comfotiaa regular."
+            },
+            {
+              "cardTitle": "Ubuntu",
+              "description": "Фирменный шрифт. Доступный вариант: ubuntu."
+            }
+          ]
         }
       ]
-    }
-  ]
-},
+    },
     {
       "id": "system",
       "title": "Системные переменные HorizonOS",
@@ -590,16 +563,16 @@ window.pgnData = {
         }
       ]
     },
-{
-  "id": "system-commands",
-  "title": "Системные команды и Уведомления",
-  "blocks": [
     {
-      "type": "codeBlock",
-      "title": "Команды system",
-      "code": "background.rgb r g b — меняет цвет фона\nnew.notification ГлавныйТекст Текст Кнопка t — создаёт системное уведомление\nshow.toast текст — показывает всплывающее сообщение\n\nsystem open.app.is.code code — открывает приложение по коду\nsystem save name данные — сохраняет данные\nsystem read.save name переменная — загружает сохранённые данные в переменную\nsystem delete.save name — удаляет сохранённые данные\nsystem notoff.screen — запрещает выключение экрана\nsystem off.screen — разрешает выключение экрана\nsystem create.app name app.id.adk icon code — создаёт приложение с указанными данными"
+      "id": "system-commands",
+      "title": "Системные команды и Уведомления",
+      "blocks": [
+        {
+          "type": "codeBlock",
+          "title": "Команды system",
+          "code": "background.rgb r g b — меняет цвет фона\nnew.notification ГлавныйТекст Текст Кнопка t — создаёт системное уведомление\nshow.toast текст — показывает всплывающее сообщение\n\nsystem open.app.is.code code — открывает приложение по коду\nsystem save name данные — сохраняет данные\nsystem read.save name переменная — загружает сохранённые данные в переменную\nsystem delete.save name — удаляет сохранённые данные\nsystem notoff.screen — запрещает выключение экрана\nsystem off.screen — разрешает выключение экрана\nsystem create.app name app.id.adk icon code — создаёт приложение с указанными данными"
+        }
+      ]
     }
-  ]
-}
   ]
 };
