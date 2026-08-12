@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PGN Studio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+
+    <style>
+        :root {
+            --bg-main: #141416;
+            --bg-sidebar: #1a1a1e;
+            --bg-header: #1f1f24;
+            --border-color: #2e2e35;
+            --accent-color: #007acc;
+            --accent-hover: #0098ff;
+            --text-main: #d4d4d8;
+            --text-white: #ffffff;
+            --header-h: 44px;
+            --tabs-h: 38px;
+            --status-h: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .editor-header {
+            height: var(--header-h);
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            flex-shrink: 0;
+            z-index: 20;
+            gap: 8px;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: 0.5px;
+        }
+
+        .brand-icon {
+            width: 22px;
+            height: 22px;
+            background: var(--accent-color);
+            border-radius: 4px;
+            display: grid;
+            place-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .file-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-select {
+            background: #141416;
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0 8px;
+            height: 28px;
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+            max-width: 130px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 0 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            height: 28px;
+            color: #fff;
+            background: #2a2a30;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-run {
+            background: #22c55e;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .btn-copy {
+            background: var(--accent-color);
+        }
+
+        .btn-clear {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-icon-only {
+            padding: 0 8px;
+        }
+
+        .mobile-tabs {
+            display: flex;
+            height: var(--tabs-h);
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #16161a;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            color: #71717a;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            color: var(--text-white);
+            background: var(--bg-main);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .workspace {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: calc(100dvh - var(--header-h) - var(--tabs-h) - var(--status-h));
+        }
+
+        .pane {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            background: var(--bg-main);
+        }
+
+        .pane.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #monaco-editor-container {
+            width: 100%;
+            height: 100%;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .canvas-pane {
+            background: #09090b;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        canvas {
+            background: #000;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            transition: width 0.2s ease, height 0.2s ease;
+        }
+
+        .toast-container {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #27272a;
+            border: 1px solid var(--accent-color);
+            color: var(--text-white);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .console-pane {
+            background: #111113;
+        }
+
+        .console-header {
+            height: 32px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .console-logs {
+            flex: 1;
+            padding: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .log-entry { color: #a1a1aa; line-height: 1.4; }
+        .log-entry.system { color: #38bdf8; }
+        .log-entry.error { color: #f87171; }
+
+        .statusbar {
+            height: var(--status-h);
+            background: var(--bg-header);
+            border-top: 1px solid var(--border-color);
+            color: #71717a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 11px;
+        }
+
+        @media (min-width: 769px) {
+            .mobile-tabs { display: none; }
+            .workspace {
+                display: flex;
+                height: calc(100vh - var(--header-h) - var(--status-h));
+            }
+            .pane { position: relative; display: flex !important; }
+            #editorPane { flex: 1; border-right: 1px solid var(--border-color); }
+            .right-side { width: 420px; display: flex; flex-direction: column; height: 100%; }
+            #previewPane { flex: 1; height: 60%; border-bottom: 1px solid var(--border-color); }
+            #consolePane { height: 40%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="editor-header">
+        <div class="brand-box">
+            <div class="brand-icon">PGN</div>
+            <span>PGN Studio</span>
+        </div>
+
+        <div class="file-controls">
+            <select id="fileSelect" class="file-select"></select>
+            <button class="btn btn-clear btn-icon-only" id="newFileBtn" title="Новый файл">+</button>
+            <button class="btn btn-clear btn-icon-only" id="deleteFileBtn" title="Удалить файл">🗑</button>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-clear" id="clearBtn">Очистить</button>
+            <button class="btn btn-copy" id="copyBtn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>Копия</span>
+            </button>
+            <button class="btn btn-run" id="runBtn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>Старт</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-tabs" id="mobileTabs">
+        <button class="tab-btn active" data-tab="editorPane" id="mobileFileTab">main.pgn</button>
+        <button class="tab-btn" data-tab="previewPane">Preview</button>
+        <button class="tab-btn" data-tab="consolePane">Terminal</button>
+    </div>
+
+    <div class="workspace">
+        <div class="pane active" id="editorPane">
+            <div id="monaco-editor-container"></div>
+        </div>
+
+        <div class="right-side" style="height: 100%;">
+            <div class="pane canvas-pane" id="previewPane">
+                <div class="toast-container" id="toastContainer"></div>
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <canvas id="pgnCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="pane console-pane" id="consolePane">
+                <div class="console-header">
+                    <span>Консоль</span>
+                    <button id="clearLogs" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:11px;">Очистить</button>
+                </div>
+                <div class="console-logs" id="consoleLogs">
+                    <div class="log-entry system">[PGN Engine] Готов к работе.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="statusbar">
+        <span id="posIndicator">Стр 1, Кол 1</span>
+        <span id="statusRes">Solar2D (720×1600)</span>
+    </footer>
+
+    <script>
+        window.pgnData = {
+          "categories": [
+            { "id": "spaces-rule", "title": "⚠️ Пробелы", "isAxeon": false },
+            { "id": "vars", "title": "📦 Переменные", "isAxeon": false },
+            { "id": "operators", "title": "🧮 Математика и Операции", "isAxeon": false },
+            { "id": "strings", "title": "🔤 Строки и Склеивание", "isAxeon": false },
+            { "id": "apps", "title": "📱 Приложения и ID", "isAxeon": false },
+            { "id": "app-icons", "title": "🎨 Иконки приложений", "isAxeon": false },
+            { "id": "axeon", "title": "⚡ Axeon Объекты", "isAxeon": true },
+            { "id": "groups-axeon", "title": "📁 Группы group.*", "isAxeon": true },
+            { "id": "object-events", "title": "👆 Управление и касания", "isAxeon": true },
+            { "id": "control-for", "title": "🔄 Циклы, Условия & Функции", "isAxeon": false },
+            { "id": "objects", "title": "🎨 Графика sRect & Rect", "isAxeon": false },
+            { "id": "texts", "title": "📝 Тексты & Ввод", "isAxeon": false },
+            { "id": "fonts", "title": "🔤 Шрифты", "isAxeon": false },
+            { "id": "system", "title": "⚙️ Системные $system", "isAxeon": false },
+            { "id": "system-commands", "title": "💻 Команды system", "isAxeon": false }
+          ],
+          "groups": [
+            {
+              "groupTitle": "Основы языка",
+              "items": [
+                { "id": "spaces-rule", "title": "Правило пробелов ⚠️" },
+                { "id": "vars", "title": "Переменные (Создание и Чтение)" },
+                { "id": "operators", "title": "Математика и Операторы" },
+                { "id": "strings", "title": "Строки и Склеивание" }
+              ]
+            },
+            {
+              "groupTitle": "HorizonOS Приложения",
+              "items": [
+                { "id": "apps", "title": "Формат ID приложений" },
+                { "id": "app-icons", "title": "Векторные иконки" }
+              ]
+            },
+            {
+              "groupTitle": "Axeon Движок",
+              "items": [
+                { "id": "axeon", "title": "Свойства объектов (Axeon) ⚡", "isHighlight": true },
+                { "id": "groups-axeon", "title": "Управление группами (group.*)" },
+                { "id": "object-events", "title": "Управление объектами и касания" }
+              ]
+            },
+            {
+              "groupTitle": "Управление кодом",
+              "items": [
+                { "id": "control-for", "title": "Циклы / if / timer / function" }
+              ]
+            },
+            {
+              "groupTitle": "Графика и Текст",
+              "items": [
+                { "id": "objects", "title": "Графические объекты (sRect / rect)" },
+                { "id": "texts", "title": "Тексты, TextWH и Поля ввода" },
+                { "id": "fonts", "title": "Системные шрифты" }
+              ]
+            },
+            {
+              "groupTitle": "Система",
+              "items": [
+                { "id": "system", "title": "Системные переменные $system" },
+                { "id": "system-commands", "title": "Системные команды и Уведомления" }
+              ]
+            }
+          ],
+          "sections": [
+            {
+              "id": "spaces-rule",
+              "title": "Критическое правило: Пробелы в коде",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "danger",
+                  "icon": "⚠️",
+                  "title": "ВСЕГДА ИСПОЛЬЗУЙТЕ ПРОБЕЛЫ!",
+                  "text": "В PGN GRAPHICS парсер требует обязательного разделения пробелами для всех токенов, операторов, переменных, кавычек и спец-символов. Слитно писать нельзя!"
+                },
+                {
+                  "type": "grid2",
+                  "items": [
+                    {
+                      "cardTitle": "❌ Неправильно: cal = 2 + 2",
+                      "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
+                      "titleColor": "var(--rose)",
+                      "codeTitle": "Некорректно",
+                      "code": "name=123\nn $= \"text\"\nval = 1+2"
+                    },
+                    {
+                      "cardTitle": "✅ Правильно: cal = 2 + 2",
+                      "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
+                      "titleColor": "var(--emerald)",
+                      "codeTitle": "Валидный код",
+                      "code": "name = 123\nn $= \" text \"\nval = 1 + 2"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "vars",
+              "title": "Переменные: Полное руководство",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "📦",
+                  "title": "1. Создание переменных (Запись)",
+                  "text": "• <b>Глобальная переменная:</b> создается простым объявлением <code>name = 123</code>. Работает во всех файлах и структурах.<br>• <b>Локальная переменная:</b> создается через <code>local name = 123</code>. Работает только внутри текущего блока (if, for) или одного файла."
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Запись нескольких переменных в одну строку"
+                },
+                {
+                  "type": "callout",
+                  "style": "warning",
+                  "icon": "⚠️",
+                  "title": "Ограничение для local",
+                  "text": "Создавать несколько локальных переменных в одну строку через запятую НЕЛЬЗЯ. Слово <code>local</code> применяется только к первой переменной!"
+                },
+                {
+                  "type": "grid2",
+                  "items": [
+                    {
+                      "cardTitle": "Глобальные (Работает)",
+                      "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
+                      "titleColor": "var(--emerald)",
+                      "codeTitle": "Обе переменные глобальные",
+                      "code": "name = 10 , n = 2"
+                    },
+                    {
+                      "cardTitle": "Локальные (Внимание!)",
+                      "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
+                      "titleColor": "var(--rose)",
+                      "codeTitle": "name — локальная, n — ГЛОБАЛЬНАЯ",
+                      "code": "local name = 10 , n = 2"
+                    }
+                  ]
+                },
+                {
+                  "type": "subTitle",
+                  "title": "2. Чтение переменных (Получение значения)"
+                },
+                {
+                  "type": "table",
+                  "headers": ["Где используется", "Глобальная", "Локальная", "Пример кода"],
+                  "rows": [
+                    ["В математических выражениях", "Просто имя (без символов)", "Знак астериск *", "<code>a = b + 1</code> или <code>a = *b + 1</code>"],
+                    ["В командах и аргументах", "Префикс подчеркивания _", "Знак астериск *", "<code>object.x box _a</code> или <code>object.x box *b</code>"]
+                  ]
+                },
+                {
+                  "type": "grid2",
+                  "items": [
+                    {
+                      "cardTitle": "✅ Правильное чтение в выражениях",
+                      "cardStyle": "border-color: rgba(16, 185, 129, 0.4);",
+                      "titleColor": "var(--emerald)",
+                      "codeTitle": "Только имя без _",
+                      "code": "b = 10\na = b + 1"
+                    },
+                    {
+                      "cardTitle": "❌ Запрещено использовать _ в выражениях",
+                      "cardStyle": "border-color: rgba(244, 63, 94, 0.4);",
+                      "titleColor": "var(--rose)",
+                      "codeTitle": "Так писать НЕЛЬЗЯ",
+                      "code": "b = 10\na = _b + 1"
+                    }
+                  ]
+                },
+                {
+                  "type": "subTitle",
+                  "title": "3. Особенности и Системные поведение"
+                },
+                {
+                  "type": "table",
+                  "headers": ["Действие", "Запись в коде", "Почему именно так?"],
+                  "rows": [
+                    ["Запись Числа 0", "<code>n = 0 + 0</code>", "Запись <code>n = 0</code> автоматически сохранит 0 как СТРОКУ. Чтобы записалось ЧИСЛО, добавьте <code>+ 0</code>"],
+                    ["Отрицательное число", "<code>n = 10 * -1</code>", "Умножение на -1 переводит число в отрицательное"],
+                    ["Запись если пусто / 0", "<code>name ??= 100</code>", "Записывает значение 100, только если в <code>name</code> записано 0 или nil (ничего)"],
+                    ["Вывод в консоль", "<code>n $= \" текст \"</code>", "Выводит содержимое переменной или текст в консоль"]
+                  ]
+                },
+                {
+                  "type": "subTitle",
+                  "title": "4. Динамические команды из переменных"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Вызов команд через подстановку",
+                  "code": "д = .. new.rect\n_д name 0 0 100 100 12"
+                },
+                {
+                  "type": "callout",
+                  "style": "danger",
+                  "icon": "⛔",
+                  "title": "Важное ограничение подстановки",
+                  "text": "Конструкция <code>_д</code> работает только для вызова команд. Использовать её для создания или перезаписи переменных (например <code>_д = .. text</code>) НЕЛЬЗЯ!"
+                }
+              ]
+            },
+            {
+              "id": "operators",
+              "title": "Математика и Операции",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "🧮",
+                  "title": "Правило записи операций",
+                  "text": "Формула: <code>переменная = значение1 оператор значение2</code><br>Пробелы с обеих сторон оператора ОБЯЗАТЕЛЬНЫ!"
+                },
+                {
+                  "type": "table",
+                  "headers": ["Оператор", "Название", "Описание / Формула"],
+                  "rows": [
+                    ["<code>+</code>", "Сложение", "<code>значение1 + значение2</code>"],
+                    ["<code>-</code>", "Вычитание", "<code>значение1 - значение2</code>"],
+                    ["<code>*</code>", "Умножение", "<code>значение1 * значение2</code>"],
+                    ["<code>/</code>", "Деление", "<code>значение1 / значение2</code>"],
+                    ["<code>//</code>", "Деление без остатка", "Целочисленное деление"],
+                    ["<code>^</code>", "Возведение в степень", "<code>значение1 ^ значение2</code>"],
+                    ["<code>%</code>", "Процент", "Вычисление процента"],
+                    ["<code>%/</code>", "Округление к кратному", "<code>(округлить(значение1 / значение2)) * значение2</code>"],
+                    ["<code>rand</code>", "Рандом", "Генерация случайного числа"],
+                    ["<code>~</code>", "Линейная интерполяция", "<code>знач1 + (знач2 - знач1) * 0.1</code>"],
+                    ["<code>wrap</code>", "Остаток от деления wrap", "<code>зн1 - (зн2 + 1) * округлить(зн1) / ((зн2 + 1)) + 1</code>"],
+                    ["<code>min</code>", "Минимум", "Выбирает наименьшее значение"],
+                    ["<code>max</code>", "Максимум", "Выбирает наибольшее значение"],
+                    ["<code>&gt;|</code>", "Минимум наоборот", "Работает как максимум"],
+                    ["<code>&lt;|</code>", "Максимум наоборот", "Работает как минимум"],
+                    ["<code>&lt;</code>", "Сравнение меньше", "Если первое значение меньше второго — установит 1"],
+                    ["<code>+=</code>", "Прибавление к себе", "<code>n += 10</code> (увеличивает n на 10)"],
+                    ["<code>??=</code>", "Запись если пусто", "Записывает значение, если переменная равна nil или 0"],
+                    ["<code>$=</code>", "Вывод в консоль", "Печатает значение в консоль"]
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "strings",
+              "title": "Работа со строками и Склеивание",
+              "blocks": [
+                {
+                  "type": "subTitle",
+                  "title": "Автосклеивание"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Пример автосклеивания",
+                  "code": "Name = .. text\nN = name name .. text \" строчка \""
+                },
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "🔤",
+                  "title": "Правила склеивания",
+                  "text": "• Для привязки первого слова используется <code>.. слово</code>.<br>• Текст в кавычках <code>\" строчка \"</code> склеивается автоматически без символов <code>..</code>.<br>• Переменная N из примера выше станет равна <code>texttexttextстрочка</code>.<br>• Для переноса текста на новую строку используйте <code>/n</code>."
+                }
+              ]
+            },
+            {
+              "id": "apps",
+              "title": "Формат ID приложений HorizonOS",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "warning",
+                  "icon": "❗️",
+                  "title": "Важно соблюдать структуру ID",
+                  "text": "ID приложения обязательно указывается в формате <code>app.ТутЛюбойID.adk</code>. В текущих версиях отсутствие префикса/суффикса не критично, но в следующих обновлениях программы со старым форматом перестанут работать!"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Пример корректного ID",
+                  "code": "app.MyAwesomeGame.adk\n\nsystem create.app myApp app.MyAwesomeGame.adk iconCode mainCode"
+                }
+              ]
+            },
+            {
+              "id": "app-icons",
+              "title": "Формат векторных иконок приложений",
+              "blocks": [
+                {
+                  "type": "codeBlock",
+                  "title": "Структура массива иконки",
+                  "code": "[\n  [\n    [точки_полигона],\n    [смещение_x, смещение_y, масштаб_x, масштаб_y, прозрачность_0_1, ['system'|'custom', r, g, b]]\n  ]\n]\n\n[\n  [\n    [\"Round.Rect\", скругление_углов],\n    [x, y, ширина, высота, прозрачность_0_1, ['system', r, g, b], поворот]\n  ]\n]"
+                }
+              ]
+            },
+            {
+              "id": "axeon",
+              "title": "Axeon Engine: Операции со свойствами объектов",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "⚡",
+                  "title": "Получение параметров объекта в переменную",
+                  "text": "Специальные операторы Axeon позволяют считывать данные объектов (например, <code>object.x</code>, <code>object.w</code>) прямо в переменные."
+                },
+                {
+                  "type": "grid3",
+                  "items": [
+                    {
+                      "badge": { "text": "Запись ==", "class": "badge-axeon" },
+                      "cardTitle": "Записать в переменную",
+                      "description": "Считывает свойство и сохраняет в переменную:",
+                      "codeSample": "varName == object.x myRect"
+                    },
+                    {
+                      "badge": { "text": "Прибавить =+=", "class": "badge-axeon" },
+                      "cardTitle": "Прибавить к переменной",
+                      "description": "Считывает свойство и прибавляет к переменной:",
+                      "codeSample": "varName =+= object.w myRect"
+                    },
+                    {
+                      "badge": { "text": "Склеить =..=", "class": "badge-axeon" },
+                      "cardTitle": "Присоединить текст",
+                      "description": "Считывает свойство и добавляет в конец строки:",
+                      "codeSample": "varName =..= object.x myRect"
+                    }
+                  ]
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Примеры получения значений",
+                  "code": "pos == object.x myRect\nscore =+= object.w myRect\nlog =..= object.x myRect"
+                }
+              ]
+            },
+            {
+              "id": "groups-axeon",
+              "title": "Управление группами и контейнерами (group.*)",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "📁",
+                  "title": "Как работают группы",
+                  "text": "Группы позволяют объединять объекты и управлять ими одновременно с помощью команд <b>group.СВОЙСТВО</b>."
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "1. Создание и добавление объектов",
+                  "code": "group.container myGroup 200 200\ngroup.add_object myGroup myBox\ngroup.add_text myGroup myText\ngroup.add_group myGroup subGroup\ngroup.add_teg myGroup myTag"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "2. Установка параметров",
+                  "code": "group.x myGroup 100\ngroup.y myGroup 150\ngroup.position myGroup 100 150\ngroup.w myGroup 300\ngroup.h myGroup 400\ngroup.size myGroup 300 400\ngroup.opacity myGroup 80\ngroup.turn myGroup 90"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "3. Изменение параметров (Относительное)",
+                  "code": "group.sx myGroup 10\ngroup.sy myGroup -5\ngroup.sw myGroup 20\ngroup.sh myGroup -10\ngroup.sopacity myGroup -15"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "4. Управление, Видимость и Слои",
+                  "code": "group.hide myGroup\ngroup.show myGroup\ngroup.delete myGroup\ngroup.layer_above myGroup\ngroup.layer_down myGroup"
+                }
+              ]
+            },
+            {
+              "id": "object-events",
+              "title": "Управление объектами и Касания (object.*)",
+              "blocks": [
+                {
+                  "type": "callout",
+                  "style": "purple",
+                  "icon": "💡",
+                  "title": "Как работает управление объектами",
+                  "text": "Вся графика на экране управляется через команду <b>object.СВОЙСТВО</b>."
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "1. Касания (Touch)",
+                  "code": "touch.object btn myFunc\ntouch.object btn myFunc()\ntouch.object btn myFunc( n )"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "2. Установка точных параметров",
+                  "code": "object.x box 100\nobject.y box 200\nobject.position box 100 200\nobject.w box 150\nobject.h box 80\nobject.size box 100\nobject.opacity box 50\nobject.turn box 45\nobject.rgb box 255 0 0\nobject.hex box #FF0000\nobject.Mx box 2\nobject.My box 2\nobject.anchor_point box 0.5 0.5"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "3. Изменение параметров (Сдвиг)",
+                  "code": "object.sx box 10\nobject.sy box -5\nobject.sw box 20\nobject.sh box -10\nobject.ssize box 15\nobject.sopacity box -20"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "4. Поворот к другому объекту",
+                  "code": "object.turn_object player enemy"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "5. Видимость и Удаление",
+                  "code": "object.hide box\nobject.show box\nobject.delete box"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "6. Слои (Порядок отображения)",
+                  "code": "object.layer_above box\nobject.layer_down box"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "7. Обводка и Рамка объекта (Outline)",
+                  "code": "object.outline.w box 4\nobject.outline.sw box 2\nobject.outline.rgb box 255 255 0 100"
+                }
+              ]
+            },
+            {
+              "id": "control-for",
+              "title": "Управление кодом: Циклы, Условия и Функции",
+              "blocks": [
+                {
+                  "type": "subTitle",
+                  "title": "Цикл for"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Конструкция цикла",
+                  "code": "for name от до шаг счетчик {\n\n}forend_name\n\nfor n 1 100 1 i {\n    local stepPos = *i * 100\n    object.x box *stepPos\n}forend_n"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Условие if"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Логическое ветвление",
+                  "code": "if name значение1 =/==/≈/≠/>/</≥/≤ значение2 ( передать_локальную_переменную ) {\n\n}ifend_name\n\nif check *n = 2 ( n ) {\n\n}ifend_check"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Таймер timer"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Интервальный таймер",
+                  "code": "timer name каждые(сек) сколько_повторов ( передать_локальную_переменную ) {\n\n}timerend_name\n\ntimer myTimer 1 60 ( i ) {\n\n}timerend_myTimer"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Функции function"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Создание и вызов функций",
+                  "code": "function name ( аргумент ) {\n\n}functend_name\n\nname()\nname( *i )"
+                }
+              ]
+            },
+            {
+              "id": "objects",
+              "title": "Графические объекты",
+              "blocks": [
+                {
+                  "type": "subTitle",
+                  "title": "Прямоугольник с pro-углами new.sRect"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "new.sRect",
+                  "code": "new.sRect name x y шир выс скруг1 скруг2 скруг3 скруг4 количество_точек поворот\n\nnew.sRect name 0 0 100 100 15 15 0 0 100 0"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Обычный прямоугольник new.rect"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "new.rect",
+                  "code": "new.rect name x y шир выс скруг\n\nnew.rect name 0 0 100 100 15"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Параметры графических объектов"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Цвет и Непрозрачность",
+                  "code": "object.color.rgb name r g b [непрозрачность(0-100)]\nobject.opacity name непрозрачность(0-100)"
+                }
+              ]
+            },
+            {
+              "id": "texts",
+              "title": "Текстовые элементы и поля ввода",
+              "blocks": [
+                {
+                  "type": "subTitle",
+                  "title": "Создание и управление текстом"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "Создание текста",
+                  "code": "new.text name text x y размер шрифт непрозрачность(0-100)\nnew.text name myText 0 0 36 medium 100\n\nnew.TextWH name text x y размер шрифт непрозрачность ширина высота выравнивание\nnew.TextWH n MyText 0 0 36 medium 100 1000 100 center\n\ntext.change name newText\n\ntext.color.rgb name r g b [непрозрачность(0-100)]\ntext.opacity name непрозрачность(0-100)"
+                },
+                {
+                  "type": "subTitle",
+                  "title": "Многострочное текстовое поле"
+                },
+                {
+                  "type": "codeBlock",
+                  "title": "textField.multiLine",
+                  "code": "new.textField.multiLine name x y w h шрифт размерТекста ЗаднийТекст\nnew.textField.multiLine name 0 0 250 100 medium 36 Введи_текст\n\ntext.textField.multiLine name text\nfocus.textField.multiLine name\ndisable.keyboard"
+                }
+              ]
+            },
+            {
+              "id": "fonts",
+              "title": "Системные шрифты HorizonOS",
+              "blocks": [
+                {
+                  "type": "grid3",
+                  "items": [
+                    {
+                      "cardTitle": "Google Sans",
+                      "description": "Основной системный шрифт. Доступные варианты: bold, medium, regular."
+                    },
+                    {
+                      "cardTitle": "Comfortaa",
+                      "description": "Скругленный стиль. Доступные варианты: Comfotiaa bold, Comfotiaa medium, Comfotiaa regular."
+                    },
+                    {
+                      "cardTitle": "Ubuntu",
+                      "description": "Фирменный шрифт. Доступный вариант: ubuntu."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "system",
+              "title": "Системные переменные HorizonOS",
+              "blocks": [
+                {
+                  "type": "table",
+                  "headers": ["Переменная", "Описание"],
+                  "rows": [
+                    ["<code>$system.fps</code>", "Текущий кадровейт (FPS)"],
+                    ["<code>$system.color.r / .g / .b</code>", "Системный цвет акцентов и кнопок"],
+                    ["<code>$system.colorText.r / .g / .b</code>", "Системный цвет текста"],
+                    ["<code>$system.colorBg.r / .g / .b</code>", "Системный цвет фона"],
+                    ["<code>$system.version.os</code>", "Версия HorizonOS"],
+                    ["<code>$system.version.ape</code>", "Версия ядра APE"],
+                    ["<code>$system.vesion.pgn</code>", "Версия PGN GRAPHICS"],
+                    ["<code>$system.version.desing</code>", "Версия темы дизайна"],
+                    ["<code>$system.version.nameDesing</code>", "Имя системного дизайна"],
+                    ["<code>$system.width</code> / <code>$system.height</code>", "Ширина и высота экрана"],
+                    ["<code>$system.topScreen</code> / <code>$system.downScreen</code>", "Верхняя и нижняя границы"],
+                    ["<code>$system.leftScreen</code> / <code>$system.rightScreen</code>", "Левая и правая границы"],
+                    ["<code>$system.date1</code>", "Нагрузка системы (0 - 100%)"],
+                    ["<code>$system.time.sec / min / day / month / yers / wday</code>", "Время и дата (wday — день недели)"]
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "system-commands",
+              "title": "Системные команды и Уведомления",
+              "blocks": [
+                {
+                  "type": "codeBlock",
+                  "title": "Команды system",
+                  "code": "background.rgb r g b — меняет цвет фона\nnew.notification ГлавныйТекст Текст Кнопка t — создаёт системное уведомление\nshow.toast текст — показывает всплывающее сообщение\n\nsystem open.app.is.code code — открывает приложение по коду\nsystem save name данные — сохраняет данные\nsystem read.save name переменная — загружает сохранённые данные в переменную\nsystem delete.save name — удаляет сохранённые данные\nsystem notoff.screen — запрещает выключение экрана\nsystem off.screen — разрешает выключение экрана\nsystem create.app name app.id.adk icon code — создаёт приложение с указанными данными"
+                }
+              ]
+            }
+          ]
+        };
+
+        const defaultCode = `background.rgb 24 24 27
+
+new.sRect card 0 0 240 140 12 12 12 12 100 0
+object.color.rgb card 32 32 36
+object.outline.w card 1
+object.outline.rgb card 255 255 255
+
+new.rect header 0 -50 200 30 8
+object.color.rgb header 0 122 204
+
+new.text symbol "Привет" 0 -50 14 regular 100
+text.color.rgb symbol 255 255 255`;
+
+        let editor = null;
+        let pgnFiles = {};
+        let activeFileName = "main.pgn";
+
+        // Загрузка и сохранение файлов в localStorage
+        function loadStorageFiles() {
+            try {
+                const stored = localStorage.getItem('pgn_studio_files');
+                if (stored) {
+                    pgnFiles = JSON.parse(stored);
+                }
+            } catch (e) {}
+
+            if (!pgnFiles || Object.keys(pgnFiles).length === 0) {
+                pgnFiles = { "main.pgn": defaultCode };
+            }
+            if (!pgnFiles[activeFileName]) {
+                activeFileName = Object.keys(pgnFiles)[0];
+            }
+        }
+
+        function saveStorageFiles() {
+            try {
+                if (editor) {
+                    pgnFiles[activeFileName] = editor.getValue();
+                }
+                localStorage.setItem('pgn_studio_files', JSON.stringify(pgnFiles));
+            } catch (e) {}
+        }
+
+        function updateFileSelectUI() {
+            const select = document.getElementById('fileSelect');
+            select.innerHTML = '';
+            Object.keys(pgnFiles).forEach(fileName => {
+                const opt = document.createElement('option');
+                opt.value = fileName;
+                opt.textContent = fileName;
+                if (fileName === activeFileName) opt.selected = true;
+                select.appendChild(opt);
+            });
+            const mobileTab = document.getElementById('mobileFileTab');
+            if (mobileTab) mobileTab.textContent = activeFileName;
+        }
+
+        // Системное разрешение устройства (720x1600 в портретном режиме)
+        function getSystemResolution() {
+            let w = window.screen ? Math.min(window.screen.width, window.screen.height) : 720;
+            let h = window.screen ? Math.max(window.screen.width, window.screen.height) : 1600;
+            
+            if (w < 600) {
+                const ratio = window.devicePixelRatio || 2;
+                w = Math.round(w * ratio);
+                h = Math.round(h * ratio);
+            }
+
+            if (!w || w <= 0) w = 720;
+            if (!h || h <= 0) h = 1600;
+
+            return { width: w, height: h };
+        }
+
+        let sysRes = getSystemResolution();
+        let SOLAR_VIRTUAL_WIDTH = sysRes.width;
+        let SOLAR_VIRTUAL_HEIGHT = sysRes.height;
+
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' }});
+
+        require(['vs/editor/editor.main'], function() {
+            loadStorageFiles();
+            updateFileSelectUI();
+
+            monaco.languages.register({ id: 'pgn' });
+
+            const suggestionsMap = new Map();
+
+            function addSuggestion(label, kind, detail = '') {
+                if (!label || suggestionsMap.has(label)) return;
+                suggestionsMap.set(label, {
+                    label: label,
+                    kind: kind || monaco.languages.CompletionItemKind.Keyword,
+                    insertText: label,
+                    detail: detail
+                });
+            }
+
+            function extractTokensFromText(text) {
+                if (!text) return;
+                const clean = text.replace(/<[^>]*>/g, ' ');
+                clean.split('\n').forEach(line => {
+                    const l = line.split('—')[0].trim();
+                    l.split(/\s+/).forEach(token => {
+                        token = token.replace(/[\(\),;\{}]/g, '').trim();
+                        if (!token || token.includes('"')) return;
+                        
+                        if (token.startsWith('$system')) {
+                            addSuggestion(token, monaco.languages.CompletionItemKind.Variable, 'Системная переменная');
+                        } else if (token.startsWith('new.') || token.startsWith('object.') || token.startsWith('group.') || token.startsWith('text.') || token.startsWith('touch.') || token.startsWith('focus.') || token.startsWith('disable.') || token.startsWith('system')) {
+                            addSuggestion(token, monaco.languages.CompletionItemKind.Function, 'Команда PGN');
+                        } else if (token.startsWith('local') || token.startsWith('for') || token.startsWith('if') || token.startsWith('timer') || token.startsWith('function')) {
+                            addSuggestion(token, monaco.languages.CompletionItemKind.Keyword, 'Ключевое слово');
+                        } else if (token.match(/^[a-zA-Z0-9_\$\.\*]+$/) && !token.match(/^-?[0-9]+$/)) {
+                            addSuggestion(token, monaco.languages.CompletionItemKind.Property, 'Токен');
+                        }
+                    });
+                });
+            }
+
+            if (window.pgnData && window.pgnData.sections) {
+                window.pgnData.sections.forEach(sec => {
+                    sec.blocks.forEach(b => {
+                        if (b.text) {
+                            const matches = b.text.match(/<code>(.*?)<\/code>/g);
+                            if (matches) {
+                                matches.forEach(m => extractTokensFromText(m.replace(/<\/?code>/g, '')));
+                            }
+                        }
+                        if (b.code) extractTokensFromText(b.code);
+                        if (b.codeSample) extractTokensFromText(b.codeSample);
+                        if (b.rows) {
+                            b.rows.forEach(r => {
+                                r.forEach(cell => extractTokensFromText(cell));
+                            });
+                        }
+                        if (b.items) {
+                            b.items.forEach(it => {
+                                if (it.code) extractTokensFromText(it.code);
+                                if (it.codeSample) extractTokensFromText(it.codeSample);
+                                if (it.description) extractTokensFromText(it.description);
+                            });
+                        }
+                    });
+                });
+            }
+
+            const allSuggestions = Array.from(suggestionsMap.values());
+
+            monaco.languages.registerCompletionItemProvider('pgn', {
+                triggerCharacters: ['.', '$', '_', '*'],
+                provideCompletionItems: function(model, position) {
+                    const lineContent = model.getLineContent(position.lineNumber);
+                    const textUntilPosition = lineContent.substring(0, position.column - 1);
+                    const match = textUntilPosition.match(/[\$a-zA-Z0-9_\.\*]+$/);
+                    const currentWord = match ? match[0] : '';
+
+                    const startColumn = position.column - currentWord.length;
+                    const range = {
+                        startLineNumber: position.lineNumber,
+                        endLineNumber: position.lineNumber,
+                        startColumn: startColumn,
+                        endColumn: position.column
+                    };
+
+                    return {
+                        suggestions: allSuggestions.map(s => ({
+                            ...s,
+                            range: range
+                        }))
+                    };
+                }
+            });
+
+            monaco.languages.setMonarchTokensProvider('pgn', {
+                tokenizer: {
+                    root: [
+                        [/\$system\.[a-zA-Z0-9_\.]+/, 'variable.predefined'],
+                        [/_[a-zA-Z0-9_]+/, 'variable.parameter'],
+                        [/\*[a-zA-Z0-9_]+/, 'variable.name'],
+                        [/".*?"/, 'string'],
+                        [/\b(new\.rect|new\.sRect|new\.text|new\.TextWH|new\.textField\.multiLine|new\.notification)\b/, 'keyword'],
+                        [/\b(object\.[a-zA-Z0-9_\.]+|group\.[a-zA-Z0-9_\.]+|text\.[a-zA-Z0-9_\.]+)\b/, 'type'],
+                        [/\b(for|forend_[a-zA-Z0-9_]+|if|ifend_[a-zA-Z0-9_]+|timer|timerend_[a-zA-Z0-9_]+|function|functend_[a-zA-Z0-9_]+|local)\b/, 'keyword.flow'],
+                        [/\b(background\.rgb|show\.toast|system)\b/, 'predefined'],
+                        [/-?[0-9]+/, 'number'],
+                        [/(\+=|\?\?=|\$=|==|=\+=|=|\+|-|\*|\/)/, 'operator']
+                    ]
+                }
+            });
+
+            monaco.editor.defineTheme('pgnDark', {
+                base: 'vs-dark',
+                inherit: true,
+                rules: [
+                    { token: 'keyword', foreground: '38BDF8', fontStyle: 'bold' },
+                    { token: 'keyword.flow', foreground: 'F472B6' },
+                    { token: 'type', foreground: '34D399' },
+                    { token: 'variable.predefined', foreground: 'FBBF24' },
+                    { token: 'string', foreground: 'F87171' },
+                    { token: 'number', foreground: 'A7F3D0' }
+                ],
+                colors: {
+                    'editor.background': '#141416',
+                    'editor.foreground': '#d4d4d8',
+                    'editor.lineHighlightBackground': '#1f1f24',
+                    'editorCursor.foreground': '#007acc',
+                    'editorLineNumber.foreground': '#4b5563'
+                }
+            });
+
+            editor = monaco.editor.create(document.getElementById('monaco-editor-container'), {
+                value: pgnFiles[activeFileName] || defaultCode,
+                language: 'pgn',
+                theme: 'pgnDark',
+                automaticLayout: true,
+                fontSize: 14,
+                fontFamily: 'JetBrains Mono, monospace',
+                minimap: { enabled: false },
+                padding: { top: 12, bottom: 12 },
+                scrollBeyondLastLine: false,
+                renderLineHighlight: 'all',
+                selectOnLineNumbers: true,
+                selectionHighlight: true,
+                multiCursorModifier: 'ctrlCmd',
+                wordWrap: 'on',
+                lineNumbersMinChars: 3,
+                glyphMargin: false,
+                folding: true,
+                lineDecorationsWidth: 0,
+                tabSize: 4,
+                insertSpaces: true,
+                fixedOverflowWidgets: true
+            });
+
+            editor.onDidChangeModelContent(() => {
+                saveStorageFiles();
+            });
+
+            editor.onDidChangeCursorPosition(e => {
+                document.getElementById('posIndicator').textContent = `Стр ${e.position.lineNumber}, Кол ${e.position.column}`;
+            });
+
+            updateCanvasDimensions();
+            runCode();
+        });
+
+        // Работа с файлами
+        document.getElementById('fileSelect').addEventListener('change', (e) => {
+            saveStorageFiles();
+            activeFileName = e.target.value;
+            if (editor) {
+                editor.setValue(pgnFiles[activeFileName] || '');
+            }
+            updateFileSelectUI();
+        });
+
+        document.getElementById('newFileBtn').addEventListener('click', () => {
+            saveStorageFiles();
+            let name = prompt('Введите имя нового файла:', 'script.pgn');
+            if (!name) return;
+            name = name.trim();
+            if (!name.endsWith('.pgn')) name += '.pgn';
+
+            if (!pgnFiles[name]) {
+                pgnFiles[name] = '// Новый файл PGN\n';
+            }
+            activeFileName = name;
+            saveStorageFiles();
+            updateFileSelectUI();
+            if (editor) {
+                editor.setValue(pgnFiles[activeFileName]);
+            }
+        });
+
+        document.getElementById('deleteFileBtn').addEventListener('click', () => {
+            const keys = Object.keys(pgnFiles);
+            if (keys.length <= 1) {
+                showToast('Нельзя удалить единственный файл');
+                return;
+            }
+            if (confirm(`Удалить файл ${activeFileName}?`)) {
+                delete pgnFiles[activeFileName];
+                activeFileName = Object.keys(pgnFiles)[0];
+                saveStorageFiles();
+                updateFileSelectUI();
+                if (editor) {
+                    editor.setValue(pgnFiles[activeFileName] || '');
+                }
+            }
+        });
+
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.pane');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                if (window.innerWidth <= 768) {
+                    panes.forEach(p => p.classList.remove('active'));
+                    document.getElementById(targetTab).classList.add('active');
+                }
+
+                if (targetTab === 'previewPane') {
+                    setTimeout(() => {
+                        updateCanvasDimensions();
+                        runCode();
+                    }, 50);
+                }
+
+                if (targetTab === 'editorPane' && editor) {
+                    setTimeout(() => editor.layout(), 50);
+                }
+            });
+        });
+
+        const canvas = document.getElementById('pgnCanvas');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const ctx = canvas.getContext('2d');
+        const consoleLogs = document.getElementById('consoleLogs');
+        const toastContainer = document.getElementById('toastContainer');
+
+        function updateCanvasDimensions() {
+            const res = getSystemResolution();
+            SOLAR_VIRTUAL_WIDTH = res.width;
+            SOLAR_VIRTUAL_HEIGHT = res.height;
+
+            const resLabel = document.getElementById('statusRes');
+            if (resLabel) resLabel.textContent = `Solar2D (${SOLAR_VIRTUAL_WIDTH}×${SOLAR_VIRTUAL_HEIGHT})`;
+
+            const rect = canvasWrapper.getBoundingClientRect();
+            const containerW = rect.width || window.innerWidth;
+            const containerH = rect.height || window.innerHeight;
+
+            const padding = 16;
+            const availableW = Math.max(100, containerW - padding);
+            const availableH = Math.max(150, containerH - padding);
+
+            const scale = Math.min(availableW / SOLAR_VIRTUAL_WIDTH, availableH / SOLAR_VIRTUAL_HEIGHT);
+            const displayW = Math.floor(SOLAR_VIRTUAL_WIDTH * scale);
+            const displayH = Math.floor(SOLAR_VIRTUAL_HEIGHT * scale);
+
+            canvas.style.width = `${displayW}px`;
+            canvas.style.height = `${displayH}px`;
+
+            canvas.width = SOLAR_VIRTUAL_WIDTH;
+            canvas.height = SOLAR_VIRTUAL_HEIGHT;
+        }
+
+        window.addEventListener('resize', () => {
+            updateCanvasDimensions();
+            runCode();
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            if (!editor) return;
+            const selection = editor.getSelection();
+            const selectedText = editor.getModel().getValueInRange(selection);
+            const codeToCopy = selectedText || editor.getValue();
+            
+            navigator.clipboard.writeText(codeToCopy).then(() => {
+                showToast(selectedText ? 'Выделенный фрагмент скопирован' : 'Весь код скопирован');
+            }).catch(() => {
+                const area = document.createElement('textarea');
+                area.value = codeToCopy;
+                document.body.appendChild(area);
+                area.select();
+                document.execCommand('copy');
+                document.body.removeChild(area);
+                showToast('Скопировано');
+            });
+        });
+
+        document.getElementById('runBtn').addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="previewPane"]').classList.add('active');
+                panes.forEach(p => p.classList.remove('active'));
+                document.getElementById('previewPane').classList.add('active');
+            }
+            setTimeout(() => {
+                updateCanvasDimensions();
+                runCode();
+            }, 50);
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (editor) {
+                editor.setValue('');
+                saveStorageFiles();
+            }
+        });
+
+        document.getElementById('clearLogs').addEventListener('click', () => {
+            consoleLogs.innerHTML = '';
+        });
+
+        function logToConsole(text, type = '') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = text;
+            consoleLogs.appendChild(entry);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        function showToast(text) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = text.replace(/_/g, ' ');
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function runCode() {
+            if (!editor) return;
+            const code = editor.getValue();
+            const lines = code.split('\n');
+
+            ctx.fillStyle = '#141416';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const objects = {};
+            const variables = {
+                '$system.width': SOLAR_VIRTUAL_WIDTH,
+                '$system.height': SOLAR_VIRTUAL_HEIGHT
+            };
+
+            lines.forEach((line, index) => {
+                let trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('//')) return;
+
+                const parts = parseTokens(trimmed);
+                if (parts.length === 0) return;
+
+                try {
+                    executeStatement(parts, objects, variables);
+                } catch (e) {
+                    logToConsole(`[Ошибка ${index + 1}]: ${e.message}`, 'error');
+                }
+            });
+
+            renderObjects(objects);
+            logToConsole('[Рендер обновлен]', 'system');
+        }
+
+        function parseTokens(line) {
+            const tokens = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                    current += char;
+                } else if (char === ' ' && !inQuotes) {
+                    if (current) tokens.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            if (current) tokens.push(current);
+            return tokens;
+        }
+
+        function executeStatement(parts, objects, variables) {
+            const cmd = parts[0];
+
+            if (cmd === 'background.rgb') {
+                const r = parts[1] || 0, g = parts[2] || 0, b = parts[3] || 0;
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            else if (cmd === 'new.rect' || cmd === 'new.sRect') {
+                const name = parts[1];
+                objects[name] = {
+                    type: 'rect',
+                    x: parseFloat(parts[2]) || 0,
+                    y: parseFloat(parts[3]) || 0,
+                    w: parseFloat(parts[4]) || 100,
+                    h: parseFloat(parts[5]) || 100,
+                    r: parseFloat(parts[6]) || 0,
+                    color: 'rgb(0,122,204)',
+                    outlineW: 0,
+                    outlineColor: 'transparent'
+                };
+            }
+            else if (cmd === 'new.text') {
+                const name = parts[1];
+                let textVal = parts[2] ? parts[2].replace(/"/g, '') : '';
+                objects[name] = {
+                    type: 'text',
+                    text: textVal,
+                    x: parseFloat(parts[3]) || 0,
+                    y: parseFloat(parts[4]) || 0,
+                    size: parseFloat(parts[5]) || 14,
+                    color: 'rgb(255,255,255)'
+                };
+            }
+            else if (cmd === 'object.color.rgb' || cmd === 'text.color.rgb') {
+                const name = parts[1];
+                if (objects[name]) {
+                    const r = parts[2] || 0, g = parts[3] || 0, b = parts[4] || 0;
+                    objects[name].color = `rgb(${r},${g},${b})`;
+                }
+            }
+            else if (cmd === 'object.outline.rgb') {
+                const name = parts[1];
+                if (objects[name]) {
+                    const r = parts[2] || 0, g = parts[3] || 0, b = parts[4] || 0;
+                    objects[name].outlineColor = `rgb(${r},${g},${b})`;
+                }
+            }
+            else if (cmd === 'object.outline.w') {
+                const name = parts[1];
+                if (objects[name]) {
+                    objects[name].outlineW = parseFloat(parts[2]) || 0;
+                }
+            }
+            else if (cmd === 'show.toast') {
+                showToast(parts.slice(1).join(' '));
+            }
+        }
+
+        function renderObjects(objects) {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            Object.values(objects).forEach(obj => {
+                const posX = cx + obj.x;
+                const posY = cy - obj.y;
+
+                if (obj.type === 'rect') {
+                    const drawX = posX - obj.w / 2;
+                    const drawY = posY - obj.h / 2;
+
+                    ctx.beginPath();
+                    ctx.fillStyle = obj.color;
+                    if (obj.r > 0 && ctx.roundRect) {
+                        ctx.roundRect(drawX, drawY, obj.w, obj.h, obj.r);
+                    } else {
+                        ctx.rect(drawX, drawY, obj.w, obj.h);
+                    }
+                    ctx.fill();
+
+                    if (obj.outlineW > 0) {
+                        ctx.lineWidth = obj.outlineW;
+                        ctx.strokeStyle = obj.outlineColor;
+                        ctx.stroke();
+                    }
+                } 
+                else if (obj.type === 'text') {
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.font = `${obj.size}px 'Inter', sans-serif`;
+                    ctx.fillStyle = obj.color;
+                    ctx.fillText(obj.text, posX, posY);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
