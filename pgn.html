@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PGN Graphics — Documentation</title>
+    <title>PGN Graphics — Официальная Документация HorizonOS</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-page: #030712;
-            --bg-sidebar: #090d16;
-            --bg-header: rgba(9, 13, 22, 0.75);
-            --bg-card: rgba(15, 23, 42, 0.45);
-            --bg-card-hover: rgba(30, 41, 59, 0.65);
-            --bg-code: #050811;
-            --bg-modal: rgba(10, 15, 28, 0.92);
+            --bg-page: #060911;
+            --bg-sidebar: #0b0f19;
+            --bg-header: rgba(11, 15, 25, 0.85);
+            --bg-card: rgba(18, 24, 38, 0.6);
+            --bg-card-hover: rgba(26, 34, 52, 0.8);
+            --bg-code: #080c14;
             
-            --border: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(168, 85, 247, 0.35);
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(99, 102, 241, 0.4);
             
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
@@ -31,18 +30,12 @@
             --cyan: #38bdf8;
             --cyan-glow: rgba(56, 189, 248, 0.25);
             --emerald: #10b981;
-            --emerald-glow: rgba(16, 185, 129, 0.25);
             --amber: #f59e0b;
             --rose: #f43f5e;
             --purple: #a855f7;
-            --purple-glow: rgba(168, 85, 247, 0.35);
             
-            --sidebar-w: 280px;
-            --toc-w: 240px;
-            --header-h: 64px;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --sidebar-w: 290px;
+            --header-h: 68px;
         }
 
         * {
@@ -52,50 +45,20 @@
             scroll-behavior: smooth;
         }
 
-        html, body {
-            overflow-x: hidden;
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-page);
             color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.65;
+            line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Ambient Background Glow --- */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -200px;
-            left: 20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 70%);
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
+        body.sidebar-open {
+            overflow: hidden;
         }
 
-        /* --- Custom Scrollbar --- */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
-
-        /* --- Progress Bar --- */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--cyan), var(--primary), var(--purple));
-            z-index: 1200;
-            width: 0%;
-            transition: width 0.1s ease-out;
-            box-shadow: 0 0 12px var(--purple-glow);
-        }
-
-        /* --- Header --- */
         .header {
             position: fixed;
             top: 0;
@@ -103,14 +66,14 @@
             right: 0;
             height: var(--header-h);
             background: var(--bg-header);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
-            z-index: 1100;
+            z-index: 50;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
+            padding: 0 28px 0 68px;
         }
 
         .header-brand {
@@ -118,342 +81,222 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            transition: opacity 0.2s;
         }
-
-        .header-brand:hover { opacity: 0.9; }
 
         .brand-logo {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, var(--primary), var(--purple));
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
             border-radius: 10px;
             display: grid;
             place-items: center;
             font-weight: 800;
-            font-size: 14px;
+            font-size: 15px;
             color: #fff;
             box-shadow: 0 0 20px var(--primary-glow);
-            position: relative;
         }
 
         .brand-title {
             font-weight: 800;
             font-size: 17px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 60%, var(--text-sub));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.4px;
+            color: var(--text-main);
         }
 
         .brand-badge {
-            font-size: 10px;
-            background: rgba(168, 85, 247, 0.12);
-            color: #d8b4fe;
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            font-size: 11px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--cyan);
+            border: 1px solid rgba(56, 189, 248, 0.3);
             padding: 2px 8px;
             border-radius: 99px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        .search-trigger {
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 7px 14px;
-            color: var(--text-muted);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 260px;
+            gap: 14px;
         }
 
-        .search-trigger:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: var(--border-glow);
-            color: var(--text-sub);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
-        }
-
-        .search-key {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1px 6px;
-            font-size: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-sub);
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-        }
-
-        /* --- Search Modal (Ctrl+K) --- */
-        .search-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(3, 7, 18, 0.8);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 12vh;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .search-modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .search-modal {
-            background: var(--bg-modal);
-            border: 1px solid var(--border-glow);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 620px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px var(--purple-glow);
-            overflow: hidden;
-            transform: translateY(-12px);
-            transition: transform 0.2s ease;
-        }
-
-        .search-modal-overlay.active .search-modal {
-            transform: translateY(0);
-        }
-
-        .search-modal-header {
-            display: flex;
+        .editor-btn {
+            display: inline-flex;
             align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            gap: 12px;
-        }
-
-        .search-modal-input {
-            width: 100%;
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 15px;
-            outline: none;
-            font-family: inherit;
-        }
-
-        .search-modal-results {
-            max-height: 380px;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .search-result-item {
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            color: var(--text-sub);
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: #ffffff;
             text-decoration: none;
-            display: block;
-            transition: all 0.15s ease;
-            margin-bottom: 4px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 14px var(--primary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .search-result-item:hover, .search-result-item.selected {
-            background: rgba(168, 85, 247, 0.15);
+        .editor-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 18px var(--primary-glow);
+        }
+
+        .search-box {
+            position: relative;
+            width: 240px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px 8px 36px;
+            font-size: 13px;
             color: var(--text-main);
-            border-left: 3px solid var(--purple);
+            outline: none;
+            transition: all 0.2s;
         }
 
-        .search-result-title { font-weight: 700; font-size: 14px; color: #fff; }
-        .search-result-desc { font-size: 12px; color: var(--text-muted); }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
 
-        /* --- Overlay for Mobile Sidebar --- */
-        .sidebar-overlay {
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            fill: var(--text-muted);
+        }
+
+        .fixed-toggle-btn {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            top: 16px;
+            left: 16px;
+            z-index: 100;
+            width: 36px;
+            height: 36px;
+            background: rgba(18, 24, 38, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+        .fixed-toggle-btn:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
 
-        /* --- Layout --- */
         .layout {
             display: flex;
             padding-top: var(--header-h);
             min-height: 100vh;
-            position: relative;
-            z-index: 1;
         }
 
-        /* --- Left Sidebar --- */
         .sidebar {
             width: var(--sidebar-w);
             background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border);
             position: fixed;
             top: var(--header-h);
-            bottom: 0;
             left: 0;
+            bottom: 0;
+            height: calc(100dvh - var(--header-h));
             overflow-y: auto;
-            padding: 24px 16px;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            padding: 28px 18px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            gap: 24px;
+            z-index: 99;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: none;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        body.sidebar-open .sidebar {
+            transform: translateX(0);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
         }
 
         .nav-group-title {
             font-size: 11px;
             text-transform: uppercase;
             font-weight: 800;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 8px;
-            padding: 0 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
+            margin-bottom: 10px;
+            padding: 0 8px;
         }
-
-        .nav-group-title:hover { color: var(--text-sub); }
 
         .nav-list {
             list-style: none;
             display: flex;
             flex-direction: column;
             gap: 3px;
-            transition: max-height 0.3s ease, opacity 0.2s ease;
-            overflow: hidden;
-        }
-
-        .nav-group.collapsed .nav-list {
-            max-height: 0 !important;
-            opacity: 0;
-            pointer-events: none;
         }
 
         .nav-item a {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
+            padding: 9px 12px;
             color: var(--text-sub);
             text-decoration: none;
             font-size: 13.5px;
             font-weight: 500;
-            border-radius: var(--radius-md);
-            transition: all 0.2s ease;
+            border-radius: 8px;
+            transition: all 0.15s ease;
         }
 
         .nav-item a:hover {
             color: var(--text-main);
             background: rgba(255, 255, 255, 0.04);
-            transform: translateX(3px);
         }
 
         .nav-item a.active {
-            color: #fff;
-            background: linear-gradient(90deg, rgba(168, 85, 247, 0.18), transparent);
-            font-weight: 700;
-            border-left: 3px solid var(--purple);
-            padding-left: 9px;
-        }
-
-        /* --- Right TOC Sidebar --- */
-        .right-sidebar {
-            width: var(--toc-w);
-            position: fixed;
-            top: calc(var(--header-h) + 28px);
-            right: 32px;
-            background: rgba(9, 13, 22, 0.6);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            backdrop-filter: blur(16px);
-            z-index: 300;
-        }
-
-        .toc-title {
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--purple);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toc-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toc-list a {
-            font-size: 12.5px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s;
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            padding-left: 10px;
-            border-left: 2px solid transparent;
-        }
-
-        .toc-list a:hover { color: var(--text-main); }
-        .toc-list a.active {
             color: var(--cyan);
+            background: rgba(56, 189, 248, 0.1);
             font-weight: 600;
-            border-left-color: var(--cyan);
         }
 
-        /* --- Main Content --- */
+        .nav-item a.highlight {
+            color: var(--amber);
+        }
+
         .main-container {
-            margin-left: var(--sidebar-w);
-            margin-right: calc(var(--toc-w) + 50px);
+            margin-left: 0;
             flex: 1;
             display: flex;
             justify-content: center;
-            width: calc(100% - var(--sidebar-w) - var(--toc-w) - 50px);
+            width: 100%;
         }
 
         .content {
             width: 100%;
             max-width: 920px;
-            padding: 40px 48px 120px 48px;
+            padding: 44px 52px 90px 52px;
         }
 
         .doc-hero {
-            margin-bottom: 32px;
-            padding-bottom: 28px;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
             border-bottom: 1px solid var(--border);
-            position: relative;
         }
 
         .doc-breadcrumb {
@@ -462,99 +305,38 @@
             gap: 8px;
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 12px;
-            font-weight: 600;
+            margin-bottom: 14px;
+            font-weight: 500;
         }
 
         .doc-title {
-            font-size: 38px;
+            font-size: 40px;
             font-weight: 800;
             letter-spacing: -1.2px;
             line-height: 1.15;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #ffffff 40%, var(--purple) 75%, var(--cyan));
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--text-sub));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .doc-subtitle {
-            font-size: 15.5px;
+            font-size: 16.5px;
             color: var(--text-sub);
             line-height: 1.6;
-            max-width: 720px;
         }
 
-        /* STICKY CATEGORY BAR */
-        .sticky-category-wrapper {
-            position: sticky;
-            top: var(--header-h);
-            z-index: 800;
-            margin: 0 -48px 40px -48px;
-            padding: 12px 48px;
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .category-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 2px;
-            scrollbar-width: none;
-        }
-
-        .category-bar::-webkit-scrollbar { display: none; }
-
-        .cat-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 16px;
-            border-radius: 99px;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--text-sub);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .cat-chip:hover, .cat-chip.active {
-            color: #fff;
-            background: rgba(168, 85, 247, 0.18);
-            border-color: var(--purple);
-            box-shadow: 0 0 15px var(--purple-glow);
-        }
-
-        .cat-chip .chip-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--text-muted);
-        }
-
-        .cat-chip.active .chip-dot {
-            background: var(--cyan);
-            box-shadow: 0 0 8px var(--cyan);
-        }
-
-        /* --- Content Blocks & Cards with Mouse Tracking Glow --- */
         section {
-            margin-bottom: 56px;
-            scroll-margin-top: calc(var(--header-h) + 80px);
+            margin-bottom: 64px;
+            scroll-margin-top: calc(var(--header-h) + 28px);
         }
 
         h2 {
-            font-size: 24px;
+            font-size: 25px;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--text-main);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -564,90 +346,122 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: linear-gradient(90deg, var(--border), transparent);
+            background: var(--border);
         }
 
         h3 {
-            font-size: 17px;
+            font-size: 17.5px;
             font-weight: 700;
             color: var(--cyan);
-            margin: 24px 0 12px 0;
+            margin: 28px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        p { color: var(--text-sub); font-size: 14.5px; margin-bottom: 16px; line-height: 1.7; }
+        p {
+            color: var(--text-sub);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
 
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 18px;
+            margin: 20px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
 
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Mouse Tracking Spot Light */
-        .card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(168, 85, 247, 0.12), transparent 40%);
-            border-radius: inherit;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
+            border-radius: 14px;
+            padding: 22px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
 
         .card:hover {
             background: var(--bg-card-hover);
-            border-color: var(--border-glow);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.15);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
         }
 
-        .card:hover::after { opacity: 1; }
-
         .callout {
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            margin: 20px 0;
-            font-size: 14px;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 22px 0;
+            font-size: 14.5px;
             display: flex;
-            gap: 14px;
+            gap: 16px;
             align-items: flex-start;
             border: 1px solid transparent;
         }
 
-        .callout-icon { flex-shrink: 0; font-size: 18px; line-top: 1; }
-        .callout-danger { background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.25); color: #ffe4e6; }
-        .callout-warning { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25); color: #fef3c7; }
-        .callout-info { background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.25); color: #e0f2fe; }
-        .callout-success { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25); color: #d1fae5; }
-        .callout-title { font-weight: 700; margin-bottom: 2px; }
+        .callout-icon {
+            flex-shrink: 0;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .callout-danger {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: rgba(244, 63, 94, 0.3);
+            color: #ffe4e6;
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: #fef3c7;
+        }
+
+        .callout-info {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: #e0f2fe;
+        }
+
+        .callout-purple {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #f3e8ff;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
 
         .code-block {
-            margin: 20px 0;
-            border-radius: var(--radius-md);
+            position: relative;
+            margin: 18px 0 24px 0;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
             background: var(--bg-code);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
 
         .code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 14px;
+            padding: 10px 18px;
             background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid var(--border);
             font-size: 12px;
             color: var(--text-muted);
             font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
         }
 
         .copy-btn {
@@ -655,7 +469,7 @@
             border: 1px solid var(--border);
             color: var(--text-sub);
             border-radius: 6px;
-            padding: 3px 9px;
+            padding: 4px 10px;
             font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
@@ -663,173 +477,127 @@
         }
 
         .copy-btn:hover {
-            background: rgba(168, 85, 247, 0.2);
-            color: #fff;
-            border-color: var(--purple);
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-main);
         }
 
-        pre { padding: 16px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #e2e8f0; }
+        pre {
+            padding: 18px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--text-main);
+        }
 
-        /* Syntax Highlight Micro-Classes */
-        .token-keyword { color: #f43f5e; font-weight: 600; }
-        .token-type { color: #38bdf8; }
-        .token-string { color: #10b981; }
-        .token-function { color: #a855f7; }
-        .token-comment { color: #64748b; font-style: italic; }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
         p code, li code, td code {
             background: rgba(255, 255, 255, 0.08);
-            color: var(--cyan);
-            padding: 2px 6px;
+            color: #38bdf8;
+            padding: 2px 7px;
             border-radius: 5px;
-            font-size: 12.5px;
-            font-family: 'JetBrains Mono', monospace;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); margin: 20px 0; background: var(--bg-card); }
-        table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
-        th { background: rgba(9, 13, 22, 0.9); padding: 12px 16px; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border); white-space: nowrap; }
-        td { padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--text-sub); }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin: 22px 0;
+            background: var(--bg-card);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 14px 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-sub);
+        }
+
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
-        .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .badge-global { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-local { background: rgba(56, 189, 248, 0.15); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.3); }
-
-        /* Floating Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 24px;
-            left: 24px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-sidebar);
-            border: 1px solid var(--border);
-            color: var(--text-sub);
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        .back-to-top.visible { opacity: 1; pointer-events: auto; }
-        .back-to-top:hover { color: #fff; border-color: var(--purple); transform: translateY(-3px); }
-
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            background: var(--bg-sidebar);
-            border: 1px solid var(--emerald);
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px var(--emerald-glow);
-            display: flex;
+        .badge {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 1200px) {
-            .right-sidebar { display: none; }
-            .main-container { margin-right: 0; width: calc(100% - var(--sidebar-w)); }
+        .badge-axeon {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple);
+            border: 1px solid rgba(168, 85, 247, 0.3);
         }
 
         @media (max-width: 992px) {
-            .mobile-toggle { display: block; }
-            .search-trigger { width: 180px; }
-            .search-key { display: none; }
-            
-            .sidebar { 
-                transform: translateX(-100%); 
-                width: 280px;
-                box-shadow: 15px 0 40px rgba(0,0,0,0.8);
-            }
-            .sidebar.open { transform: translateX(0); }
-
-            .main-container { margin-left: 0; width: 100%; }
-            .content { padding: 24px 20px 80px 20px; }
-            .sticky-category-wrapper { margin: 0 -20px 28px -20px; padding: 12px 20px; }
-            .back-to-top { left: auto; right: 24px; }
-        }
-
-        @media (max-width: 600px) {
-            .brand-badge { display: none; }
-            .doc-title { font-size: 30px; }
-            .search-trigger { width: 38px; padding: 8px; justify-content: center; }
-            .search-trigger span { display: none; }
+            .content { padding: 28px 20px 60px 20px; }
+            .search-box { width: 150px; }
         }
     </style>
 </head>
-<body>
+<body class="dark">
 
-    <div class="scroll-progress" id="scrollProgress"></div>
+    <button class="fixed-toggle-btn" id="menuToggle" aria-label="Переключить меню">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="2.25"/>
+            <circle cx="12" cy="12" r="2.25"/>
+            <circle cx="12" cy="19" r="2.25"/>
+        </svg>
+    </button>
 
     <header class="header">
-        <div style="display: flex; align-items: center; gap: 14px;">
-            <button class="mobile-toggle" id="menuToggle" aria-label="Открыть меню">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
+        <div style="display: flex; align-items: center; gap: 16px;">
             <a href="#" class="header-brand">
                 <div class="brand-logo">PGN</div>
                 <span class="brand-title">PGN GRAPHICS</span>
-                <span class="brand-badge">v2.4 Developer</span>
+                <span class="brand-badge">HorizonOS</span>
             </a>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <button class="search-trigger" id="openSearchBtn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <span>Быстрый поиск...</span>
-                <span class="search-key">Ctrl+K</span>
-            </button>
+        <div class="header-actions">
+            <a href="editor.html" class="editor-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span>Редактор кода</span>
+            </a>
+
+            <div class="search-box">
+                <svg viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.39A7.9 7.9 0 1 0 15 16.29l5.39 5.4a1 1 0 0 0 1.42-1.42zM10 16a6 6 0 1 1 6-6 6 6 0 0 1-6 6z"/></svg>
+                <input type="text" id="docSearch" placeholder="Поиск по языку...">
+            </div>
         </div>
     </header>
 
-    <div class="search-modal-overlay" id="searchModalOverlay">
-        <div class="search-modal">
-            <div class="search-modal-header">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <input type="text" class="search-modal-input" id="modalSearchInput" placeholder="Поиск по API, функциям, руководствам..." autoFocus>
-            </div>
-            <div class="search-modal-results" id="modalSearchResults"></div>
-        </div>
-    </div>
-
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
     <div class="layout">
         <nav class="sidebar" id="sidebar"></nav>
-
-        <aside class="right-sidebar">
-            <div class="toc-title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
-                На этой странице
-            </div>
-            <ul class="toc-list" id="tocList"></ul>
-        </aside>
 
         <div class="main-container">
             <main class="content">
@@ -837,444 +605,215 @@
                     <div class="doc-breadcrumb">
                         <span>Документация</span>
                         <span>/</span>
-                        <span style="color: var(--purple);">PGN Graphics API</span>
+                        <span style="color: var(--cyan);">Язык PGN & Axeon</span>
                     </div>
-                    <h1 class="doc-title">PGN Graphics Engine</h1>
-                    <p class="doc-subtitle">Полное руководство пользователя, API-справочник и практические примеры высокого уровня рендеринга.</p>
+                    <h1 class="doc-title">PGN Graphics & Language</h1>
+                    <p class="doc-subtitle">Полное справочное руководство по синтаксису, операторам, графическим объектам и системным API HorizonOS.</p>
                 </div>
 
-                <div class="sticky-category-wrapper" id="stickyWrapper">
-                    <nav class="category-bar" id="categoryBar"></nav>
-                </div>
-
-                <div id="dynamicContent"></div>
+                <div id="contentSections"></div>
             </main>
         </div>
     </div>
 
-    <button class="back-to-top" id="backToTop" aria-label="Наверх">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
-    </button>
-
-    <div class="toast-container" id="toastContainer"></div>
-
     <script src="pgn-data.js"></script>
+
     <script>
-        const defaultDatabase = {
-            categories: [
-                { id: "intro", title: "Введение" },
-                { id: "quickstart", title: "Быстрый старт" },
-                { id: "core-api", title: "Ядро и API" },
-                { id: "rendering", title: "Рендеринг и Шейдеры" },
-                { id: "performance", title: "Оптимизация" }
-            ],
-            groups: [
-                {
-                    groupTitle: "Основы",
-                    items: [
-                        { id: "intro", title: "Обзор PGN Graphics", isHighlight: true },
-                        { id: "quickstart", title: "Установка и настройка" }
-                    ]
-                },
-                {
-                    groupTitle: "Справочник API",
-                    items: [
-                        { id: "core-api", title: "Графическое ядро" },
-                        { id: "rendering", title: "Система шейдеров" },
-                        { id: "performance", title: "Пакетная отрисовка" }
-                    ]
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.body.classList.toggle('sidebar-open');
+            });
+
+            sidebar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (e.target.tagName === 'A') {
+                    document.body.classList.remove('sidebar-open');
                 }
-            ],
-            sections: [
-                {
-                    id: "intro",
-                    title: "Введение в PGN Graphics",
-                    blocks: [
-                        {
-                            type: "html",
-                            html: "<p><strong>PGN Graphics</strong> — высокопроизводительный движок рендеринга 2D/3D графики, оптимизированный для мобильных устройств и десктопных приложений с минимальными издержками на CPU/GPU.</p>"
-                        },
-                        {
-                            type: "callout",
-                            style: "info",
-                            icon: "🚀",
-                            title: "Релиз v2.4",
-                            text: "Добавлена подсистема Vulkan/WebGPU, аппаратный инстансинг и оптимизированный пайплайн отрисовки."
-                        },
-                        {
-                            type: "grid2",
-                            items: [
-                                {
-                                    cardTitle: "Высокая скорость",
-                                    description: "Аппаратное ускорение через Vulkan/Metal с авто-фоллбэком на OpenGL ES 3.0.",
-                                    badge: { class: "badge-global", text: "120+ FPS" }
-                                },
-                                {
-                                    cardTitle: "Кроссплатформенность",
-                                    description: "Единая кодовая база для iOS, Android, macOS, Windows и WebAssembly.",
-                                    badge: { class: "badge-local", text: "Cross-Platform" }
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "quickstart",
-                    title: "Быстрый старт",
-                    blocks: [
-                        { type: "subTitle", title: "Инициализация контекста" },
-                        {
-                            type: "codeBlock",
-                            title: "main.pgn",
-                            code: "<span class='token-keyword'>import</span> PGNGraphics;\n\n<span class='token-keyword'>func</span> <span class='token-function'>main</span>() {\n    <span class='token-keyword'>let</span> app = PGN.Application.<span class='token-function'>init</span>({\n        title: <span class='token-string'>\"My Game\"</span>,\n        width: 1280,\n        height: 720,\n        vsync: <span class='token-keyword'>true</span>\n    });\n    \n    app.<span class='token-function'>run</span>();\n}"
-                        },
-                        {
-                            type: "callout",
-                            style: "warning",
-                            icon: "⚡",
-                            title: "Важно",
-                            text: "Убедитесь, что драйверы графики поддерживают OpenGL 3.3+ или Vulkan 1.2 перед запуском в продакшене."
-                        }
-                    ]
-                },
-                {
-                    id: "core-api",
-                    title: "Ядро и API",
-                    blocks: [
-                        {
-                            type: "table",
-                            headers: ["Метод", "Параметры", "Описание"],
-                            rows: [
-                                ["<code>PGN.Init()</code>", "Config config", "Инициализирует графический контекст."],
-                                ["<code>PGN.DrawMesh()</code>", "Mesh mesh, Matrix4 transform", "Рендерит меш с заданным транcформом."],
-                                ["<code>PGN.SetShader()</code>", "Shader shader", "Устанавливает активный шейдерный пайплайн."]
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "rendering",
-                    title: "Рендеринг и Шейдеры",
-                    blocks: [
-                        { type: "html", html: "<p>Движок поддерживает кастомное написание PGN-SL (PGN Shading Language), совместимого с HLSL и GLSL.</p>" },
-                        {
-                            type: "codeBlock",
-                            title: "basic.shader",
-                            code: "<span class='token-keyword'>shader</span> StandardPBR {\n    <span class='token-keyword'>input</span> <span class='token-type'>vec3</span> aPosition;\n    <span class='token-keyword'>input</span> <span class='token-type'>vec2</span> aTexCoord;\n    \n    <span class='token-keyword'>output</span> <span class='token-type'>vec4</span> fragColor;\n    \n    <span class='token-keyword'>void</span> <span class='token-function'>fragment</span>() {\n        fragColor = <span class='token-type'>vec4</span>(1.0, 0.5, 0.2, 1.0);\n    }\n}"
-                        }
-                    ]
-                },
-                {
-                    id: "performance",
-                    title: "Оптимизация производительности",
-                    blocks: [
-                        {
-                            type: "callout",
-                            style: "success",
-                            icon: "💡",
-                            title: "Совет по Batching",
-                            text: "Используйте PGN.BatchGroup для сокращения вызовов DrawCalls. Это снижает нагрузку на CPU до 80%."
-                        }
-                    ]
+            });
+
+            document.addEventListener('click', (e) => {
+                if (document.body.classList.contains('sidebar-open')) {
+                    if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                        document.body.classList.remove('sidebar-open');
+                    }
                 }
-            ]
-        };
+            });
 
-        let currentDatabase = defaultDatabase;
+            if (!window.pgnData) return;
 
-        async function loadPGNDatabase() {
-            if (window.pgnData) {
-                currentDatabase = window.pgnData;
-            } else {
-                try {
-                    const response = await fetch('pgn-data.json');
-                    if (response.ok) currentDatabase = await response.json();
-                } catch (e) {}
-            }
-            renderApp(currentDatabase);
-        }
+            const contentSections = document.getElementById('contentSections');
 
-        function renderApp(db) {
-            // Sticky Categories
-            document.getElementById('categoryBar').innerHTML = db.categories.map(cat => `
-                <a href="#${cat.id}" class="cat-chip">
-                    <span class="chip-dot"></span>${cat.title}
-                </a>
-            `).join('');
+            window.pgnData.groups.forEach(group => {
+                const groupDiv = document.createElement('div');
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'nav-group-title';
+                titleDiv.textContent = group.groupTitle;
+                groupDiv.appendChild(titleDiv);
 
-            // Collapsible Left Sidebar Navigation
-            document.getElementById('sidebar').innerHTML = db.groups.map((group, idx) => `
-                <div class="nav-group" id="nav-group-${idx}">
-                    <div class="nav-group-title" onclick="toggleNavGroup(${idx})">
-                        <span>${group.groupTitle}</span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-                    </div>
-                    <ul class="nav-list" style="max-height: 500px;">
-                        ${group.items.map(item => `
-                            <li class="nav-item">
-                                <a href="#${item.id}" class="${item.isHighlight ? 'active' : ''}">
-                                    <span>${item.title}</span>
-                                </a>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            `).join('');
+                const ul = document.createElement('ul');
+                ul.className = 'nav-list';
 
-            // Right Table of Contents
-            document.getElementById('tocList').innerHTML = db.categories.map(cat => `
-                <li><a href="#${cat.id}">${cat.title}</a></li>
-            `).join('');
+                group.items.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'nav-item';
+                    
+                    const a = document.createElement('a');
+                    a.href = `#${item.id}`;
+                    a.textContent = item.title;
+                    
+                    if (index === 0 && group === window.pgnData.groups[0]) {
+                        a.className = 'active';
+                    }
+                    if (item.isHighlight) {
+                        a.classList.add('highlight');
+                    }
 
-            // Content Renderer
-            document.getElementById('dynamicContent').innerHTML = db.sections.map(sec => `
-                <section id="${sec.id}">
-                    <h2>${sec.title}</h2>
-                    ${sec.blocks.map(block => renderBlock(block)).join('')}
-                </section>
-            `).join('');
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                });
 
-            bindEvents();
-            setupIntersectionObserver();
-            setupSearchModal();
-            setupMouseGlow();
-        }
+                groupDiv.appendChild(ul);
+                sidebar.appendChild(groupDiv);
+            });
 
-        function toggleNavGroup(idx) {
-            const group = document.getElementById(`nav-group-${idx}`);
-            group.classList.toggle('collapsed');
-        }
+            window.pgnData.sections.forEach(sec => {
+                const sectionHtml = document.createElement('section');
+                sectionHtml.id = sec.id;
 
-        function renderBlock(block) {
-            switch (block.type) {
-                case 'html': return block.html;
-                case 'subTitle': return `<h3>${block.title}</h3>`;
-                case 'callout':
-                    return `
-                        <div class="callout callout-${block.style}">
-                            <div class="callout-icon">${block.icon || 'ℹ️'}</div>
+                const h2 = document.createElement('h2');
+                h2.textContent = sec.title;
+                sectionHtml.appendChild(h2);
+
+                sec.blocks.forEach(block => {
+                    if (block.type === 'callout') {
+                        const div = document.createElement('div');
+                        div.className = `callout callout-${block.style}`;
+                        div.innerHTML = `
+                            <div class="callout-icon">${block.icon}</div>
                             <div>
                                 <div class="callout-title">${block.title}</div>
                                 <div>${block.text}</div>
                             </div>
-                        </div>
-                    `;
-                case 'grid2':
-                case 'grid3':
-                    return `
-                        <div class="${block.type === 'grid3' ? 'grid-3' : 'grid-2'}">
-                            ${block.items.map(card => `
-                                <div class="card">
-                                    ${card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : ''}
-                                    <h3 style="margin-top:10px; margin-bottom:8px; font-size:15px; color:#fff;">${card.cardTitle}</h3>
-                                    ${card.description ? `<p style="font-size:13px; margin-bottom:0;">${card.description}</p>` : ''}
+                        `;
+                        sectionHtml.appendChild(div);
+                    } 
+                    else if (block.type === 'grid2') {
+                        const div = document.createElement('div');
+                        div.className = 'grid-2';
+                        block.items.forEach(card => {
+                            div.innerHTML += `
+                                <div class="card" style="${card.cardStyle || ''}">
+                                    <h3 style="color: ${card.titleColor || 'var(--cyan)'}; margin-top:0;">${card.cardTitle}</h3>
+                                    <div class="code-block">
+                                        <div class="code-header"><span>${card.codeTitle}</span></div>
+                                        <pre><code>${escapeHtml(card.code)}</code></pre>
+                                    </div>
                                 </div>
-                            `).join('')}
-                        </div>
-                    `;
-                case 'codeBlock':
-                    return `
-                        <div class="code-block">
+                            `;
+                        });
+                        sectionHtml.appendChild(div);
+                    }
+                    else if (block.type === 'grid3') {
+                        const div = document.createElement('div');
+                        div.className = 'grid-3';
+                        block.items.forEach(card => {
+                            const badgeHtml = card.badge ? `<span class="badge ${card.badge.class}">${card.badge.text}</span>` : '';
+                            const descHtml = card.description ? `<p>${card.description}</p>` : '';
+                            const codeHtml = card.codeSample ? `<div class="code-block"><pre><code>${escapeHtml(card.codeSample)}</code></pre></div>` : '';
+                            
+                            div.innerHTML += `
+                                <div class="card">
+                                    ${badgeHtml}
+                                    <h3 style="margin-top:0;">${card.cardTitle}</h3>
+                                    ${descHtml}
+                                    ${codeHtml}
+                                </div>
+                            `;
+                        });
+                        sectionHtml.appendChild(div);
+                    }
+                    else if (block.type === 'subTitle') {
+                        const h3 = document.createElement('h3');
+                        h3.textContent = block.title;
+                        sectionHtml.appendChild(h3);
+                    }
+                    else if (block.type === 'table') {
+                        const div = document.createElement('div');
+                        div.className = 'table-container';
+                        
+                        let ths = block.headers.map(h => `<th>${h}</th>`).join('');
+                        let trs = block.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
+                        
+                        div.innerHTML = `
+                            <table>
+                                <thead><tr>${ths}</tr></thead>
+                                <tbody>${trs}</tbody>
+                            </table>
+                        `;
+                        sectionHtml.appendChild(div);
+                    }
+                    else if (block.type === 'codeBlock') {
+                        const div = document.createElement('div');
+                        div.className = 'code-block';
+                        div.innerHTML = `
                             <div class="code-header">
                                 <span>${block.title}</span>
-                                <button class="copy-btn">Копировать</button>
+                                <button class="copy-btn">Скопировать</button>
                             </div>
-                            <pre><code>${block.code}</code></pre>
-                        </div>
-                    `;
-                case 'table':
-                    return `
-                        <div class="table-container">
-                            <table>
-                                <thead><tr>${block.headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
-                                <tbody>
-                                    ${block.rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                default: return '';
-            }
-        }
-
-        function setupMouseGlow() {
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                            <pre><code>${escapeHtml(block.code)}</code></pre>
+                        `;
+                        sectionHtml.appendChild(div);
+                    }
+                    else if (block.type === 'html') {
+                        const div = document.createElement('div');
+                        div.innerHTML = block.html;
+                        sectionHtml.appendChild(div);
+                    }
                 });
-            });
-        }
 
-        function bindEvents() {
-            // Copy Code
-            document.querySelectorAll('.copy-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+                contentSections.appendChild(sectionHtml);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('copy-btn')) {
+                    const btn = e.target;
                     const pre = btn.parentElement.nextElementSibling;
                     navigator.clipboard.writeText(pre.innerText).then(() => {
-                        showToast('Код скопирован в буфер!');
+                        const originalText = btn.innerText;
                         btn.innerText = 'Скопировано!';
-                        setTimeout(() => { btn.innerText = 'Копировать'; }, 2000);
+                        btn.style.color = 'var(--emerald)';
+                        setTimeout(() => {
+                            btn.innerText = originalText;
+                            btn.style.color = '';
+                        }, 2000);
                     });
-                });
-            });
-
-            // Scroll Progress & Back to Top
-            const backToTop = document.getElementById('backToTop');
-            window.addEventListener('scroll', () => {
-                const winScroll = document.documentElement.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                document.getElementById('scrollProgress').style.width = (winScroll / height) * 100 + '%';
-
-                if (winScroll > 300) backToTop.classList.add('visible');
-                else backToTop.classList.remove('visible');
-            });
-
-            backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        }
-
-        function showToast(msg) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<span>✓</span> <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(10px)';
-                toast.style.transition = 'all 0.2s ease';
-                setTimeout(() => toast.remove(), 200);
-            }, 2000);
-        }
-
-        function setupIntersectionObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        document.querySelectorAll('.cat-chip').forEach(chip => {
-                            chip.classList.toggle('active', chip.getAttribute('href') === `#${id}`);
-                        });
-                        document.querySelectorAll('.toc-list a').forEach(a => {
-                            a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-                        });
-                        document.querySelectorAll('.nav-item a').forEach(a => {
-                            a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-                        });
-                    }
-                });
-            }, { rootMargin: '-20% 0px -60% 0px' });
-
-            document.querySelectorAll('section[id]').forEach(sec => observer.observe(sec));
-        }
-
-        function setupSearchModal() {
-            const overlay = document.getElementById('searchModalOverlay');
-            const input = document.getElementById('modalSearchInput');
-            const results = document.getElementById('modalSearchResults');
-            const openBtn = document.getElementById('openSearchBtn');
-            let selectedIdx = -1;
-
-            function openModal() {
-                overlay.classList.add('active');
-                input.focus();
-                performSearch(input.value);
-            }
-
-            function closeModal() {
-                overlay.classList.remove('active');
-                selectedIdx = -1;
-            }
-
-            openBtn.addEventListener('click', openModal);
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-
-            window.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    overlay.classList.contains('active') ? closeModal() : openModal();
-                }
-                if (e.key === 'Escape') closeModal();
-
-                // Keyboard arrow navigation inside Modal
-                if (overlay.classList.contains('active')) {
-                    const items = results.querySelectorAll('.search-result-item');
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
-                        updateSelection(items);
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        selectedIdx = Math.max(selectedIdx - 1, 0);
-                        updateSelection(items);
-                    } else if (e.key === 'Enter' && selectedIdx >= 0 && items[selectedIdx]) {
-                        items[selectedIdx].click();
-                    }
                 }
             });
 
-            function updateSelection(items) {
-                items.forEach((item, idx) => {
-                    item.classList.toggle('selected', idx === selectedIdx);
+            const searchInput = document.getElementById('docSearch');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(query) ? 'block' : 'none';
                 });
-            }
-
-            input.addEventListener('input', (e) => {
-                selectedIdx = -1;
-                performSearch(e.target.value);
             });
 
-            function performSearch(query) {
-                const q = query.toLowerCase().trim();
-                if (!q) {
-                    results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Введите текст для поиска...</div>';
-                    return;
-                }
-
-                const matches = [];
-                currentDatabase.sections.forEach(sec => {
-                    if (sec.title.toLowerCase().includes(q)) {
-                        matches.push({ id: sec.id, title: sec.title, desc: 'Раздел документации' });
-                    }
-                });
-
-                if (matches.length === 0) {
-                    results.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Ничего не найдено</div>';
-                } else {
-                    results.innerHTML = matches.map(m => `
-                        <a href="#${m.id}" class="search-result-item" onclick="document.getElementById('searchModalOverlay').classList.remove('active')">
-                            <div class="search-result-title">${m.title}</div>
-                            <div class="search-result-desc">${m.desc}</div>
-                        </a>
-                    `).join('');
-                }
-            }
-        }
-
-        // Mobile Menu Drawer
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const menuToggle = document.getElementById('menuToggle');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        });
-
-        sidebar.addEventListener('click', (e) => {
-            if (e.target.closest('a')) {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
+            function escapeHtml(text) {
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
             }
         });
-
-        loadPGNDatabase();
     </script>
 </body>
 </html>
+
