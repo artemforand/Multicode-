@@ -63,7 +63,7 @@
     {
       "id": "gems",
       "idAct": "action1",
-      "count": 30,
+      "count": 50,
       "priceStep": 0,
       "canBuy":false,
       "prizeType": "gems",
