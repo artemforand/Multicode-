@@ -63,8 +63,8 @@
     {
       "id": "gems",
       "idAct": "action1",
-      "count": 0,
-      "priceStep": 30,
+      "count": 30,
+      "priceStep": 0,
       "canBuy":false,
       "prizeType": "gems",
       "spriteMax": "Sprites/resource/gems3.png"
