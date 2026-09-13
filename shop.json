@@ -1,0 +1,63 @@
+{
+  "action": [
+    {
+      "id": "factorTrophy",
+      "idAct": "action1",
+      "count": 1,
+      "maxLevel": 8,
+      "priceStep": 120,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/123213132133.png"
+    }
+  ],
+  "Asp": [
+    {
+      "id": "icon",
+      "icon": "player_icon_asp",
+      "idAct": "action1",
+      "count": 1,
+      "priceStep": 0,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/icons/player_icon_asp.png",
+      "scale": 0.16,
+      "text": "Коллаба",
+      "isIcon": true
+    }
+  ],
+  "box": [
+    {
+      "id": "big",
+      "idAct": "action1",
+      "count": 1,
+      "priceStep": 30,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/box/big1.png"
+    },
+    {
+      "id": "mega",
+      "idAct": "action1",
+      "count": 1,
+      "priceStep": 60,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/box/mega1.png"
+    }
+  ],
+  "resource": [
+    {
+      "id": "gems",
+      "idAct": "action1",
+      "count": 30,
+      "priceStep": 300,
+      "prizeType": "money",
+      "spriteMax": "Sprites/resource/gems3.png"
+    },
+    {
+      "id": "money",
+      "idAct": "action1",
+      "count": 300,
+      "priceStep": 30,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/resource/money3.png"
+    }
+  ]
+}
