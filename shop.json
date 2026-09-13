@@ -1,4 +1,5 @@
 {
+  "categories":["action", "box", "resource", "Asp"],
   "action": [
     {
       "id": "factorTrophy",
@@ -58,6 +59,15 @@
       "priceStep": 30,
       "prizeType": "gems",
       "spriteMax": "Sprites/resource/money3.png"
+    },
+    {
+      "id": "gems",
+      "idAct": "action1",
+      "count": 0,
+      "priceStep": 30,
+      "canBuy":false,
+      "prizeType": "gems",
+      "spriteMax": "Sprites/resource/gems3.png"
     }
   ]
 }
