@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1411">
+<meta name="description" content="Meander | Artemforand — текстовые квесты">
+<link rel="icon" type="image/png" href="artemforand.png">
+<link rel="apple-touch-icon" href="artemforand.png">
+<title>Meander | Artemforand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script>
+if (localStorage.getItem('theme') === 'light') document.documentElement.setAttribute('data-theme', 'light');
+</script>
+<style>
+:root {
+  --md-sys-color-primary: #a0d8b3;
+  --md-sys-color-on-primary: #0a3822;
+  --md-sys-color-primary-container: #225037;
+  --md-sys-color-on-primary-container: #bcf4ce;
+  --md-sys-color-surface: #0f1411;
+  --md-sys-color-on-surface: #e1e3df;
+  --md-sys-color-surface-variant: #1a211c;
+  --md-sys-color-on-surface-variant: #c1c9c1;
+  --md-sys-color-surface-container-lowest: #0a0f0c;
+  --md-sys-color-surface-container-low: #131815;
+  --md-sys-color-surface-container: #171d19;
+  --md-sys-color-surface-container-high: #212823;
+  --md-sys-color-surface-container-highest: #2c332d;
+  --md-sys-color-outline: #8a938c;
+  --md-sys-color-outline-variant: #414942;
+  --md-sys-color-scrim: rgba(0, 0, 0, 0.6);
+  --md-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --md-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+  --md-shape-corner-extra-small: 4px;
+  --md-shape-corner-small: 8px;
+  --md-shape-corner-medium: 12px;
+  --md-shape-corner-large: 16px;
+  --md-shape-corner-extra-large: 28px;
+  --md-shape-corner-full: 9999px;
+  --md-easing-standard: cubic-bezier(0.2, 0.0, 0.0, 1.0);
+  --md-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+}
+
+[data-theme="light"] {
+  --md-sys-color-primary: #386a4e;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #bcf4ce;
+  --md-sys-color-on-primary-container: #002111;
+  --md-sys-color-surface: #f6fbf4;
+  --md-sys-color-on-surface: #181d19;
+  --md-sys-color-surface-variant: #e0e5de;
+  --md-sys-color-on-surface-variant: #414942;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f0f5ee;
+  --md-sys-color-surface-container: #eaefe8;
+  --md-sys-color-surface-container-high: #e5eae3;
+  --md-sys-color-surface-container-highest: #dfe4dd;
+  --md-sys-color-outline: #717972;
+  --md-sys-color-outline-variant: #c1c9c1;
+  --md-sys-color-scrim: rgba(0, 0, 0, 0.4);
+  --md-elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 3px 1px rgba(0, 0, 0, 0.1);
+  --md-elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 6px 2px rgba(0, 0, 0, 0.1);
+  --md-elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.05), 0px 4px 8px 3px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  font-family: 'Plus Jakarta Sans', 'Roboto', -apple-system, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 110px;
+  -webkit-font-smoothing: antialiased;
+  word-break: break-word;
+}
+
+body.lock {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select {
+  font: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.container {
+  width: min(1120px, calc(100% - 32px));
+  margin: auto;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  background: var(--md-sys-color-surface);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  transition: background-color 0.3s;
+}
+
+.nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.2px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.logo-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--md-shape-corner-medium);
+  overflow: hidden;
+  background: var(--md-sys-color-primary-container);
+  display: grid;
+  place-items: center;
+}
+
+.logo-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px 4px 4px;
+  border-radius: var(--md-shape-corner-full);
+  background: var(--md-sys-color-surface-container);
+  transition: background 0.2s var(--md-easing-standard);
+}
+
+.profile-mini:hover {
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--md-shape-corner-full);
+  overflow: hidden;
+  background: var(--md-sys-color-primary-container);
+  display: grid;
+  place-items: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-mini span:last-child {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-shape-corner-full);
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s var(--md-easing-standard);
+}
+
+.icon-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-btn:hover {
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.hero {
+  padding: 32px 0 20px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 16px;
+}
+
+.hero-main, .profile-card {
+  border-radius: var(--md-shape-corner-extra-large);
+  background: var(--md-sys-color-surface-container-low);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--md-elevation-1);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--md-sys-color-on-primary-container);
+  background: var(--md-sys-color-primary-container);
+  padding: 6px 14px;
+  border-radius: var(--md-shape-corner-full);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--md-sys-color-primary);
+  border-radius: var(--md-shape-corner-full);
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -1px;
+  font-weight: 800;
+}
+
+.gradient {
+  color: var(--md-sys-color-primary);
+}
+
+.hero-main p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 650px;
+  margin: 18px 0 28px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  border-radius: var(--md-shape-corner-full);
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s var(--md-easing-standard);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.btn:hover {
+  background: var(--md-sys-color-surface-container-highest);
+  box-shadow: var(--md-elevation-1);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: var(--md-sys-color-primary);
+  filter: brightness(1.1);
+  box-shadow: var(--md-elevation-2);
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.profile-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.big-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--md-shape-corner-large);
+  overflow: hidden;
+  background: var(--md-sys-color-primary-container);
+  display: grid;
+  place-items: center;
+}
+
+.big-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-card h2 {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.verified {
+  width: 18px;
+  height: 18px;
+}
+
+.profile-card .handle {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.bio {
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+  font-size: 14px;
+  margin: 20px 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-corner-large);
+  padding: 12px;
+  text-align: center;
+}
+
+.stat b {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.stat span {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+  display: block;
+}
+
+.section {
+  padding: 20px 0 40px;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.section-head h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.section-head p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.search, .select {
+  background: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-shape-corner-full);
+  padding: 12px 20px;
+  font-size: 14px;
+  transition: all 0.2s var(--md-easing-standard);
+}
+
+.search {
+  min-width: 220px;
+}
+
+.search:focus, .select:focus {
+  border-color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-surface-container-highest);
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%238a938c" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  white-space: nowrap;
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 8px 16px;
+  border-radius: var(--md-shape-corner-small);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s var(--md-easing-standard);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.filter:hover {
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+
+.filter.active {
+  background: var(--md-sys-color-secondary-container, var(--md-sys-color-primary-container));
+  color: var(--md-sys-color-on-primary-container);
+  border-color: transparent;
+}
+
+.quest-grid {
+  display: grid;
+  grid-template-columns: repeat( auto-fill, minmax(300px, 1fr) );
+  gap: 16px;
+}
+
+.quest {
+  position: relative;
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: transform 0.2s var(--md-easing-standard), box-shadow 0.2s var(--md-easing-standard);
+}
+
+.quest:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-elevation-2);
+}
+
+.quest-cover {
+  height: 160px;
+  border-radius: var(--md-shape-corner-large);
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+  background: var(--md-sys-color-surface-container-highest);
+}
+
+.quest-cover img.bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.quest-cover:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+}
+
+.quest-icon {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  width: 36px;
+  height: 36px;
+  z-index: 2;
+  border-radius: var(--md-shape-corner-small);
+}
+
+.quest-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: var(--md-shape-corner-full);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-primary);
+  z-index: 3;
+}
+
+.quest h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.quest p {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 14px;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.quest-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+.tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-high);
+  padding: 4px 10px;
+  border-radius: var(--md-shape-corner-small);
+}
+
+.quest-open {
+  width: 100%;
+  border-radius: var(--md-shape-corner-full);
+}
+
+.feature-card {
+  border-radius: var(--md-shape-corner-extra-large);
+  padding: 24px;
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.dev-image {
+  width: 100%;
+  height: 220px;
+  border-radius: var(--md-shape-corner-large);
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: var(--md-sys-color-surface-container-highest);
+  position: relative;
+}
+
+.dev-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dev-label {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: var(--md-shape-corner-full);
+  color: var(--md-sys-color-on-primary-container);
+  background: var(--md-sys-color-primary-container);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.feature-icon-wrapper {
+  margin-bottom: 16px;
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--md-sys-color-primary-container);
+  border-radius: var(--md-shape-corner-medium);
+  display: grid;
+  place-items: center;
+}
+
+.version-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-surface-container-high);
+  padding: 6px 12px;
+  border-radius: var(--md-shape-corner-full);
+}
+
+.feature-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.feature-card p {
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.dev-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.dev-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--md-shape-corner-small);
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-high);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.empty {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--md-sys-color-on-surface-variant);
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-shape-corner-extra-large);
+  font-size: 15px;
+  border: 1px dashed var(--md-sys-color-outline-variant);
+}
+
+.empty img {
+  width: 48px;
+  height: 48px;
+  opacity: 0.6;
+  margin-bottom: 12px;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--md-sys-color-scrim);
+  z-index: 80;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--md-easing-standard), visibility 0.3s;
+}
+
+.scrim.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sheet {
+  position: fixed;
+  z-index: 90;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: auto;
+  width: min(360px, 85vw);
+  background: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-shape-corner-extra-large) 0 0 var(--md-shape-corner-extra-large);
+  box-shadow: var(--md-elevation-3);
+  transform: translateX(100%);
+  transition: transform 0.3s var(--md-easing-emphasized);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sheet.open {
+  transform: translateX(0);
+}
+
+.sheet-head {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.sheet-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sheet-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--md-shape-corner-medium);
+  overflow: hidden;
+  background: var(--md-sys-color-primary-container);
+}
+
+.sheet-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sheet h2 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sheet small {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+}
+
+.sheet-body {
+  overflow-y: auto;
+  padding: 16px;
+  flex: 1;
+}
+
+.sheet-section {
+  margin-bottom: 24px;
+}
+
+.sheet-section h3 {
+  font-size: 12px;
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
+  margin: 0 0 8px 8px;
+  letter-spacing: 0.5px;
+}
+
+.sheet-list {
+  border-radius: var(--md-shape-corner-medium);
+  overflow: hidden;
+  background: var(--md-sys-color-surface-container);
+}
+
+.sheet-row {
+  width: 100%;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--md-sys-color-on-surface);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  transition: background 0.2s;
+}
+
+.sheet-row:last-child {
+  border: none;
+}
+
+.sheet-row:hover {
+  background: var(--md-sys-color-surface-container-high);
+}
+
+.row-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.row-text {
+  flex: 1;
+}
+
+.row-text b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row-text span {
+  display: block;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+}
+
+.switch {
+  width: 44px;
+  height: 24px;
+  border-radius: var(--md-shape-corner-full);
+  background: var(--md-sys-color-surface-container-highest);
+  padding: 2px;
+  transition: 0.2s var(--md-easing-standard);
+  position: relative;
+}
+
+.switch:after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--md-sys-color-outline);
+  transition: 0.2s var(--md-easing-standard);
+}
+
+.switch.on {
+  background: var(--md-sys-color-primary);
+}
+
+.switch.on:after {
+  transform: translateX(20px);
+  background: var(--md-sys-color-on-primary);
+}
+
+.sheet-footer {
+  padding: 16px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.fab {
+  position: fixed;
+  right: 16px;
+  bottom: 90px;
+  z-index: 45;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--md-shape-corner-large);
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  cursor: pointer;
+  box-shadow: var(--md-elevation-2);
+  transition: all 0.2s var(--md-easing-standard);
+  display: grid;
+  place-items: center;
+}
+
+.fab:hover {
+  transform: scale(1.05);
+  box-shadow: var(--md-elevation-3);
+}
+
+.bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  height: 80px;
+  background: var(--md-sys-color-surface-container);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-inner {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.bottom a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  width: 64px;
+}
+
+.bottom-icon-wrapper {
+  width: 64px;
+  height: 32px;
+  border-radius: var(--md-shape-corner-full);
+  display: grid;
+  place-items: center;
+  transition: background 0.2s var(--md-easing-standard);
+}
+
+.bottom a img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+}
+
+.bottom a.active {
+  color: var(--md-sys-color-on-surface);
+}
+
+.bottom a.active .bottom-icon-wrapper {
+  background: var(--md-sys-color-secondary-container, var(--md-sys-color-primary-container));
+}
+
+.bottom a.active img {
+  opacity: 1;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  z-index: 150;
+  transform: translate(-50%, 20px);
+  opacity: 0;
+  pointer-events: none;
+  background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  padding: 12px 20px;
+  border-radius: var(--md-shape-corner-extra-large);
+  box-shadow: var(--md-elevation-2);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s var(--md-easing-standard);
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.footer {
+  padding: 20px 0;
+}
+
+.footer-inner {
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 13px;
+}
+
+@media (max-width: 850px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: calc(100% - 24px);
+  }
+  
+  .hero-main, .profile-card {
+    padding: 20px;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .search, .select {
+    width: 100%;
+  }
+
+  .quest-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-mini span:last-child {
+    display: none;
+  }
+
+  .profile-mini {
+    padding: 4px;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">
+        <img src="artemforand.png" alt="Artemforand">
+      </span>
+      Meander
+    </a>
+   
+    <div style="display:flex;align-items:center;gap:8px">
+      <a class="profile-mini" href="#about">
+        <span class="avatar">
+          <img src="artemforand.png" alt="Artemforand">
+        </span>
+        <span>Artemforand</span>
+      </a>
+      <button class="icon-btn" id="moreBtn" aria-label="Открыть меню">
+        <img src="https://api.iconify.design/solar:menu-dots-bold.svg?color=%238a938c" alt="Menu">
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet-head">
+    <div class="sheet-title">
+      <div class="sheet-icon">
+        <img src="artemforand.png" alt="Artemforand">
+      </div>
+      <div>
+        <h2>Meander</h2>
+        <small>Artemforand · Панель</small>
+      </div>
+    </div>
+    <button class="icon-btn" id="closeSheet" aria-label="Закрыть">
+      <img src="https://api.iconify.design/solar:close-circle-bold.svg?color=%238a938c" alt="Close">
+    </button>
+  </div>
+  <div class="sheet-body">
+    <section class="sheet-section">
+      <h3>НАВИГАЦИЯ</h3>
+      <div class="sheet-list">
+        <button class="sheet-row" onclick="go('quests')">
+<span class="row-icon">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#a0d8b3" d="M13.5 3.5a2 2 0 0 0-3 0L3.8 11a2 2 0 0 0 1.4 3.4h4.3v4.1a2 2 0 0 0 3.4 1.4l7.5-7.5a2 2 0 0 0-1.4-3.4h-4.1V4.9a2 2 0 0 0-1.4-1.4Z"/>
+  </svg>
+</span>
+          <span class="row-text">
+            <b>Мои квесты</b>
+            <span>Все опубликованные истории</span>
+          </span>
+        </button>
+     <button class="sheet-row" onclick="window.open('https://backend.meander.sbs/share/profile/f1605fca-0b9f-4ec3-aa8d-eaa25deff189', '_blank')">
+  <span class="row-icon"><img src="https://api.iconify.design/solar:user-bold-duotone.svg?color=%23a0d8b3" alt="Profile"></span>
+  <span class="row-text">
+    <b>Профиль автора</b>
+    <span>Meander | Artemforand</span>
+  </span>
+</button>
+      </div>
+    </section>
+
+    <section class="sheet-section">
+      <h3>ССЫЛКИ</h3>
+      <div class="sheet-list">
+        <a class="sheet-row" href="https://play.google.com/store/apps/details?id=com.IILLUMINAT.meadner" target="_blank" rel="noopener">
+          <span class="row-icon"><img src="https://api.iconify.design/solar:play-bold-duotone.svg?color=%23a0d8b3" alt="Play"></span>
+          <span class="row-text">
+            <b>Google Play</b>
+            <span>Приложение Meander</span>
+          </span>
+        </a>
+        <a class="sheet-row" href="https://backend.meander.sbs/share/profile/f1605fca-0b9f-4ec3-aa8d-eaa25deff189" target="_blank" rel="noopener">
+          <span class="row-icon"><img src="https://api.iconify.design/solar:global-bold-duotone.svg?color=%23a0d8b3" alt="Web"></span>
+          <span class="row-text">
+            <b>Сайт Meander</b>
+            <span>Официальный сайт</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section class="sheet-section">
+      <h3>ПАРАМЕТРЫ</h3>
+      <div class="sheet-list">
+
+        <button class="sheet-row" onclick="toggleTheme(this)">
+          <span class="row-icon"><img src="https://api.iconify.design/solar:moon-bold-duotone.svg?color=%23a0d8b3" alt="Dark"></span>
+          <span class="row-text">
+            <b>Тёмная тема</b>
+            <span>Смена оформления</span>
+          </span>
+          <span class="switch on" id="themeSwitch"></span>
+        </button>
+      </div>
+    </section>
+  </div>
+  <div class="sheet-footer">
+    <button class="btn btn-primary" style="width:100%" onclick="closeSheet()">Закрыть</button>
+  </div>
+</aside>
+
+<main>
+  <section class="hero" id="about">
+    <div class="container hero-grid">
+      <div class="hero-main">
+        <div class="eyebrow">
+          <span class="dot"></span> Автор квестов Meander
+        </div>
+        <h1>
+          Meander <span class="gradient">| Artemforand</span>
+        </h1>
+        <p>
+          Моя коллекция текстовых квестов, экспериментов и историй. Открывай квесты по ссылке, следи за обновлениями и находи новые приключения.
+        </p>
+        <div class="actions">
+          <a href="#quests" class="btn btn-primary">
+            <img src="https://api.iconify.design/solar:play-bold.svg?color=%230a3822" alt="Play">
+            Открыть квесты
+          </a>
+        </div>
+      </div>
+
+      <aside class="profile-card">
+        <div>
+          <div class="profile-top">
+            <div class="big-avatar">
+              <img src="artem.png" alt="Artemforand">
+            </div>
+            <div>
+              <h2>
+                Artemforand
+                <img src="https://api.iconify.design/solar:verified-check-bold.svg?color=%23a0d8b3" class="verified" alt="Verified">
+              </h2>
+              <div class="handle">Автор · Meander</div>
+            </div>
+          </div>
+          <p class="bio">
+            Создаю текстовые квесты в Meander, или разные игры 
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <b id="questCount">2</b>
+            <span>Квеста</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="quests">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Квесты</h2>
+          <p>Открывай прямо из этой страницы</p>
+        </div>
+        <div class="controls">
+          <input id="search" class="search" placeholder="Поиск квестов..." autocomplete="off">
+          <select id="sort" class="select">
+            <option value="default">Сначала новые</option>
+            <option value="az">По названию</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="all">Все</button>
+        <button class="filter" data-filter="simulation">Симулятор</button>
+        <button class="filter" data-filter="horror">Хоррор</button>
+        <button class="filter" data-filter="history">История</button>
+        <button class="filter" data-filter="experiment">Эксперимент</button>
+      </div>
+
+      <div id="questGrid" class="quest-grid">
+        <article class="quest" data-category="simulation" data-title="Симулятор шахтера" data-order="3">
+          <span class="quest-badge">ОТКРЫТ</span>
+          <div class="quest-cover">
+            <img src="miner.png" alt="Симулятор шахтера" class="bg">
+            <img src="mine.png" class="quest-icon" alt="Mine">
+          </div>
+          <h3>Симулятор шахтера</h3>
+          <p>Спускайся в шахту, добывай ресурсы и развивай свою добычу.</p>
+          <div class="quest-meta">
+            <span class="tag">Симулятор</span>
+            <span class="tag">Экономика</span>
+            <span class="tag">Meander</span>
+          </div>
+          <a class="btn btn-primary quest-open" href="https://backend.meander.sbs/share/quest/114e79ce-39a2-49b4-bd7c-5000f803bb6e" target="_blank" rel="noopener">
+            Открыть квест 
+            <img src="https://api.iconify.design/solar:arrow-right-linear.svg?color=%230a3822" alt=">">
+          </a>
+        </article>
+
+        <article class="quest" data-category="simulation" data-title="Age of history" data-order="2">
+          <span class="quest-badge">ОТКРЫТ | ДЕМО</span>
+          <div class="quest-cover">
+            <img src="ageofhistory.png" alt="Age of history" class="bg">
+          </div>
+          <h3>Age of history</h3>
+          <p>Выбирай страну, нападай на других, улучшай экономику и завоевывай мир.</p>
+          <div class="quest-meta">
+            <span class="tag">Симулятор</span>
+            <span class="tag">Стратегия</span>
+            <span class="tag">Meander</span>
+          </div>
+          <a class="btn btn-primary quest-open" href="https://backend.meander.sbs/share/quest/2e7ec90b-957f-4121-9739-5e564b98137f" target="_blank" rel="noopener">
+            Открыть квест 
+            <img src="https://api.iconify.design/solar:arrow-right-linear.svg?color=%230a3822" alt=">">
+          </a>
+        </article>
+      </div>
+
+      <div id="empty" class="empty">
+        <img src="https://api.iconify.design/solar:ghost-bold-duotone.svg?color=%238a938c" alt="Empty">
+        <div>Ничего не найдено. Попробуй другой запрос.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Возможности</h2>
+          <p>Выберите что хотите</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="dev-image">
+          <img src="meander.png" alt="Meander Dev">
+          <span class="dev-label">DEV</span>
+        </div>
+
+        <div class="feature-content">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="feature-icon">
+              <img src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%230a3822" alt="Code">
+            </div>
+            <span class="version-badge">2.8.13-beta (257)</span>
+          </div>
+
+          <h3>Meander Dev</h3>
+
+          <p>
+            Информационная страница Meander | Artemforand с опубликованными текстовыми квестами и описанием проектов. Установите приложение, чтобы получить доступ к новым функциям и обновлениям.
+          </p>
+
+          <div class="dev-meta">
+            <span>
+              <img src="https://api.iconify.design/solar:check-circle-bold-duotone.svg?color=%23a0d8b3" alt="">
+              Beta
+            </span>
+            <span>
+              <img src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%23a0d8b3" alt="">
+              Dev
+            </span>
+          </div>
+
+          <a href="https://gitlab.com/Aryemforamd/and-youtube/-/raw/main/app-dev-release.apk?ref_type=heads&inline=false" class="btn btn-primary" style="width:100%" download>
+            <img src="https://api.iconify.design/solar:download-square-bold-duotone.svg?color=%230a3822" alt="Download">
+            Установить
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>© 2026 Meander | Artemforand</span>
+    <span>Текстовые квесты · Истории · Эксперименты</span>
+  </div>
+</footer>
+
+<nav class="bottom">
+  <div class="bottom-inner">
+    <a href="#" class="active">
+      <div class="bottom-icon-wrapper">
+        <img src="https://api.iconify.design/solar:home-smile-bold-duotone.svg?color=%23a0d8b3" alt="Home">
+      </div>
+      Главная
+    </a>
+    <a href="#quests">
+      <div class="bottom-icon-wrapper">
+<img src="https://api.iconify.design/solar:map-arrow-right-bold-duotone.svg?color=%238a938c" alt="Quests">
+      </div>
+      Квесты
+    </a>
+    <a href="#about">
+      <div class="bottom-icon-wrapper">
+        <img src="https://api.iconify.design/solar:user-bold-duotone.svg?color=%238a938c" alt="Profile">
+      </div>
+      Профиль
+    </a>
+  </div>
+</nav>
+
+<button class="fab" id="fab" aria-label="Открыть меню">
+  <img src="https://api.iconify.design/solar:hamburger-menu-linear.svg?color=%230a3822" alt="Menu">
+</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const cards = [...document.querySelectorAll('.quest')];
+const search = document.getElementById('search');
+const sort = document.getElementById('sort');
+const empty = document.getElementById('empty');
+let filter = 'all';
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  
+  let visible = cards.filter(c => {
+    const okFilter = filter === 'all' || c.dataset.category === filter;
+    const okSearch = !q || c.dataset.title.toLowerCase().includes(q) || c.innerText.toLowerCase().includes(q);
+    return okFilter && okSearch;
+  });
+
+  if (sort.value === 'az') {
+    visible.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title, 'ru'));
+  } else {
+    visible.sort((a, b) => Number(b.dataset.order) - Number(a.dataset.order));
+  }
+
+  const grid = document.getElementById('questGrid');
+  visible.forEach(c => grid.appendChild(c));
+
+  cards.forEach(c => {
+    c.style.display = visible.includes(c) ? 'flex' : 'none';
+  });
+
+  empty.style.display = visible.length ? 'none' : 'block';
+}
+
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    filter = btn.dataset.filter;
+    render();
+  });
+});
+
+search.addEventListener('input', render);
+sort.addEventListener('change', render);
+
+function go(id) {
+  closeSheet();
+  setTimeout(() => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  }, 180);
+}
+
+const sheet = document.getElementById('sheet');
+const scrim = document.getElementById('scrim');
+const moreBtn = document.getElementById('moreBtn');
+const closeBtn = document.getElementById('closeSheet');
+const fab = document.getElementById('fab');
+
+function openSheet() {
+  sheet.classList.add('open');
+  scrim.classList.add('open');
+  sheet.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('lock');
+}
+
+function closeSheet() {
+  sheet.classList.remove('open');
+  scrim.classList.remove('open');
+  sheet.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('lock');
+}
+
+moreBtn.addEventListener('click', openSheet);
+closeBtn.addEventListener('click', closeSheet);
+fab.addEventListener('click', openSheet);
+scrim.addEventListener('click', closeSheet);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSheet();
+});
+
+function toggleSwitch(row) {
+  row.querySelector('.switch')?.classList.toggle('on');
+  notify('Параметр изменён');
+}
+
+function toggleTheme(row) {
+  const root = document.documentElement;
+  const switchEl = row.querySelector('.switch');
+  if (root.getAttribute('data-theme') === 'light') {
+    root.removeAttribute('data-theme');
+    switchEl?.classList.add('on');
+    localStorage.setItem('theme', 'dark');
+    notify('Тёмная тема включена');
+  } else {
+    root.setAttribute('data-theme', 'light');
+    switchEl?.classList.remove('on');
+    localStorage.setItem('theme', 'light');
+    notify('Светлая тема включена');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('theme') === 'light') {
+    document.getElementById('themeSwitch')?.classList.remove('on');
+  }
+});
+
+function notify(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => {
+    t.classList.remove('show');
+  }, 2600);
+}
+
+render();
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  playRandomMusic();
+});
+
+document.querySelectorAll('.bottom a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelectorAll('.bottom a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
