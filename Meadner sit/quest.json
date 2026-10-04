@@ -12,16 +12,6 @@
   },
   {
     "category": "simulation",
-    "title": "ИИ",
-    "order": 3,
-    "status": "ОТКРЫТ",
-    "image": "ai.png",
-    "description": "Первая ии в Meander.",
-    "tags": ["Искусственный интеллект", "Meander"],
-    "link": "https://backend.meander.sbs/share/quest/b7211ee3-8374-4775-a648-58cab58ef77a"
-  },
-  {
-    "category": "simulation",
     "title": "Age of history",
     "order": 2,
     "status": "ОТКРЫТ | ДЕМО",
@@ -29,5 +19,15 @@
     "description": "Выбирай страну, нападай на других, улучшай экономику и завоевывай мир.",
     "tags": ["Симулятор", "Стратегия", "Meander"],
     "link": "https://backend.meander.sbs/share/quest/2e7ec90b-957f-4121-9739-5e564b98137f"
+  },
+  {
+    "category": "simulation",
+    "title": "ИИ",
+    "order": 3,
+    "status": "ОТКРЫТ",
+    "image": "ai.png",
+    "description": "Первая ии в Meander.",
+    "tags": ["Искусственный интеллект", "Meander"],
+    "link": "https://backend.meander.sbs/share/quest/b7211ee3-8374-4775-a648-58cab58ef77a"
   }
 ]
