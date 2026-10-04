@@ -1170,6 +1170,320 @@ h1 {
     text-align: center;
   }
 }
+
+.plugin-doc-card {
+margin-top: 16px;
+padding: 20px;
+border-radius: var(--md-shape-xxl);
+background: var(--md-sys-color-surface-container-low);
+border: 1px solid var(--md-sys-color-outline-variant);
+box-shadow: var(--md-elevation-1);
+}
+
+.plugin-doc-top {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+
+.plugin-doc-icon {
+width: 50px;
+height: 50px;
+border-radius: var(--md-shape-lg);
+background: var(--md-sys-color-primary-container);
+display: grid;
+place-items: center;
+flex-shrink: 0;
+}
+
+.plugin-doc-icon img {
+width: 27px;
+height: 27px;
+}
+
+.plugin-doc-info {
+flex: 1;
+min-width: 0;
+}
+
+.plugin-doc-info h3 {
+font-size: 18px;
+font-weight: 800;
+}
+
+.plugin-doc-info p {
+margin-top: 3px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 13px;
+}
+
+.plugin-doc-count {
+margin-top: 16px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 10px;
+}
+
+.plugin-doc-count span {
+color: var(--md-sys-color-on-surface-variant);
+font-size: 13px;
+font-weight: 600;
+}
+
+.plugin-doc-open {
+min-height: 44px;
+padding: 10px 18px;
+}
+
+.plugin-scrim {
+position: fixed;
+inset: 0;
+z-index: 180;
+background: var(--md-sys-color-scrim);
+opacity: 0;
+visibility: hidden;
+transition: .3s var(--md-easing);
+}
+
+.plugin-scrim.open {
+opacity: 1;
+visibility: visible;
+}
+
+.plugin-modal {
+position: fixed;
+left: 50%;
+bottom: 20px;
+width: min(620px, calc(100% - 24px));
+max-height: min(720px, calc(100vh - 40px));
+transform: translate(-50%, calc(100% + 40px));
+z-index: 190;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+background: var(--md-sys-color-surface-container-low);
+border: 1px solid var(--md-sys-color-outline-variant);
+border-radius: 28px;
+box-shadow: var(--md-elevation-3);
+transition: transform .35s var(--md-easing);
+}
+
+.plugin-modal.open {
+transform: translate(-50%, 0);
+}
+
+.plugin-modal-head {
+padding: 18px 18px 16px;
+display: flex;
+align-items: center;
+gap: 12px;
+border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.plugin-modal-icon {
+width: 44px;
+height: 44px;
+border-radius: 14px;
+display: grid;
+place-items: center;
+background: var(--md-sys-color-primary-container);
+flex-shrink: 0;
+}
+
+.plugin-modal-icon img {
+width: 24px;
+height: 24px;
+}
+
+.plugin-modal-title {
+flex: 1;
+min-width: 0;
+}
+
+.plugin-modal-title h2 {
+font-size: 18px;
+font-weight: 800;
+}
+
+.plugin-modal-title span {
+display: block;
+margin-top: 2px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 12px;
+}
+
+.plugin-modal-body {
+overflow-y: auto;
+padding: 14px;
+flex: 1;
+overscroll-behavior: contain;
+}
+
+.plugin-item {
+padding: 16px;
+margin-bottom: 10px;
+border-radius: 20px;
+background: var(--md-sys-color-surface-container);
+border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.plugin-item:last-child {
+margin-bottom: 0;
+}
+
+.plugin-item-top {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+}
+
+.plugin-item-icon {
+width: 40px;
+height: 40px;
+border-radius: 12px;
+display: grid;
+place-items: center;
+background: var(--md-sys-color-primary-container);
+flex-shrink: 0;
+}
+
+.plugin-item-icon img {
+width: 21px;
+height: 21px;
+}
+
+.plugin-item-main {
+min-width: 0;
+flex: 1;
+}
+
+.plugin-item-name {
+font-size: 15px;
+font-weight: 800;
+}
+
+.plugin-item-id {
+margin-top: 3px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 11px;
+font-family: monospace;
+}
+
+.plugin-version {
+display: inline-flex;
+margin-top: 7px;
+padding: 5px 9px;
+border-radius: 999px;
+background: var(--md-sys-color-primary-container);
+color: var(--md-sys-color-on-primary-container);
+font-size: 10px;
+font-weight: 800;
+}
+
+.plugin-description {
+margin-top: 13px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 13px;
+line-height: 1.5;
+}
+
+.plugin-methods {
+margin-top: 14px;
+display: grid;
+gap: 8px;
+}
+
+.plugin-method {
+padding: 12px;
+border-radius: 14px;
+background: var(--md-sys-color-surface-container-high);
+}
+
+.plugin-method-name {
+color: var(--md-sys-color-primary);
+font-family: monospace;
+font-size: 13px;
+font-weight: 800;
+}
+
+.plugin-method-description {
+margin-top: 5px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 12px;
+line-height: 1.45;
+}
+
+.plugin-method-usage {
+margin-top: 8px;
+padding: 9px 10px;
+border-radius: 10px;
+overflow-x: auto;
+background: var(--md-sys-color-surface-container-lowest);
+color: var(--md-sys-color-on-surface);
+font-family: monospace;
+font-size: 11px;
+white-space: nowrap;
+}
+
+.plugin-modal-footer {
+padding: 12px 14px calc(14px + env(safe-area-inset-bottom));
+border-top: 1px solid var(--md-sys-color-outline-variant);
+background: var(--md-sys-color-surface-container-low);
+}
+
+.plugin-modal-footer .btn {
+width: 100%;
+}
+
+.plugin-loading {
+padding: 45px 20px;
+text-align: center;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 13px;
+}
+
+.plugin-empty {
+padding: 45px 20px;
+text-align: center;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 13px;
+}
+
+.plugin-status {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+margin-top: 8px;
+color: var(--md-sys-color-on-surface-variant);
+font-size: 11px;
+font-weight: 700;
+}
+
+.plugin-status-dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(--md-sys-color-primary);
+}
+
+@media (max-width: 600px) {
+.plugin-modal {
+bottom: 0;
+width: 100%;
+max-height: 82vh;
+border-radius: 28px 28px 0 0;
+transform: translateY(100%);
+}
+
+.plugin-modal.open {
+transform: translateY(0);
+}
+
+.plugin-doc-card {
+padding: 18px;
+}
+}
 </style>
 </head>
 
@@ -1238,7 +1552,7 @@ h1 {
           </span>
         </button>
 
-        <button class="sheet-row" onclick="window.location.href='profile.html'">
+        <button class="sheet-row" onclick="window.location.href='https://backend.meander.sbs/share/profile/f1605fca-0b9f-4ec3-aa8d-eaa25deff189'">
           <span class="row-icon">
             <img src="https://api.iconify.design/solar:user-bold-duotone.svg?color=%23a0d8b3" alt="Profile">
           </span>
@@ -1377,120 +1691,180 @@ h1 {
 </section>
 
 <section class="section" id="quests">
-  <div class="container">
+  <div class="container"><div class="section-head">
+  <div>
+    <h2>Квесты</h2>
+    <p>Открывай прямо из этой страницы</p>
+  </div>
 
-    <div class="section-head">
-      <div>
-        <h2>Квесты</h2>
-        <p>Открывай прямо из этой страницы</p>
-      </div>
+  <div class="controls">
+    <input
+      id="search"
+      class="search"
+      placeholder="Поиск квестов..."
+      autocomplete="off"
+    >
 
-      <div class="controls">
-        <input
-          id="search"
-          class="search"
-          placeholder="Поиск квестов..."
-          autocomplete="off"
+    <select id="sort" class="select">
+      <option value="default">Сначала новые</option>
+      <option value="az">По названию</option>
+    </select>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter active" data-filter="all">Все</button>
+  <button class="filter" data-filter="simulation">Симулятор</button>
+  <button class="filter" data-filter="horror">Хоррор</button>
+  <button class="filter" data-filter="history">История</button>
+  <button class="filter" data-filter="experiment">Эксперимент</button>
+</div>
+
+<div id="questListWrapper" class="quest-list-wrapper">
+
+  <div id="questGrid" class="quest-grid"></div>
+
+  <div id="expandArea" class="expand-area">
+    <button class="btn-expand-all" id="expandBtn">
+      Открыть все
+    </button>
+  </div>
+
+</div>
+
+<div id="empty" class="empty">
+  <img
+    src="https://api.iconify.design/solar:ghost-bold-duotone.svg?color=%238a938c"
+    alt="Empty"
+  >
+  <div>Ничего не найдено. Попробуй другой запрос.</div>
+</div>
+
+  </div>
+</section><section class="section">
+  <div class="container"><div class="section-head">
+  <div>
+    <h2>Возможности</h2>
+    <p>Выберите что хотите</p>
+  </div>
+</div>
+
+<div class="feature-card">
+
+  <div class="dev-image">
+    <img src="meander.png" alt="Meander Dev">
+    <span class="dev-label">DEV</span>
+  </div>
+
+  <div class="feature-content">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;">
+
+      <div class="feature-icon">
+        <img
+          src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%230a3822"
+          alt="Code"
         >
-
-        <select id="sort" class="select">
-          <option value="default">Сначала новые</option>
-          <option value="az">По названию</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="filters">
-      <button class="filter active" data-filter="all">Все</button>
-      <button class="filter" data-filter="simulation">Симулятор</button>
-      <button class="filter" data-filter="horror">Хоррор</button>
-      <button class="filter" data-filter="history">История</button>
-      <button class="filter" data-filter="experiment">Эксперимент</button>
-    </div>
-
-    <div id="questListWrapper" class="quest-list-wrapper">
-
-      <div id="questGrid" class="quest-grid"></div>
-
-      <div id="expandArea" class="expand-area">
-        <button class="btn-expand-all" id="expandBtn">
-          Открыть все
-        </button>
       </div>
 
+      <span class="version-badge">
+        2.8.13-beta (257)
+      </span>
+
     </div>
 
-    <div id="empty" class="empty">
-      <img src="https://api.iconify.design/solar:ghost-bold-duotone.svg?color=%238a938c" alt="Empty">
-      <div>Ничего не найдено. Попробуй другой запрос.</div>
+    <h3>Meander Dev</h3>
+
+    <p>
+      Информационная страница Meander | Artemforand с опубликованными текстовыми квестами и описанием проектов. Установите приложение, чтобы получить доступ к новым функциям и обновлениям.
+    </p>
+
+    <div class="dev-meta">
+
+      <span>
+        <img
+          src="https://api.iconify.design/solar:check-circle-bold-duotone.svg?color=%23a0d8b3"
+          alt=""
+        >
+        Beta
+      </span>
+
+      <span>
+        <img
+          src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%23a0d8b3"
+          alt=""
+        >
+        Dev
+      </span>
+
+    </div>
+
+    <a
+      href="https://gitlab.com/Aryemforamd/and-youtube/-/raw/main/app-dev-release.apk?ref_type=heads&inline=false"
+      class="btn btn-primary"
+      style="width:100%"
+      download
+    >
+      <img
+        src="https://api.iconify.design/solar:download-square-bold-duotone.svg?color=%230a3822"
+        alt="Download"
+      >
+      Установить
+    </a>
+
+  </div>
+</div>
+
+  </div>
+</section><section class="section" id="plugins">
+  <div class="container"><div class="section-head">
+  <div>
+    <h2>Плагины</h2>
+    <p>Крайне не рекомендуется использовать</p>
+  </div>
+</div>
+
+<div class="plugin-doc-card">
+
+  <div class="plugin-doc-top">
+
+    <div class="plugin-doc-icon">
+      <img
+        src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%23a0d8b3"
+        alt="Plugins"
+      >
+    </div>
+
+    <div class="plugin-doc-info">
+      <h3>Документация плагинов</h3>
+      <p>
+        Все через Lua
+      </p>
     </div>
 
   </div>
-</section>
 
-<section class="section">
-  <div class="container">
+  <div class="plugin-doc-count">
 
-    <div class="section-head">
-      <div>
-        <h2>Возможности</h2>
-        <p>Выберите что хотите</p>
-      </div>
-    </div>
+    <span>
+      Meander Plugin API
+    </span>
 
-    <div class="feature-card">
+    <button
+      class="btn btn-primary plugin-doc-open"
+      onclick="window.location.href='plugins.html'"
+    >
+      <img
+        src="https://api.iconify.design/solar:book-bold-duotone.svg?color=%230a3822"
+        alt=""
+      >
+      Документация
+    </button>
 
-      <div class="dev-image">
-        <img src="meander.png" alt="Meander Dev">
-        <span class="dev-label">DEV</span>
-      </div>
+  </div>
 
-      <div class="feature-content">
+</div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;">
-
-          <div class="feature-icon">
-            <img src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%230a3822" alt="Code">
-          </div>
-
-          <span class="version-badge">
-            2.8.13-beta (257)
-          </span>
-
-        </div>
-
-        <h3>Meander Dev</h3>
-
-        <p>
-          Информационная страница Meander | Artemforand с опубликованными текстовыми квестами и описанием проектов. Установите приложение, чтобы получить доступ к новым функциям и обновлениям.
-        </p>
-
-        <div class="dev-meta">
-
-          <span>
-            <img src="https://api.iconify.design/solar:check-circle-bold-duotone.svg?color=%23a0d8b3" alt="">
-            Beta
-          </span>
-
-          <span>
-            <img src="https://api.iconify.design/solar:code-square-bold-duotone.svg?color=%23a0d8b3" alt="">
-            Dev
-          </span>
-
-        </div>
-
-        <a
-          href="https://gitlab.com/Aryemforamd/and-youtube/-/raw/main/app-dev-release.apk?ref_type=heads&inline=false"
-          class="btn btn-primary"
-          style="width:100%"
-          download
-        >
-          <img src="https://api.iconify.design/solar:download-square-bold-duotone.svg?color=%230a3822" alt="Download">
-          Установить
-        </a>
-
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1791,6 +2165,14 @@ document.addEventListener('DOMContentLoaded',() => {
 
   loadQuests();
 });
+fetch('plugins.txt')
+  .then(response => response.text())
+  .then(text => {
+    console.log(text);
+  })
+  .catch(error => {
+    console.error(error);
+  });
 </script>
 
 </body>
