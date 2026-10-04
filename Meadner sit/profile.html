@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Профиль — Meander</title>
+<meta name="theme-color" content="#0f1411">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0b100d;
+  --bg-deep: #080c0a;
+
+  --surface: #101612;
+  --surface-low: #111813;
+  --surface-container: #151c17;
+  --surface-high: #1b241e;
+  --surface-highest: #222d25;
+
+  --text: #f1f5f1;
+  --text-soft: #d2d9d3;
+  --muted: #a5afa8;
+
+  --primary: #9be0b3;
+  --primary-light: #b0eac5;
+  --primary-dark: #1d5a3a;
+  --primary-container: #17452f;
+
+  --outline: #4c5750;
+  --outline-soft: #303a33;
+
+  --green: #82dca0;
+  --green-bright: #a5e8ba;
+
+  --radius-xl: 30px;
+  --radius-large: 26px;
+  --radius-medium: 20px;
+  --radius-small: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding:
+    max(8px, env(safe-area-inset-top))
+    max(8px, env(safe-area-inset-right))
+    max(18px, env(safe-area-inset-bottom))
+    max(8px, env(safe-area-inset-left));
+
+  background:
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(126, 221, 157, .055),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 100% 25%,
+      rgba(89, 151, 111, .035),
+      transparent 28%
+    ),
+    var(--bg);
+
+  color: var(--text);
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+button,
+a {
+  font-family: inherit;
+}
+
+.page {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.topbar {
+  width: 100%;
+  height: 66px;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 5px;
+  margin: 0 0 10px;
+  gap: 16px;
+}
+
+.brand {
+  min-width: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #111713;
+  border: 1px solid #202a23;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .25);
+}
+
+.brand-icon img {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  display: block;
+  object-fit: contain;
+}
+
+.brand-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  font-size: 23px;
+  line-height: 46px;
+  font-weight: 700;
+  letter-spacing: -.7px;
+}
+
+.theme-button {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  flex: 0 0 48px;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid #28322c;
+  border-radius: 50%;
+  background: #111713;
+  color: var(--text);
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease;
+}
+
+.theme-button img {
+  width: 23px;
+  height: 23px;
+  display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 390px) {
+  .topbar {
+    gap: 10px;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    flex-basis: 44px;
+  }
+
+  .brand-icon img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brand-text {
+    font-size: 21px;
+  }
+
+  .theme-button {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    flex-basis: 46px;
+  }
+}
+
+.theme-button:hover {
+  background: #182019;
+}
+
+.theme-button img {
+  width: 23px;
+  height: 23px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.m3-card {
+  position: relative;
+  overflow: hidden;
+
+  padding: 24px;
+
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-xl);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.018),
+      transparent 48%
+    ),
+    var(--surface-container);
+
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.2),
+    0 14px 32px rgba(0,0,0,.18);
+}
+
+.profile {
+  padding: 30px 24px 24px;
+  text-align: center;
+}
+
+.profile-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  margin-bottom: 19px;
+}
+
+.avatar {
+  width: 124px;
+  height: 124px;
+  padding: 4px;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #73cf91,
+      #a9e8be
+    );
+
+  box-shadow:
+    0 0 0 4px rgba(143, 224, 171, .07),
+    0 8px 26px rgba(74, 132, 91, .2);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  background: var(--surface-highest);
+}
+
+.verified {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: 34px;
+  height: 34px;
+
+  border: 4px solid var(--surface-container);
+  border-radius: 50%;
+
+  background: var(--primary);
+  color: #102017;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 3px 14px rgba(125, 218, 153, .24);
+}
+
+.verified img {
+  width: 17px;
+  height: 17px;
+}
+
+.profile-name {
+  max-width: 100%;
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 29px;
+  line-height: 35px;
+  font-weight: 700;
+  letter-spacing: -.8px;
+}
+
+.profile-id {
+  margin-top: 8px;
+  padding: 6px 12px;
+
+  border-radius: 12px;
+
+  background: var(--surface-high);
+  border: 1px solid var(--outline-soft);
+
+  color: var(--muted);
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.profile-bio {
+  max-width: 520px;
+  margin: 14px 0 0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.profile-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.action {
+  height: 50px;
+  padding: 0 20px;
+
+  border: 0;
+  border-radius: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.action img {
+  width: 19px;
+  height: 19px;
+}
+
+.action-tonal {
+  color: var(--text);
+
+  background: var(--surface-high);
+
+  border: 1px solid var(--outline-soft);
+}
+
+.action-tonal:hover {
+  background: var(--surface-highest);
+}
+
+.action-primary {
+  color: #0b1b11;
+
+  background: var(--primary);
+
+  box-shadow:
+    0 5px 18px rgba(116, 203, 143, .12);
+}
+
+.action-primary:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+
+  margin-top: 12px;
+}
+
+.stat {
+  min-width: 0;
+
+  padding: 16px 7px;
+
+  border-radius: var(--radius-medium);
+
+  background: var(--surface-high);
+
+  border: 1px solid var(--outline-soft);
+}
+
+.stat b {
+  display: block;
+
+  color: var(--text);
+
+  font-size: 22px;
+  line-height: 26px;
+  font-weight: 700;
+}
+
+.stat span {
+  display: block;
+  margin-top: 5px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.extra-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+
+  margin-top: 9px;
+}
+
+.extra-stat {
+  min-height: 70px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 14px;
+
+  border-radius: var(--radius-medium);
+
+  background: var(--surface-high);
+
+  border: 1px solid var(--outline-soft);
+}
+
+.extra-stat > img {
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+
+  border-radius: 12px;
+
+  background: var(--primary-container);
+}
+
+.extra-stat b {
+  display: block;
+
+  color: var(--text);
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.extra-stat span {
+  display: block;
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 19px;
+
+  color: var(--text);
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.section-title img {
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+
+  border-radius: 12px;
+
+  background: #1a3927;
+}
+
+.about {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.info-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.info {
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 13px;
+
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--radius-medium);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.018),
+      transparent 65%
+    ),
+    var(--surface-high);
+
+  transition: .18s ease;
+}
+
+.info:hover {
+  transform: translateY(-1px);
+  border-color: #526257;
+  background: var(--surface-highest);
+}
+
+.info:nth-child(1) .info-left img {
+  background: rgba(120, 214, 148, .12);
+}
+
+.info:nth-child(2) .info-left img {
+  background: rgba(151, 211, 169, .1);
+}
+
+.info:nth-child(3) .info-left img {
+  background: rgba(120, 214, 148, .12);
+}
+
+.info:nth-child(4) .info-left img {
+  background: rgba(151, 211, 169, .1);
+}
+
+.info-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.info-left img {
+  flex: 0 0 auto;
+
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+
+  border-radius: 11px;
+}
+
+.info-label {
+  color: var(--muted);
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.info-value {
+  max-width: 52%;
+
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-align: right;
+  word-break: break-word;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  background: var(--green);
+
+  box-shadow:
+    0 0 0 4px rgba(130, 220, 160, .09),
+    0 0 12px rgba(130, 220, 160, .35);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.link {
+  height: 44px;
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  border: 1px solid var(--outline-soft);
+  border-radius: 14px;
+
+  background: var(--surface-high);
+
+  color: var(--text);
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: .18s ease;
+}
+
+.link:hover {
+  background: var(--surface-highest);
+  border-color: #526257;
+  transform: translateY(-1px);
+}
+
+.link img {
+  width: 20px;
+  height: 20px;
+}
+
+.skeleton {
+  color: transparent !important;
+  user-select: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--surface-high) 25%,
+      var(--surface-highest) 50%,
+      var(--surface-high) 75%
+    ) !important;
+
+  background-size: 200% 100% !important;
+
+  animation: skeleton 1.4s infinite;
+
+  border-radius: 10px;
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.toast {
+  position: fixed;
+  z-index: 1000;
+
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+
+  transform: translate(-50%, 100px);
+
+  opacity: 0;
+  pointer-events: none;
+
+  padding: 13px 20px;
+
+  border-radius: 14px;
+
+  background: #19201b;
+  color: #fff;
+
+  border: 1px solid #39453d;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.35);
+
+  font-size: 14px;
+
+  transition: .25s ease;
+}
+
+.toast.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.footer {
+  padding: 24px 0 10px;
+
+  color: #7f8982;
+
+  text-align: center;
+
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding:
+      max(7px, env(safe-area-inset-top))
+      max(7px, env(safe-area-inset-right))
+      max(18px, env(safe-area-inset-bottom))
+      max(7px, env(safe-area-inset-left));
+  }
+
+  .topbar {
+    padding: 4px 6px;
+    margin-bottom: 8px;
+  }
+
+  .m3-card {
+    padding: 22px 14px;
+    border-radius: 29px;
+  }
+
+  .profile {
+    padding: 30px 14px 18px;
+  }
+
+  .profile-name {
+    font-size: 26px;
+  }
+
+  .info-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .info {
+    min-height: 76px;
+    padding: 12px 10px;
+    border-radius: 18px;
+
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .info-left {
+    width: 100%;
+  }
+
+  .info-value {
+    max-width: 100%;
+    width: 100%;
+
+    padding-left: 44px;
+    margin-top: -2px;
+
+    text-align: left;
+  }
+
+  .info:nth-child(4) {
+    grid-column: 1 / -1;
+
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .info:nth-child(4) .info-value {
+    width: auto;
+
+    margin: 0;
+    margin-left: auto;
+
+    padding: 0;
+
+    text-align: right;
+  }
+}
+
+@media (max-width: 390px) {
+  .profile-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .extra-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    gap: 7px;
+  }
+
+  .stat {
+    padding: 15px 4px;
+  }
+
+  .info {
+    min-height: 72px;
+  }
+
+  .info-label {
+    font-size: 11px;
+  }
+
+  .info-value {
+    font-size: 12px;
+  }
+
+  .info-left img {
+    width: 32px;
+    height: 32px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <img src="./meander.png" alt="Meander">
+    </div>
+
+    <div class="brand-text">Meander</div>
+  </div>
+
+  <button class="theme-button" id="themeButton" aria-label="Переключить тему">
+    <img
+      id="themeIcon"
+      src="https://api.iconify.design/solar:sun-bold-duotone.svg?color=%23a5b0a8"
+      alt="Тема"
+    >
+  </button>
+</header>
+<main>
+
+<section class="m3-card profile">
+
+<div class="profile-head">
+
+<div class="avatar-wrap">
+
+<div class="avatar">
+<img
+  id="avatar"
+  src="https://api.iconify.design/solar:user-bold-duotone.svg?color=%239be0b3"
+  alt="Аватар">
+</div>
+
+<div class="verified" id="verified">
+<img
+  src="https://api.iconify.design/solar:verified-check-bold.svg?color=%230b2115"
+  alt="Подтвержден">
+</div>
+
+</div>
+
+<h1 class="profile-name skeleton" id="profileName">
+Загрузка имени
+</h1>
+
+<div class="profile-id skeleton" id="profileId">
+ID: 00000000-0000
+</div>
+
+<p class="profile-bio skeleton" id="about">
+Загрузка информации о профиле и пользователе...
+</p>
+
+</div>
+
+<div class="profile-actions">
+
+<button
+  class="action action-tonal"
+  onclick="window.location.href='index.html'">
+
+<img
+  src="https://api.iconify.design/solar:alt-arrow-left-outline.svg?color=%23d9e0da">
+
+Назад
+
+</button>
+
+<button
+  class="action action-primary"
+  onclick="shareProfile()">
+
+<img
+  src="https://api.iconify.design/solar:share-outline.svg?color=%230b2115">
+
+Поделиться
+
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<b id="questsCount" class="skeleton">0</b>
+<span>Квестов</span>
+</div>
+
+<div class="stat">
+<b id="followersCount" class="skeleton">0</b>
+<span>Подписчиков</span>
+</div>
+
+<div class="stat">
+<b id="followingCount" class="skeleton">0</b>
+<span>Подписок</span>
+</div>
+
+</div>
+
+<div class="extra-stats">
+
+<div class="extra-stat">
+
+<img
+  src="https://api.iconify.design/solar:heart-bold-duotone.svg?color=%239be0b3">
+
+<div>
+<b id="likesCount" class="skeleton">0</b>
+<span>Лайков</span>
+</div>
+
+</div>
+
+<div class="extra-stat">
+
+<img
+  src="https://api.iconify.design/solar:download-minimalistic-bold-duotone.svg?color=%239be0b3">
+
+<div>
+<b id="downloadsCount" class="skeleton">0</b>
+<span>Загрузок</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="m3-card">
+
+<div class="section-title">
+
+<img
+  src="https://api.iconify.design/solar:info-circle-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+Информация
+
+</div>
+
+<div class="info-list">
+
+<div class="info">
+
+<div class="info-left">
+
+<img
+  src="https://api.iconify.design/solar:user-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+<span class="info-label">Имя</span>
+
+</div>
+
+<span
+  class="info-value skeleton"
+  id="infoName">
+Имя пользователя
+</span>
+
+</div>
+
+<div class="info">
+
+<div class="info-left">
+
+<img
+  src="https://api.iconify.design/solar:fire-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+<span class="info-label">Серия</span>
+
+</div>
+
+<span
+  class="info-value skeleton"
+  id="streak">
+0 дней
+</span>
+
+</div>
+
+<div class="info">
+
+<div class="info-left">
+
+<img
+  src="https://api.iconify.design/solar:heart-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+<span class="info-label">Лайки</span>
+
+</div>
+
+<span
+  class="info-value skeleton"
+  id="infoLikes">
+0
+</span>
+
+</div>
+
+<div class="info">
+
+<div class="info-left">
+
+<img
+  src="https://api.iconify.design/solar:shield-check-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+<span class="info-label">Статус</span>
+
+</div>
+
+<span class="info-value status">
+
+<span class="status-dot"></span>
+
+<span
+  id="status"
+  class="skeleton">
+Активен
+</span>
+
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+  class="m3-card"
+  id="linksSection"
+  style="display:none">
+
+<div class="section-title">
+
+<img
+  src="https://api.iconify.design/solar:link-bold-duotone.svg?color=%239be0b3"
+  alt="">
+
+Ссылки
+
+</div>
+
+<div
+  class="links"
+  id="links">
+</div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+Meander · Текстовые квесты
+</footer>
+
+</div>
+
+<div
+  class="toast"
+  id="toast">
+Ссылка скопирована
+</div>
+
+<script>
+const API = 'http://139.100.236.142:5002/api/my-profile';
+
+const themeButton = document.getElementById('themeButton');
+const themeIcon = document.getElementById('themeIcon');
+
+let shareUrl =
+  'https://backend.meander.sbs/share/profile/f1605fca-0b9f-4ec3-aa8d-eaa25deff189';
+
+function updateThemeIcon() {
+  const light = document.body.classList.contains('light');
+
+  themeIcon.src = light
+    ? 'https://api.iconify.design/solar:moon-bold-duotone.svg?color=%23a5b0a8'
+    : 'https://api.iconify.design/solar:sun-bold-duotone.svg?color=%23a5b0a8';
+}
+
+function updateThemeColor() {
+  document
+    .querySelector('meta[name="theme-color"]')
+    .setAttribute('content', '#0f1411');
+}
+
+themeButton.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+
+  localStorage.setItem(
+    'meander-theme',
+    document.body.classList.contains('light')
+      ? 'light'
+      : 'dark'
+  );
+
+  updateThemeIcon();
+  updateThemeColor();
+});
+
+if (localStorage.getItem('meander-theme') === 'light') {
+  document.body.classList.remove('light');
+}
+
+updateThemeIcon();
+updateThemeColor();
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+async function shareProfile() {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Профиль Meander',
+        url: shareUrl
+      });
+    } catch {}
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    showToast('Ссылка скопирована');
+  } catch {
+    window.open(shareUrl, '_blank');
+  }
+}
+
+function formatNumber(value) {
+  const number = Number(value);
+
+  return Number.isFinite(number)
+    ? number.toLocaleString('ru-RU')
+    : '0';
+}
+
+function setText(id, value, fallback = '—') {
+  const element = document.getElementById(id);
+
+  if (!element) return;
+
+  element.classList.remove('skeleton');
+
+  element.textContent =
+    value !== null &&
+    value !== undefined &&
+    value !== ''
+      ? value
+      : fallback;
+}
+
+function addLinks(links) {
+  const section =
+    document.getElementById('linksSection');
+
+  const container =
+    document.getElementById('links');
+
+  if (!Array.isArray(links) || !links.length) {
+    return;
+  }
+
+  container.innerHTML = '';
+
+  links.forEach(item => {
+    if (!item || !item.url) return;
+
+    const link =
+      document.createElement('a');
+
+    link.className = 'link';
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+
+    const icon =
+      document.createElement('img');
+
+    icon.src =
+      item.platform === 'telegram'
+        ? 'https://api.iconify.design/logos:telegram.svg'
+        : 'https://api.iconify.design/solar:link-bold-duotone.svg?color=%239be0b3';
+
+    const text =
+      document.createElement('span');
+
+    text.textContent =
+      item.platform
+        ? item.platform.charAt(0).toUpperCase() +
+          item.platform.slice(1)
+        : 'Ссылка';
+
+    link.appendChild(icon);
+    link.appendChild(text);
+
+    container.appendChild(link);
+  });
+
+  if (container.children.length) {
+    section.style.display = '';
+  }
+}
+
+async function loadProfile() {
+  try {
+    const response =
+      await fetch(API, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        },
+        cache: 'no-store'
+      });
+
+    if (!response.ok) {
+      throw new Error(
+        'HTTP ' + response.status
+      );
+    }
+
+    const data =
+      await response.json();
+
+    if (!data.success) {
+      throw new Error(
+        data.error || 'Ошибка API'
+      );
+    }
+
+    const profile = data.profile;
+
+    if (!profile) {
+      throw new Error(
+        'Профиль не найден'
+      );
+    }
+
+    const name =
+      profile.full_name ||
+      'Пользователь Meander';
+
+    const id =
+      profile.id || '—';
+
+    const bio =
+      profile.bio ||
+      'Профиль пользователя Meander.';
+
+    if (profile.id) {
+      shareUrl =
+        `https://backend.meander.sbs/share/profile/${profile.id}`;
+    }
+
+    setText(
+      'profileName',
+      name
+    );
+
+    setText(
+      'profileId',
+      id
+    );
+
+    setText(
+      'infoName',
+      name
+    );
+
+    setText(
+      'about',
+      bio
+    );
+
+    if (profile.avatar_url) {
+      const image =
+        document.getElementById('avatar');
+
+      image.onerror = () => {
+        image.src =
+          'https://api.iconify.design/solar:user-bold-duotone.svg?color=%239be0b3';
+      };
+
+      image.src =
+        profile.avatar_url;
+    }
+
+    if (profile.is_verified) {
+      document
+        .getElementById('verified')
+        .style.display = 'flex';
+    }
+
+    setText(
+      'questsCount',
+      formatNumber(data.quests_count)
+    );
+
+    setText(
+      'followersCount',
+      formatNumber(profile.followers_count)
+    );
+
+    setText(
+      'followingCount',
+      formatNumber(profile.following_count)
+    );
+
+    setText(
+      'likesCount',
+      formatNumber(profile.total_likes)
+    );
+
+    setText(
+      'downloadsCount',
+      formatNumber(profile.total_downloads)
+    );
+
+    setText(
+      'infoLikes',
+      formatNumber(profile.total_likes)
+    );
+
+    setText(
+      'streak',
+      formatNumber(profile.streak_count) +
+      ' дней'
+    );
+
+    setText(
+      'status',
+      profile.is_verified
+        ? 'Подтверждён'
+        : 'Активен'
+    );
+
+    addLinks(
+      profile.social_links
+    );
+
+  } catch (error) {
+
+    document
+      .querySelectorAll('.skeleton')
+      .forEach(element => {
+        element.classList.remove(
+          'skeleton'
+        );
+      });
+
+    document.querySelector('main').innerHTML = `
+      <section
+        class="m3-card"
+        style="text-align:center">
+
+        <div
+          style="
+            font-size:18px;
+            font-weight:700;
+            margin-bottom:8px;
+          ">
+          Не удалось загрузить профиль
+        </div>
+
+        <div
+          style="
+            color:var(--muted);
+            font-size:14px;
+            margin-bottom:20px;
+          ">
+          ${error.message}
+        </div>
+
+        <button
+          class="action action-primary"
+          style="margin:auto"
+          onclick="location.reload()">
+          Повторить
+        </button>
+
+      </section>
+    `;
+  }
+}
+
+loadProfile();
+</script>
+
+</body>
+</html>
