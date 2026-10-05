@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    {
+      "name": "Плагин на заметку",
+      "description": "Создаёт заметку",
+      "author": "Artemforand",
+      "version": "1.0.0",
+      "new":true,
+      "updated": "05.10.2026",
+      "icon": "https://api.iconify.design/solar:notes-bold-duotone.svg?color=%23a0d8b3",
+      "path": "plugins/plugins1/download.zip",
+      "screenshots": [
+        "plugins/plugins1/note-1.png",
+        "plugins/plugins1/note-2.png"
+      ]
+    }
+  ]
+}
